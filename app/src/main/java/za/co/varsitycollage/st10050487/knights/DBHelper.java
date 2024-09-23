@@ -24,6 +24,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "SURNAME TEXT NOT NULL," +
                 "DATEOFBIRTH TEXT NOT NULL," +
                 "EMAIL TEXT NOT NULL," +
+                "PASSWORD TEXT NOT NULL," +
                 "ROLE_ID INTEGER," +
                 "FOREIGN KEY (ROLE_ID) REFERENCES ROLES(ROLE_ID))";
         db.execSQL(CREATE_TABLE_USERS);
