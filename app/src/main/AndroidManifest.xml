@@ -23,6 +23,7 @@
         </activity>
         <activity android:name=".StudentParentReg" />
         <activity android:name=".GetStarted" />
+        <activity android:name=".Login" />
     </application>
 
 </manifest>

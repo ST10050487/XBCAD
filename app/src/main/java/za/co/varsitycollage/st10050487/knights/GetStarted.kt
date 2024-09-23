@@ -20,7 +20,7 @@ class GetStarted : AppCompatActivity() {
         // An onClickListener to navigate to StudentParentReg activity
         getStartedButton.setOnClickListener {
             // Create an Intent to start the StudentParentReg activity
-            val intent = Intent(this@GetStarted, StudentParentReg::class.java)
+            val intent = Intent(this@GetStarted, Login::class.java)
             startActivity(intent)
         }
     }
