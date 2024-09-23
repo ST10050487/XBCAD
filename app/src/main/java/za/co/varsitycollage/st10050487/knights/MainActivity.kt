@@ -9,11 +9,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Add the StudentParentReg fragment
+        // Check if the saved instance state is null to avoid overlapping fragments on orientation change
         if (savedInstanceState == null) {
-            supportFragmentManager.commit {
-                replace(R.id.fragment_container, StudentParentReg())
-            }
+            // Load the StudentParentReg fragment
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, StudentParentReg())  // Assuming fragment_container is the container in activity_main.xml
+                .commit()
         }
     }
 }
