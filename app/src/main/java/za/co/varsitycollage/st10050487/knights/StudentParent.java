@@ -1,7 +1,6 @@
 package za.co.varsitycollage.st10050487.knights;
 
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -15,9 +14,9 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-public class StudentParentReg extends Fragment {
+public class StudentParent extends Fragment {
 
-    public StudentParentReg() {
+    public StudentParent() {
         // Required empty public constructor
     }
 
