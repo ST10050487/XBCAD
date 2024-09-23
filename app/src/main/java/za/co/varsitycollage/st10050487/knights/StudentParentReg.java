@@ -1,14 +1,21 @@
 package za.co.varsitycollage.st10050487.knights;
 
+import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Calendar;
 
 public class StudentParentReg extends AppCompatActivity {
 
@@ -54,6 +61,25 @@ public class StudentParentReg extends AppCompatActivity {
     private void setCheckboxColor() {
         CheckBox checkBox = findViewById(R.id.checkBox);
         checkBox.setButtonDrawable(R.drawable.checkbox_custom);
+    }
+
+    // This method is used for the date picker dialog
+    public void showDatePickerDialog(View v) {
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        // Update the EditText with the selected date
+                        EditText dateField = findViewById(R.id.DateField);
+                        dateField.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                    }
+                }, year, month, day);
+        datePickerDialog.show();
     }
 }
 
