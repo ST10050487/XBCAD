@@ -25,6 +25,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".StudentParentReg" />
+        <activity android:name=".GetStarted" />
+        <activity android:name=".Login" />
 
         <meta-data
             android:name="preloaded_fonts"
