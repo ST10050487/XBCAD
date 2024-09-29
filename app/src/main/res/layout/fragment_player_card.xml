@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-  >
-
+    tools:context=".ViewPlayer">
 
     <androidx.cardview.widget.CardView
         android:layout_width="379dp"
@@ -18,14 +16,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
         <LinearLayout
             android:layout_width="382dp"
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:paddingHorizontal="15dp"
             android:paddingTop="15dp">
-
 
             <LinearLayout
                 android:layout_width="69dp"
@@ -47,26 +43,26 @@
                     android:background="@drawable/yellow_barrier" />
             </LinearLayout>
 
-
             <LinearLayout
                 android:layout_width="279dp"
                 android:layout_height="140dp"
                 android:layout_gravity="center_horizontal"
-                android:orientation="vertical"
-              >
+                android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/txtFullname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:layout_marginVertical="17dp"
                     android:layout_marginHorizontal="15dp"
                     android:fontFamily="@font/inter_bold"
-                    android:text="FullName"
+                    android:text=""
                     android:textSize="16dp"
                     android:textColor="@color/white" />
 
                 <TextView
+                    android:id="@+id/txtEmail"
                     android:layout_marginTop="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -75,6 +71,7 @@
                     android:textColor="@color/white" />
 
                 <TextView
+                    android:id="@+id/txtGrade"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter"
@@ -82,6 +79,7 @@
                     android:textColor="@color/white" />
 
                 <TextView
+                    android:id="@+id/txtAge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter"
@@ -89,10 +87,6 @@
                     android:textColor="@color/white" />
 
             </LinearLayout>
-
-
         </LinearLayout>
-
-
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

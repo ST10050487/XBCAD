@@ -2,8 +2,11 @@ package za.co.varsitycollage.st10050487.knights;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.Arrays;
 
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
@@ -150,6 +153,68 @@ public class DBHelper extends SQLiteOpenHelper {
         // Recreate tables
         onCreate(db);
     }
+    /* HANNAH ADDED, CAUSE NO PASSWORD IN addUsers and to log user in ********************************/
+    public boolean addUser(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("NAME", name);
+        values.put("SURNAME", surname);
+        values.put("DATEOFBIRTH", dateOfBirth);
+        values.put("EMAIL", email);
+        values.put("PASSWORD", password);
+        values.put("ROLE_ID", roleId);
+        long result = db.insert("USERS", null, values);
+        return result != -1;
+    }
+
+    public boolean loginUser(String email, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM USERS WHERE EMAIL = ? AND PASSWORD = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email, password});
+        boolean isLoggedIn = cursor.getCount() > 0;
+        cursor.close();
+        return isLoggedIn;
+    }
+    public PlayerProfile getPlayerProfileByUserId(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM PLAYER_PROFILE WHERE USER_ID = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+        PlayerProfile playerProfile = null;
+        if (cursor.moveToFirst()) {
+            int playerIdIndex = cursor.getColumnIndex("PLAYER_ID");
+            int nameIndex = cursor.getColumnIndex("NAME");
+            int surnameIndex = cursor.getColumnIndex("SURNAME");
+            int nicknameIndex = cursor.getColumnIndex("NICKNAME");
+            int ageIndex = cursor.getColumnIndex("AGE");
+            int gradeIndex = cursor.getColumnIndex("GRADE");
+            int heightIndex = cursor.getColumnIndex("HEIGHT");
+            int positionsIndex = cursor.getColumnIndex("POSITIONS");
+            int teamsIndex = cursor.getColumnIndex("TEAMS");
+            int dateOfBirthIndex = cursor.getColumnIndex("DATEOFBIRTH");
+            int userIdIndex = cursor.getColumnIndex("USER_ID");
+
+            if (playerIdIndex >= 0 && nameIndex >= 0 && surnameIndex >= 0 && nicknameIndex >= 0 &&
+                    ageIndex >= 0 && gradeIndex >= 0 && heightIndex >= 0 && positionsIndex >= 0 &&
+                    teamsIndex >= 0 && dateOfBirthIndex >= 0 && userIdIndex >= 0) {
+                playerProfile = new PlayerProfile(
+                        cursor.getInt(playerIdIndex),
+                        cursor.getString(nameIndex),
+                        cursor.getString(surnameIndex),
+                        cursor.getString(nicknameIndex),
+                        cursor.getInt(ageIndex),
+                        cursor.getString(gradeIndex),
+                        cursor.getString(heightIndex),
+                        Arrays.asList(cursor.getString(positionsIndex).split(",")),
+                        Arrays.asList(cursor.getString(teamsIndex).split(",")),
+                        cursor.getString(dateOfBirthIndex),
+                        cursor.getInt(userIdIndex)
+                );
+            }
+        }
+        cursor.close();
+        return playerProfile;
+    }
+    /*********************************/
     //A method to add users to the database
     public void addUsers(String name, String surname, String dateOfBirth, String email, int roleId) {
         // Add users to the database

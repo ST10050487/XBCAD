@@ -1,28 +1,74 @@
 package za.co.varsitycollage.st10050487.knights
 
+import android.content.ContentValues
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.widget.FrameLayout
-import androidx.activity.enableEdgeToEdge
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class ViewPlayer : AppCompatActivity() {
+
+    private lateinit var dbHelper: DBHelper
+    private lateinit var teams: TextView
+    private lateinit var positions: TextView
+    private lateinit var sports: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_view_player)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 
-            val playerCardContainer = findViewById<FrameLayout>(R.id.player_card_container)
-            val inflater = LayoutInflater.from(this)
-            val playerCardView = inflater.inflate(R.layout.player_card, playerCardContainer, false)
-            playerCardContainer.addView(playerCardView)
 
-            insets
+
+        dbHelper = DBHelper(this)
+        teams = findViewById(R.id.txtTeam)
+        positions = findViewById(R.id.txtPosition)
+        sports = findViewById(R.id.txtSports)
+
+
+        addDummyPlayerProfile(dbHelper.writableDatabase)
+
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.player_card_container, PlayerCardFragment())
+                .commitNow()
+            getPlayerData()
+        }
+    }
+        fun addDummyPlayerProfile(db: SQLiteDatabase) {
+        val values = ContentValues()
+        values.put("NAME", "John")
+        values.put("SURNAME", "Marcus")
+        values.put("NICKNAME", "Johnny")
+        values.put("AGE", 20)
+        values.put("GRADE", "11")
+        values.put("HEIGHT", "64")
+        values.put("POSITION", "Forward")
+        values.put("DATEOFBIRTH", "2003-01-01")
+        values.put("USER_ID", 121) // Assuming a user with USER_ID 1 exists
+        db.insert("PLAYER_PROFILE", null, values)
+
+            val result = db.insert("USERS", null, values)
+            if(result != -1L) {
+                Toast.makeText(this, "Player profile added successfully", Toast.LENGTH_SHORT).show()
+            }
+
+    }
+    private fun getPlayerData() {
+        val userId = 121 // Replace with the actual user ID
+        val playerProfile = dbHelper.getPlayerProfileByUserId(userId)
+
+        if (playerProfile != null) {
+            val positionsList = playerProfile.positions
+            val teamsList = playerProfile.teams
+            val sport = playerProfile.grade
+
+            val positionsString = positionsList.joinToString(", ")
+            val teamsString = teamsList.joinToString(", ")
+
+            positions.text = positionsString
+            teams.text = teamsString
+            sports.text = sport
         }
     }
 }

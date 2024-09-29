@@ -5,6 +5,9 @@
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="android:fontFamily">@font/inter</item>
     </style>
-
+    <style name="round_img">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
     <style name="Theme.Knights" parent="Base.Theme.Knights" />
 </resources>
