@@ -2,15 +2,24 @@ package za.co.varsitycollage.st10050487.knights
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.textfield.TextInputEditText
 
 class ViewPlayer : AppCompatActivity() {
 
     private lateinit var dbHelper: DBHelper
-    private lateinit var teams: TextView
+    private var userId: Int = 0
+    private var playerId: Int = 0
+    private lateinit var profilePicture: ImageView
+    private lateinit var backBtn: LinearLayout
+
+    private lateinit var ageGroups: TextView
     private lateinit var positions: TextView
     private lateinit var sports: TextView
 
@@ -19,56 +28,59 @@ class ViewPlayer : AppCompatActivity() {
         setContentView(R.layout.activity_view_player)
 
 
-
+        // Getting the userId from the Intent
+        userId = intent.getIntExtra("USER_ID", 0)
+        profilePicture = findViewById(R.id.profilePicture)
+        // Initializing your database helper
         dbHelper = DBHelper(this)
-        teams = findViewById(R.id.txtTeam)
+        backBtn = findViewById(R.id.back_btn)
+        ageGroups = findViewById(R.id.txtAgeGroup)
         positions = findViewById(R.id.txtPosition)
         sports = findViewById(R.id.txtSports)
 
-
-        addDummyPlayerProfile(dbHelper.writableDatabase)
+        backBtn.setOnClickListener {
+            finish()
+        }
 
         if (savedInstanceState == null) {
+            val fragment = PlayerCardFragment.newInstance(userId)
             supportFragmentManager.beginTransaction()
-                .replace(R.id.player_card_container, PlayerCardFragment())
+                .replace(R.id.player_card_container, fragment)
                 .commitNow()
-            getPlayerData()
+            //getPlayerData()
+            getDummyPlayerData()
         }
     }
-        fun addDummyPlayerProfile(db: SQLiteDatabase) {
-        val values = ContentValues()
-        values.put("NAME", "John")
-        values.put("SURNAME", "Marcus")
-        values.put("NICKNAME", "Johnny")
-        values.put("AGE", 20)
-        values.put("GRADE", "11")
-        values.put("HEIGHT", "64")
-        values.put("POSITION", "Forward")
-        values.put("DATEOFBIRTH", "2003-01-01")
-        values.put("USER_ID", 121) // Assuming a user with USER_ID 1 exists
-        db.insert("PLAYER_PROFILE", null, values)
-
-            val result = db.insert("USERS", null, values)
-            if(result != -1L) {
-                Toast.makeText(this, "Player profile added successfully", Toast.LENGTH_SHORT).show()
-            }
+    private fun getDummyPlayerData() {
+        // Dummy data
+        positions.text = "Forward"
+        ageGroups.text = "Under 17's"
+        sports.text = "Rugby"
 
     }
+
     private fun getPlayerData() {
-        val userId = 121 // Replace with the actual user ID
-        val playerProfile = dbHelper.getPlayerProfileByUserId(userId)
-
+        val playerProfile = dbHelper.getPlayerProfile(userId)
         if (playerProfile != null) {
-            val positionsList = playerProfile.positions
-            val teamsList = playerProfile.teams
-            val sport = playerProfile.grade
+            val positionsList = playerProfile.position
+            val ageGroupList =  playerProfile.ageGroup
+            val sportsList = playerProfile.nickname
+            //val positionsString = positionsList.joinToString(", ")
+           // val ageGroupString = ageGroupList.joinToString(", ")
+            positions.text = positionsList
+            ageGroups.text = ageGroupList
+            sports.text = sportsList
 
-            val positionsString = positionsList.joinToString(", ")
-            val teamsString = teamsList.joinToString(", ")
-
-            positions.text = positionsString
-            teams.text = teamsString
-            sports.text = sport
+            // Load profile picture if available
+            val profilePictureBlob = playerProfile.profilePicture
+            if (profilePictureBlob != null) {
+                val profilePictureBitmap = BitmapFactory.decodeByteArray(profilePictureBlob, 0, profilePictureBlob.size)
+                profilePicture.setImageBitmap(profilePictureBitmap)
+            }
+        }
+        else {
+            // Displaying a toast message if the player data is not found
+            Toast.makeText(this, "Player data not found", Toast.LENGTH_SHORT).show()
         }
     }
 }

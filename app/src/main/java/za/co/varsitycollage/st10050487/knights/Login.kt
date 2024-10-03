@@ -7,6 +7,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.Button
+import org.mindrot.jbcrypt.BCrypt
 import kotlin.math.log10
 
 class Login : AppCompatActivity() {
@@ -23,14 +25,14 @@ class Login : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // Initialize views
+        // Initializing views
         emailTxt = findViewById(R.id.emailTxt)
         passwordTxt = findViewById(R.id.passwordTxt)
         loginBtn = findViewById(R.id.LoginBtn)
         registerBtn = findViewById(R.id.RegisterBtn)
         dbHelper = DBHelper(this)
 
-        // Initialize your validation class
+        // Initializing the validation class
         valid = Validations()
 
         // Set click listener for the Register button
@@ -39,6 +41,7 @@ class Login : AppCompatActivity() {
             val intent = Intent(this, StudentParentReg::class.java)
             startActivity(intent)
         }
+
         // Set click listener for the Login button
         loginBtn.setOnClickListener {
             getUserInput()
@@ -49,40 +52,48 @@ class Login : AppCompatActivity() {
     private fun getUserInput() {
         val email = emailTxt.text.toString()
         val password = passwordTxt.text.toString()
+        val encryptedPassword: String
 
-        // Calling the validateEmail method
-        if (!valid.CheckEmail(email)) {
-            Toast.makeText(this, "Invalid email", Toast.LENGTH_SHORT).show()
+        // Validating email
+        if (email.isEmpty()) {
+            emailTxt.error = "Email is required"
             return
         }
-
-        // Calling the validatePassword method
+        if (!valid.CheckEmail(email)) {
+            emailTxt.error = "Invalid email format"
+            return
+        }
+        // Validate password
 //        if (!valid.CheckPassword(password)) {
 //            Toast.makeText(this, "Invalid password", Toast.LENGTH_SHORT).show()
 //            return
 //        }
-        // If the email and password are valid, the user will be logged in
-        // The user will be redirected to the StudentParentReg activity
-        //HANNAH CHANGE TO REDIRECT TO THE TEST | VIEW PLAYER | HOME PAGE
+        // Hashing the inputted password
+        //encryptedPassword = hashPassword(password)
+        // Check if user exists in the database
+        val dbHelper = DBHelper(this)
+        val userId = dbHelper.validateUser(email,password)
 
-
-        if (loginUser()) {
-            val intent = Intent(this, ViewPlayer::class.java)
+        if (userId != null) {
+            // if user exists, navigate to Home Activity
+            val intent = Intent(this, UpdatePlayerProfile::class.java)
+            // Passing the USER_ID to Home Activity
+            intent.putExtra("USER_ID", userId)
             startActivity(intent)
-         }
+            //Finishing the login activity once the user is logged in
+            finish()
+        } else {
+            // User does not exist or incorrect password
+            emailTxt.error = "Invalid email or password"
+            passwordTxt.error = "Invalid email or password"
+            Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+    //A method to hash the entered password
+    fun hashPassword(password: String): String {
+        return BCrypt.hashpw(password, BCrypt.gensalt())
     }
 
-    private fun loginUser():Boolean {
-        val email: String = emailTxt.getText().toString()
-        val password: String = passwordTxt.getText().toString()
-
-            val isLoggedIn: Boolean =
-                dbHelper.loginUser(email, password)
-            if (!isLoggedIn) {
-                Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show()
-                return false
-            }
-            return isLoggedIn
-    }
 }
 

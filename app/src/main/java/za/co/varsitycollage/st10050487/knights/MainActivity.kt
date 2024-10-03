@@ -24,8 +24,9 @@ class MainActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             // Navigate to StudentParentReg Activity after the delay
            // val intent = Intent(this@MainActivity, StudentParentReg::class.java)
-            val intent = Intent(this@MainActivity, GetStarted ::class.java)
+            //val intent = Intent(this@MainActivity, GetStarted ::class.java)
           //  val intent = Intent(this@MainActivity, ViewPlayer::class.java)
+            val intent = Intent(this@MainActivity, Login::class.java)
             startActivity(intent)
             // Finishing MainActivity so that the user cannot go back to it
             finish()
