@@ -36,7 +36,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.appcompat)
@@ -47,4 +46,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Updated Kotlin runtime dependency with actual version number
+    implementation("org.jetbrains.kotlin:kotlin-script-runtime:1.7.10")
+
+    // BCrypt dependency for password hashing
+    implementation("org.mindrot:jbcrypt:0.4")
 }

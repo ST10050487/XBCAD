@@ -2,13 +2,18 @@ package za.co.varsitycollage.st10050487.knights;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
+
 
     // Constructor
     public DBHelper(Context context) {
@@ -35,6 +40,20 @@ public class DBHelper extends SQLiteOpenHelper {
                 "ROLE TEXT NOT NULL)";
         db.execSQL(CREATE_TABLE_ROLES);
 
+        // Insert dummy data into ROLES table
+        String INSERT_ROLES = "INSERT INTO ROLES (ROLE) VALUES " +
+                "('Admin')," +
+                "('User')," +
+                "('Guest')";
+        db.execSQL(INSERT_ROLES);
+
+        // Insert dummy data into USERS table
+        String INSERT_USERS = "INSERT INTO USERS (NAME, SURNAME, DATEOFBIRTH, EMAIL, PASSWORD, ROLE_ID) VALUES " +
+                "('John', 'Doe', '1990-01-01', 'john.doe@example.com', 'Password@123', 1)," +
+                "('Jane', 'Smith', '1992-02-02', 'jane.smith@example.com', 'password456', 2)," +
+                "('Alice', 'Johnson', '1994-03-03', 'alice.johnson@example.com', 'password789', 3)";
+        db.execSQL(INSERT_USERS);
+
         // Create PLAYER_PROFILE table
         String CREATE_TABLE_PLAYER_PROFILE = "CREATE TABLE PLAYER_PROFILE (" +
                 "PLAYER_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -46,9 +65,18 @@ public class DBHelper extends SQLiteOpenHelper {
                 "HEIGHT TEXT NOT NULL," +
                 "POSITION TEXT NOT NULL," +
                 "DATEOFBIRTH TEXT NOT NULL," +
+                "PICTURE BLOB," +
+                "AGE_GROUP TEXT NOT NULL," +
                 "USER_ID INTEGER NOT NULL," +
                 "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
         db.execSQL(CREATE_TABLE_PLAYER_PROFILE);
+
+        // Insert dummy data into PLAYER_PROFILE table
+        String INSERT_PLAYER_PROFILE = "INSERT INTO PLAYER_PROFILE (NAME, SURNAME, NICKNAME, AGE, GRADE, HEIGHT, POSITION, DATEOFBIRTH, PICTURE, AGE_GROUP, USER_ID) VALUES " +
+                "('Michael', 'Jordan', 'MJ', 15, 'Grade 10', '2m', 'Shooting Guard', '2007-06-18', NULL, 'Under 18', 1)," +
+                "('Serena', 'Williams', 'Rena', 17, 'Grade 12', '1.3m', 'Tennis Player', '2005-09-26', NULL, 'Under 18', 2)," +
+                "('Lionel', 'Messi', 'Leo', 16, 'Grade 11', '1.8m', 'Forward', '2006-06-24', NULL, 'Under 18', 3)";
+        db.execSQL(INSERT_PLAYER_PROFILE);
 
         // Create TIMES table
         String CREATE_TABLE_TIMES = "CREATE TABLE TIMES (" +
@@ -274,5 +302,91 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("MATCH_ID", matchId);
         values.put("USER_ID", userId);
         db.insert("SPORT_FIXTURES", null, values);
+    }
+    // Method to check if a user exists and retrieve USER_ID
+    public Integer validateUser(String email, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        Integer userId = null; // Initialize userId to null
+
+        try {
+            // Query to check if user exists
+            cursor = db.rawQuery("SELECT USER_ID FROM USERS WHERE EMAIL=? AND PASSWORD=?", new String[]{email, password});
+
+            // Checking if cursor is not null and move to first
+            if (cursor != null && cursor.moveToFirst()) {
+                int userIdColumnIndex = cursor.getColumnIndex("USER_ID");
+                if (userIdColumnIndex != -1) {
+                    // Getting the USER_ID
+                    userId = cursor.getInt(userIdColumnIndex);
+                }
+            }
+        } finally {
+            // Closing cursor
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        // Returning the USER_ID or null
+        return userId;
+    }
+    // Method to check if a user exists and retrieve ROLE_ID
+    public PlayerProfileModel getPlayerProfile(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM PLAYER_PROFILE WHERE USER_ID = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            PlayerProfileModel playerProfile = new PlayerProfileModel(
+                    cursor.getInt(cursor.getColumnIndexOrThrow("PLAYER_ID")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("NAME")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("SURNAME")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("NICKNAME")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("AGE")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("GRADE")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("HEIGHT")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("POSITION")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("DATEOFBIRTH")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
+                    cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")) // Fetch profile picture as byte array
+            );
+            cursor.close();
+            return playerProfile;
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        return null;
+    }
+
+    //A method to update the player profile
+    public int updatePlayerProfile(int playerId, String name, String surname, String nickname,
+                                   int age, String dateOfBirth, String grade, String height,
+                                   String position, String ageGroup) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        // Fill the values to update
+        values.put("NAME", name);
+        values.put("SURNAME", surname);
+        values.put("NICKNAME", nickname);
+        values.put("AGE", age);
+        values.put("DATEOFBIRTH", dateOfBirth);
+        values.put("GRADE", grade);
+        values.put("HEIGHT", height);
+        values.put("POSITION", position);
+        values.put("AGE_GROUP", ageGroup);
+
+        // Update and return the number of rows affected
+        return db.update("PLAYER_PROFILE", values, "PLAYER_ID = ?", new String[]{String.valueOf(playerId)});
+    }
+    // A method to update profile picture
+    public int updatePlayerProfilePicture(int playerId, byte[] picture) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("PICTURE", picture);
+
+        return db.update("PLAYER_PROFILE", values, "PLAYER_ID = ?", new String[]{String.valueOf(playerId)});
     }
 }
