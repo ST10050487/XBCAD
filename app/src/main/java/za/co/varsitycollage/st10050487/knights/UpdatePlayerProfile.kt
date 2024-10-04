@@ -61,6 +61,13 @@ class UpdatePlayerProfile : AppCompatActivity() {
                 updatePlayerData()
             }
         }
+        val cancelBtn = findViewById<Button>(R.id.cancelButton)
+        cancelBtn.setOnClickListener {
+            val intent = Intent(this, ViewPlayer::class.java)
+            intent.putExtra("USER_ID", userId)
+            startActivity(intent)
+            finish()
+        }
     }
 
     // Method to show options for picking image
