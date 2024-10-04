@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Arrays;
+
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
@@ -178,6 +180,21 @@ public class DBHelper extends SQLiteOpenHelper {
         // Recreate tables
         onCreate(db);
     }
+    /* HANNAH ADDED, CAUSE NO PASSWORD IN addUsers and to log user in ********************************/
+    public boolean addUser(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("NAME", name);
+        values.put("SURNAME", surname);
+        values.put("DATEOFBIRTH", dateOfBirth);
+        values.put("EMAIL", email);
+        values.put("PASSWORD", password);
+        values.put("ROLE_ID", roleId);
+        long result = db.insert("USERS", null, values);
+        return result != -1;
+    }
+
+    /*********************************/
     //A method to add users to the database
     public void addUsers(String name, String surname, String dateOfBirth, String email, int roleId) {
         // Add users to the database
