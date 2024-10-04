@@ -37,6 +37,7 @@ class StudentParentReg : Fragment() {
         // Get references to UI elements
         val firstNameField = view.findViewById<EditText>(R.id.FirstNameField)
         val lastNameField = view.findViewById<EditText>(R.id.LastnameField)
+        val dateField = view.findViewById<EditText>(R.id.DateField)
         val passwordField = view.findViewById<EditText>(R.id.PasswordField)
         val confirmPasswordField = view.findViewById<EditText>(R.id.ConfirmPasswordField)
         val emailField = view.findViewById<EditText>(R.id.EmailField)
@@ -57,11 +58,12 @@ class StudentParentReg : Fragment() {
         regButton.setOnClickListener {
             val firstName = firstNameField.text.toString()
             val lastName = lastNameField.text.toString()
+            val dateOfBirth = dateField.text.toString()
             val password = passwordField.text.toString()
             val confirmPassword = confirmPasswordField.text.toString()
             val email = emailField.text.toString()
 
-            if (firstName.isEmpty() || lastName.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || email.isEmpty()) {
+            if (firstName.isEmpty() || lastName.isEmpty() || dateOfBirth.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || email.isEmpty()) {
                 Toast.makeText(requireContext(), "All fields are required", Toast.LENGTH_SHORT).show()
             } else if (password != confirmPassword) {
                 Toast.makeText(requireContext(), "Passwords do not match", Toast.LENGTH_SHORT).show()
@@ -69,9 +71,9 @@ class StudentParentReg : Fragment() {
                 Toast.makeText(requireContext(), "You must agree to the terms", Toast.LENGTH_SHORT).show()
             } else {
                 // Insert data into SQLite database
-                dbHelper.addUsers(firstName, lastName, "", email, 1)
+                dbHelper.addUsers(firstName, lastName, dateOfBirth, email, 1)
                 Toast.makeText(requireContext(), "User Registered Successfully", Toast.LENGTH_SHORT).show()
-                clearFields(firstNameField, lastNameField, passwordField, confirmPasswordField, emailField, checkBox)
+                clearFields(firstNameField, lastNameField, dateField, passwordField, confirmPasswordField, emailField, checkBox)
             }
         }
 
@@ -115,12 +117,13 @@ class StudentParentReg : Fragment() {
     }
 
     private fun clearFields(
-        firstNameField: EditText, lastNameField: EditText,
+        firstNameField: EditText, lastNameField: EditText, dateField: EditText,
         passwordField: EditText, confirmPasswordField: EditText,
         emailField: EditText, checkBox: CheckBox
     ) {
         firstNameField.text.clear()
         lastNameField.text.clear()
+        dateField.text.clear()
         passwordField.text.clear()
         confirmPasswordField.text.clear()
         emailField.text.clear()

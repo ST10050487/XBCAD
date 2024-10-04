@@ -1,44 +1,41 @@
 package za.co.varsitycollage.st10050487.knights;
 
+import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class StudentParent extends Fragment {
+import java.util.Calendar;
 
-    public StudentParent() {
-        // Required empty public constructor
-    }
+public class StudentParentReg extends AppCompatActivity {
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_student_parent_reg, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_student_parent_reg);
 
         // Adding a color for the text view
-        MakingTxtColor(view);
+        MakingTxtColor();
 
-        //Adding a color for the register button
-        changeRegisterButtonColor(view);
+        // Adding a color for the register button
+        changeRegisterButtonColor();
 
         // Set checkbox color programmatically
-        setCheckboxColor(view);
-
-        return view;
+        setCheckboxColor();
     }
 
-    private static void MakingTxtColor(View view) {
-        TextView textView = view.findViewById(R.id.textView7);
+    private void MakingTxtColor() {
+        TextView textView = findViewById(R.id.textView7);
         String text = "I agree to Term of Service and Privacy Policy";
         SpannableString spannableString = new SpannableString(text);
 
@@ -56,13 +53,33 @@ public class StudentParent extends Fragment {
         textView.setText(spannableString);
     }
 
-    private void changeRegisterButtonColor(View view) {
-        Button registerButton = view.findViewById(R.id.Regbtn);
+    private void changeRegisterButtonColor() {
+        Button registerButton = findViewById(R.id.Regbtn);
         registerButton.setBackgroundColor(Color.parseColor("#FFA500")); // Set the desired color here
     }
 
-    private void setCheckboxColor(View view) {
-        CheckBox checkBox = view.findViewById(R.id.checkBox);
+    private void setCheckboxColor() {
+        CheckBox checkBox = findViewById(R.id.checkBox);
         checkBox.setButtonDrawable(R.drawable.checkbox_custom);
     }
+
+    // This method is used for the date picker dialog
+    public void showDatePickerDialog(View v) {
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        // Update the EditText with the selected date
+                        EditText dateField = findViewById(R.id.DateField);
+                        dateField.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                    }
+                }, year, month, day);
+        datePickerDialog.show();
+    }
 }
+
