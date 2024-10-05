@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -405,5 +406,47 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("PICTURE", picture);
 
         return db.update("PLAYER_PROFILE", values, "PLAYER_ID = ?", new String[]{String.valueOf(playerId)});
+    }
+
+    //Check if user Admin
+    public boolean isAdmin(int userId) {
+        int isAdmin = 1;
+        int roleId;
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+
+        try {
+            db = this.getReadableDatabase();
+            cursor = db.rawQuery("SELECT ROLE_ID FROM USERS WHERE USER_ID = ?", new String[]{String.valueOf(userId)});
+
+            if (cursor.moveToFirst()) {
+                roleId = cursor.getInt(cursor.getColumnIndexOrThrow("ROLE_ID"));
+                if (roleId == isAdmin) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the exception
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
+        }
+        return false;
+    }
+
+    //A method to delete a player profile
+    public boolean deletePlayerProfile(int playerId) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            int isDeleted = db.delete("PLAYER_PROFILE", "PLAYER_ID = ?", new String[]{String.valueOf(playerId)});
+            db.close();
+            return isDeleted > 0;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
