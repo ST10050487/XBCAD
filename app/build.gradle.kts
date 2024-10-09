@@ -6,7 +6,9 @@ plugins {
 android {
     namespace = "za.co.varsitycollage.st10050487.knights"
     compileSdk = 34
-
+    viewBinding {
+        enable = true
+    }
     defaultConfig {
         applicationId = "za.co.varsitycollage.st10050487.knights"
         minSdk = 27
@@ -48,9 +50,11 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+
     // Updated Kotlin runtime dependency with actual version number
     implementation("org.jetbrains.kotlin:kotlin-script-runtime:1.7.10")
 
     // BCrypt dependency for password hashing
     implementation("org.mindrot:jbcrypt:0.4")
+
 }

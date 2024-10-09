@@ -18,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Calendar;
 
-public class StudentParentReg extends AppCompatActivity {
+public class StudentParent extends AppCompatActivity {
     private Button btnReg;
     private EditText firstNameField, lastNameField, dateField, emailField, passwordField, confirmPasswordField;
     private DBHelper dbHelper = new DBHelper(this);

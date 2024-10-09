@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateFixture">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primaryColor"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="30dp"
+                android:src="@drawable/back_btn"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/back_btn"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="665dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <!-- Team 1 -->
+            <!-- Input field for Home Team -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/inter_bold"
+                android:textAllCaps="true"
+                android:text="Timesheet for Match"
+                android:textColor="@color/black"
+                android:textSize="20dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/inter"
+                android:text="Fill in the details for the match."
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Team Management"
+                android:fontFamily="@font/inter_bold"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:textAllCaps="true"
+                android:layout_marginTop="2dp"
+                android:layout_marginHorizontal="26dp"/>
+
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:padding="5dp"
+                android:layout_marginHorizontal="20dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtHomeTeam"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Home Team"
+                    android:inputType="text"
+                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textSize="14dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!-- Input field for Away Team -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Match Logistics"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:textAllCaps="true"
+                android:layout_marginTop="2dp"
+                android:layout_marginHorizontal="26dp"/>
+
+            <!-- Input field for Time -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Meet Time"
+                android:fontFamily="@font/inter_bold"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="26dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:padding="5dp"
+                android:layout_marginHorizontal="20dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtMeetTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Meet Time"
+                    android:inputType="text"
+                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textSize="14dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bus Departure Time"
+                android:fontFamily="@font/inter_bold"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="26dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:padding="5dp"
+                android:layout_marginHorizontal="20dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtDepTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Bus Departure Time"
+                    android:inputType="text"
+                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textSize="14dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bus Arrival Time"
+                android:fontFamily="@font/inter_bold"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="26dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:padding="5dp"
+                android:layout_marginHorizontal="20dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtArrTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/bus_arrival_time"
+                    android:inputType="text"
+                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textSize="14dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!-- Input field for Results -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="RESULTS"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginHorizontal="26dp"/>
+
+            <!-- Input field for Home Result -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Home Result (Optional)"
+                android:fontFamily="@font/inter_bold"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginHorizontal="26dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:padding="5dp"
+                android:layout_marginHorizontal="20dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtHomeResult"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textSize="16dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <!-- Input field for Away Result -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/away_result_optional"
+                android:fontFamily="@font/inter_bold"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginHorizontal="26dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:padding="5dp"
+                android:layout_marginHorizontal="20dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtAwayResult"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textSize="16dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!-- Highlights -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/highlights"
+                android:fontFamily="@font/inter_bold"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:layout_marginVertical="2dp"
+                android:layout_marginHorizontal="26dp"/>
+
+            <!--Scroll fragment for images -->
+
+
+
+            <Button
+                android:id="@+id/uploadBtn"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                android:layout_width="215dp"
+                android:layout_height="58dp"
+                android:textColor="@color/white"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginHorizontal="30dp"
+                android:backgroundTint="@color/lightBlue"
+                android:text="@string/upload_image"
+                app:icon="@drawable/ic_upload"
+                android:fontFamily="@font/inter_bold"
+                app:iconGravity="end"
+                app:iconTint="@color/white"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_Highlights"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/select_btn"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/primaryColor"
+                android:layout_marginTop="30dp"
+                android:layout_marginHorizontal="50dp"/>
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="215dp"
+                android:layout_height="58dp"
+                android:layout_margin="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginHorizontal="30dp"
+                android:fontFamily="@font/inter_bold"
+                android:text="Save Changes" />
+
+
+
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

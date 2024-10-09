@@ -6,4 +6,8 @@
     <color name="backgroundtheme">#172C65</color>
     <color name="red">#FF0000</color>
     <color name="transparent">#00000000</color>
+    <color name="maroon">#8D0E50</color>
+    <color name="lightBlue">#637198</color>
+    <color name="blue">#0000FF</color>
+
 </resources>
