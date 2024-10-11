@@ -58,4 +58,8 @@ dependencies {
 
     // BCrypt dependency for password hashing
     implementation("org.mindrot:jbcrypt:0.4")
+    //implement the dependency com.intuit.sdp:sdp-android:1.1.1
+    implementation("com.intuit.sdp:sdp-android:1.1.1")
+    //implement the dependency com.intuit.ssp:ssp-android:1.1.1
+    implementation("com.intuit.ssp:ssp-android:1.1.1")
 }
