@@ -6,4 +6,9 @@
     <color name="backgroundtheme">#172C65</color>
     <color name="red">#FF0000</color>
     <color name="transparent">#00000000</color>
+    <color name="blue">#0000FF</color>
+    <color name="system_button">#FFA500</color>
+    <color name="lightgrey">#D3D3D3</color>
+    <color name="lightdarkpurple">#94186E</color>
+    <color name="gold">#FFD700</color>
 </resources>

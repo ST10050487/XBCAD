@@ -45,8 +45,8 @@ public class DBHelper extends SQLiteOpenHelper {
         // Insert dummy data into ROLES table
         String INSERT_ROLES = "INSERT INTO ROLES (ROLE) VALUES " +
                 "('Admin')," +
-                "('User')," +
-                "('Guest')";
+                "('Student')," +
+                "('Parent')";
         db.execSQL(INSERT_ROLES);
 
         // Insert dummy data into USERS table
