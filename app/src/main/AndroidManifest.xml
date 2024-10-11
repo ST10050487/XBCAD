@@ -6,10 +6,11 @@
         android:name="android.hardware.camera"
         android:required="false" />
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -20,6 +21,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Knights"
         tools:targetApi="31">
+        <activity
+            android:name=".Fragments.FragmentSportFixturesTab"
+            android:exported="false"
+            android:label="@string/title_activity_fragment_sport_fixtures_tab"
+            android:theme="@style/Theme.Knights.NoActionBar" />
         <activity
             android:name=".ViewPlayer"
             android:exported="false" />
@@ -32,12 +38,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StudentParentReg" />
         <activity android:name=".GetStarted" />
         <activity android:name=".Login" />
-        <activity android:name=".HomeActivity"/>
-        <activity android:name=".UpdatePlayerProfile"/>
-
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".UpdatePlayerProfile" />
 
         <meta-data
             android:name="preloaded_fonts"
