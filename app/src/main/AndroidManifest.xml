@@ -22,11 +22,6 @@
         android:theme="@style/Theme.Knights"
         tools:targetApi="31">
         <activity
-            android:name=".Fragments.FragmentSportFixturesTab"
-            android:exported="false"
-            android:label="@string/title_activity_fragment_sport_fixtures_tab"
-            android:theme="@style/Theme.Knights.NoActionBar" />
-        <activity
             android:name=".ViewPlayer"
             android:exported="false" />
         <activity
@@ -42,6 +37,11 @@
         <activity android:name=".Login" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".UpdatePlayerProfile" />
+        <!-- Activity for Student Parent Registration -->
+        <activity
+            android:name=".StudentParentReg"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".SuccessReg" />
 
         <meta-data
             android:name="preloaded_fonts"
