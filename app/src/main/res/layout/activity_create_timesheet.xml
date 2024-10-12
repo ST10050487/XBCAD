@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateFixture">
+    tools:context=".CreateTimesheet">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -100,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Home Team"
                     android:inputType="text"
-                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textColor="@color/lightGrey"
                     android:textSize="14dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -141,7 +141,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Meet Time"
                     android:inputType="text"
-                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textColor="@color/lightGrey"
                     android:textSize="14dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -168,7 +168,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Bus Departure Time"
                     android:inputType="text"
-                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textColor="@color/lightGrey"
                     android:textSize="14dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -197,7 +197,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/bus_arrival_time"
                     android:inputType="text"
-                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textColor="@color/lightGrey"
                     android:textSize="14dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -237,7 +237,7 @@
                     android:layout_height="wrap_content"
                     android:hint="0"
                     android:inputType="number"
-                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textColor="@color/lightGrey"
                     android:textSize="16dp" />
             </com.google.android.material.textfield.TextInputLayout>
             <!-- Input field for Away Result -->
@@ -264,7 +264,7 @@
                     android:layout_height="wrap_content"
                     android:hint="0"
                     android:inputType="number"
-                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textColor="@color/lightGrey"
                     android:textSize="16dp" />
             </com.google.android.material.textfield.TextInputLayout>
 

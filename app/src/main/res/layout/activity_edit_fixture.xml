@@ -84,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Home Team"
                     android:inputType="text"
-                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textColor="@color/lightGrey"
                     android:textSize="16dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -147,7 +147,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Away Team"
                     android:inputType="text"
-                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textColor="@color/lightGrey"
                     android:textSize="16dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -196,7 +196,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Venue"
                     android:inputType="text"
-                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textColor="@color/lightGrey"
                     android:textSize="16dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -224,7 +224,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Sport"
                     android:inputType="text"
-                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textColor="@color/lightGrey"
                     android:textSize="16dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -277,7 +277,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Time"
                     android:inputType="text"
-                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textColor="@color/lightGrey"
                     android:textSize="16dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -305,7 +305,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Date"
                     android:inputType="date"
-                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textColor="@color/lightGrey"
                     android:textSize="16dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -345,7 +345,7 @@
                     android:layout_height="wrap_content"
                     android:hint="0"
                     android:inputType="number"
-                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textColor="@color/lightGrey"
                     android:textSize="16dp" />
             </com.google.android.material.textfield.TextInputLayout>
             <!-- Input field for Home Result -->
@@ -372,7 +372,7 @@
                     android:layout_height="wrap_content"
                     android:hint="0"
                     android:inputType="number"
-                    android:textColor="@color/material_dynamic_neutral40"
+                    android:textColor="@color/lightGrey"
                     android:textSize="16dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
