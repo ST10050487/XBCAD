@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -18,11 +19,13 @@ import za.co.varsitycollage.st10050487.knights.databinding.ActivityCreateTimeshe
 import java.util.*
 
 class CreateTimesheet : AppCompatActivity() {
+    // Binding object to access views in the layout
     private lateinit var binding: ActivityCreateTimesheetBinding
     private lateinit var btnUpload: Button
     private lateinit var recycleView: RecyclerView
     private lateinit var adapter: MultipleImageAdapter
 
+    // Lists to store image URIs and filenames
     private var imageUriList = mutableListOf<Uri?>()
     private var fileNameList = mutableListOf<String?>()
 
@@ -30,18 +33,23 @@ class CreateTimesheet : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        // Set the content view to the layout
         setContentView(R.layout.activity_create_timesheet)
         binding = ActivityCreateTimesheetBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Initialize the RecyclerView and its adapter
         adapter = MultipleImageAdapter(imageUriList, fileNameList)
         binding.rvHighlights.layoutManager = LinearLayoutManager(this)
         binding.rvHighlights.adapter = adapter
 
+        // Set up the image upload button and time pickers
         ImageUpload()
         setupTimePickers()
+        setupBackButton()
     }
 
+    // Function to handle image upload
     private fun ImageUpload() {
         btnUpload = binding.uploadBtn
 
@@ -54,6 +62,7 @@ class CreateTimesheet : AppCompatActivity() {
         }
     }
 
+    // Activity result launcher for image selection
     private val imageLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
@@ -83,6 +92,7 @@ class CreateTimesheet : AppCompatActivity() {
             }
         }
 
+    // Function to get the filename from a URI
     private fun getFilenameFromUri(context: Context, uri: Uri): String? {
         val fileName: String?
         val cursor = context.contentResolver.query(uri, null, null, null, null)
@@ -92,12 +102,14 @@ class CreateTimesheet : AppCompatActivity() {
         return fileName
     }
 
+    // Function to set up time pickers for the time fields
     private fun setupTimePickers() {
         binding.txtMeetTime.setOnClickListener { showTimePickerDialog(binding.txtMeetTime) }
         binding.txtDepTime.setOnClickListener { showTimePickerDialog(binding.txtDepTime) }
         binding.txtArrTime.setOnClickListener { showTimePickerDialog(binding.txtArrTime) }
     }
 
+    // Function to show a time picker dialog
     private fun showTimePickerDialog(textView: TextView) {
         val calendar = Calendar.getInstance()
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
@@ -108,5 +120,15 @@ class CreateTimesheet : AppCompatActivity() {
         }, hour, minute, true)
 
         timePickerDialog.show()
+    }
+
+    // Function to set up the back button functionality
+    private fun setupBackButton() {
+        val backButton = findViewById<LinearLayout>(R.id.back_btn)
+        backButton.setOnClickListener {
+            val intent = Intent(this, Admin_Home::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 }

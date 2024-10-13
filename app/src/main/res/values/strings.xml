@@ -9,7 +9,6 @@
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
     <string name="terms">I agree to Term of Service and \nPrivacy Policy</string>
-
     <string name="admin_quick_access">Admin Quick Access</string>
     <string name="welcome">Welcome</string>
     <string name="application_management">Application Management</string>
@@ -24,6 +23,9 @@
     <string name="highlights">Highlights</string>
     <string name="upload_image">Upload Image</string>
     <string name="bus_arrival_time">Bus Arrival Time</string>
+    <string name="user_rights">User Rights</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="school_events">School Events</string>
 
     <string-array name="teams_array">
         <item>First Eleven</item>
@@ -34,9 +36,9 @@
         <item>Under 15\'s</item>
         <item>Under 14\'s</item>
     </string-array>
-
     <string-array name="sports_array">
         <item>Netball</item>
         <item>Rugby</item>
     </string-array>
+
 </resources>
