@@ -196,18 +196,19 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /*********************************/
-    //A method to add users to the database
-    public void addUsers(String name, String surname, String dateOfBirth, String email, int roleId) {
-        // Add users to the database
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("NAME", name);
-        values.put("SURNAME", surname);
-        values.put("DATEOFBIRTH", dateOfBirth);
-        values.put("EMAIL", email);
-        values.put("ROLE_ID", roleId);
-        db.insert("USERS", null, values);
-    }
+    // A method to add users to the database
+public void addUsers(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
+    // Add users to the database
+    SQLiteDatabase db = this.getWritableDatabase();
+    ContentValues values = new ContentValues();
+    values.put("NAME", name);
+    values.put("SURNAME", surname);
+    values.put("DATEOFBIRTH", dateOfBirth);
+    values.put("EMAIL", email);
+    values.put("PASSWORD", password);
+    values.put("ROLE_ID", roleId);
+    db.insert("USERS", null, values);
+}
     //A method to add roles to the database
     public void addRoles(String role) {
         // Add roles to the database

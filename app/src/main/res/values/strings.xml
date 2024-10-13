@@ -8,4 +8,5 @@
     <string name="title_activity_fragment_sport_fixtures_tab">FragmentSportFixturesTab</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
+    <string name="terms">I agree to Term of Service and \nPrivacy Policy</string>
 </resources>
