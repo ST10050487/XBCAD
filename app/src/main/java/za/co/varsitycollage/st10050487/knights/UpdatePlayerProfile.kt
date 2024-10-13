@@ -65,7 +65,7 @@ class UpdatePlayerProfile : AppCompatActivity() {
         }
         val cancelBtn = findViewById<Button>(R.id.cancelButton)
         cancelBtn.setOnClickListener {
-            val intent = Intent(this, ViewPlayer::class.java)
+            val intent = Intent(this, CreateTimesheet::class.java)
             intent.putExtra("USER_ID", userId)
             startActivity(intent)
             finish()
