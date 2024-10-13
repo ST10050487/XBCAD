@@ -22,8 +22,6 @@ class CreateTimesheet : AppCompatActivity() {
 
     private var imageUriList = mutableListOf<Uri?>()
     private var fileNameList = mutableListOf<String?>()
-    private var currentFile: Uri? = null
-    private var currentFileName = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

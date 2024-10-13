@@ -23,7 +23,9 @@
     <string name="highlights">Highlights</string>
     <string name="upload_image">Upload Image</string>
     <string name="bus_arrival_time">Bus Arrival Time</string>
-
+    <string name="user_rights">User Rights</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="school_events">School Events</string>
 
     <string-array name="teams_array">
         <item>First Eleven</item>
