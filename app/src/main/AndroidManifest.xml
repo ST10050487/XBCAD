@@ -22,6 +22,21 @@
         android:theme="@style/Theme.Knights"
         tools:targetApi="31">
         <activity
+            android:name=".EventManagement"
+            android:exported="false" />
+        <activity
+            android:name=".UpdateAdminUser"
+            android:exported="false" />
+        <activity
+            android:name=".Admin_Home"
+            android:exported="false" />
+        <activity
+            android:name=".CreateTimesheet"
+            android:exported="false" />
+        <activity
+            android:name=".EditFixture"
+            android:exported="false" />
+        <activity
             android:name=".ViewPlayer"
             android:exported="false" />
         <activity
