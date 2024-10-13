@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        setContentView(R.layout.activity_sport_fixtures)
 
         // Retrieve the USER_ID
         val userId = intent.getIntExtra("USER_ID", -1)

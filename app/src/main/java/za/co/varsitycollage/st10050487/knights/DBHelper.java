@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4;
 
 
     // Constructor
@@ -45,8 +45,8 @@ public class DBHelper extends SQLiteOpenHelper {
         // Insert dummy data into ROLES table
         String INSERT_ROLES = "INSERT INTO ROLES (ROLE) VALUES " +
                 "('Admin')," +
-                "('User')," +
-                "('Guest')";
+                "('Student')," +
+                "('Parent')";
         db.execSQL(INSERT_ROLES);
 
         // Insert dummy data into USERS table
@@ -156,11 +156,54 @@ public class DBHelper extends SQLiteOpenHelper {
                 "SET_LOCATION TEXT NOT NULL," +
                 "HOME_LOGO BLOB," +
                 "AWAY_LOGO BLOB," +
-                "MATCH_ID INTEGER NOT NULL," +
+                "MATCH_LOCATION TEXT NOT NULL," +
+                "MATCH_DATE TEXT NOT NULL," +
+                "MATCH_TIME TEXT NOT NULL," +
+                "PRICE REAL," +
+                "MATCH_DISCRIPTION TEXT," +
+                "PIICTURE BLOB," +
+                "TIME_ID INTEGER NOT NULL," +
                 "USER_ID INTEGER NOT NULL," +
-                "FOREIGN KEY (MATCH_ID) REFERENCES MATCHES(MATCH_ID)," +
-                "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
+                "FOREIGN KEY (TIME_ID) REFERENCES TIMES(TIME_ID)," +
+                "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID));";
+
         db.execSQL(CREATE_TABLE_SPORT_FIXTURES);
+        //Creating the AGE_GROUP table
+        String CREATE_TABLE_AGE_GROUP = "CREATE TABLE AGE_GROUP (" +
+                "AGE_GROUP_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "AGE_GROUP TEXT NOT NULL)";
+
+        db.execSQL(CREATE_TABLE_AGE_GROUP);
+
+        //Inserting data into the AGE_GROUP table
+        String INSERT_AGE_GROUP = "INSERT INTO AGE_GROUP (AGE_GROUP) VALUES " +
+                "('Boys Under 15')," +
+                "('Girls Under 15')," +
+                "('Boys Under 16')," +
+                "('Girls Under 16')," +
+                "('Boys Under 17')," +
+                "('Girls Under 17')," +
+                "('Boys Under 18')," +
+                "('Girls Under 18')," +
+                "('Open')";
+        //Creating the sport table
+        String CREATE_TABLE_SPORT = "CREATE TABLE SPORT (" +
+                "SPORT_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "SPORT TEXT NOT NULL)";
+
+        db.execSQL(CREATE_TABLE_SPORT);
+
+        //Inserting data into the SPORT table
+        String INSERT_SPORT = "INSERT INTO SPORT (SPORT) VALUES " +
+                "('Soccer')," +
+                "('Netball')," +
+                "('Rugby')," +
+                "('Hockey')," +
+                "('Cricket')," +
+                "('Tennis')," +
+                "('Basketball')," +
+                "('Athletics')," +
+                "('Swimming')";
     }
 
     @Override
@@ -176,7 +219,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS EVENTS");
         db.execSQL("DROP TABLE IF EXISTS MATCHES");
         db.execSQL("DROP TABLE IF EXISTS SPORT_FIXTURES");
-
+        db.execSQL("DROP TABLE IF EXISTS AGE_GROUP");
+        db.execSQL("DROP TABLE IF EXISTS SPORT");
         // Recreate tables
         onCreate(db);
     }
@@ -195,18 +239,19 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /*********************************/
-    //A method to add users to the database
-    public void addUsers(String name, String surname, String dateOfBirth, String email, int roleId) {
-        // Add users to the database
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("NAME", name);
-        values.put("SURNAME", surname);
-        values.put("DATEOFBIRTH", dateOfBirth);
-        values.put("EMAIL", email);
-        values.put("ROLE_ID", roleId);
-        db.insert("USERS", null, values);
-    }
+    // A method to add users to the database
+public void addUsers(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
+    // Add users to the database
+    SQLiteDatabase db = this.getWritableDatabase();
+    ContentValues values = new ContentValues();
+    values.put("NAME", name);
+    values.put("SURNAME", surname);
+    values.put("DATEOFBIRTH", dateOfBirth);
+    values.put("EMAIL", email);
+    values.put("PASSWORD", password);
+    values.put("ROLE_ID", roleId);
+    db.insert("USERS", null, values);
+}
     //A method to add roles to the database
     public void addRoles(String role) {
         // Add roles to the database
