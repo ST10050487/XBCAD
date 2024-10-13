@@ -43,6 +43,10 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".SuccessReg" />
 
+        <activity
+            android:name=".CreateTimesheet"
+            android:exported="true" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

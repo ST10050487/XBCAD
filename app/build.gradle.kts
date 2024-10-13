@@ -56,6 +56,8 @@ dependencies {
     //Responsive Design for the Images/views
     implementation("com.intuit.sdp:sdp-android:1.1.1")
 
+    implementation("com.google.android.material:material:1.9.0")
+
     //Resposive Design for the text view
     implementation("com.intuit.ssp:ssp-android:1.1.1")
 
