@@ -237,6 +237,29 @@ public class DBHelper extends SQLiteOpenHelper {
         long result = db.insert("USERS", null, values);
         return result != -1;
     }
+    public List<EventModel> getAllEvents() {
+        List<EventModel> events = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM EVENTS", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                EventModel event = new EventModel(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("EVENT_ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_NAME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DATE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_TIME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_LOCATION")),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow("EVENT_PRICE")),
+                        false // Default value for 'selected'
+                );
+                events.add(event);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return events;
+    }
+
 
     /*********************************/
     // A method to add users to the database
