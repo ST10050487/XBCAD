@@ -132,7 +132,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="@dimen/_10sdp"
                 android:padding="@dimen/_5sdp">
 
@@ -140,10 +140,13 @@
                     android:id="@+id/txtMeetTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Meet Time"
-                    android:inputType="text"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="Meeting Time"
+                    android:inputType="none"
                     android:textColor="@color/lightGrey"
-                    android:textSize="@dimen/_14sdp" />
+                    android:textSize="@dimen/_16sdp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -159,7 +162,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="@dimen/_10sdp"
                 android:padding="@dimen/_5sdp">
 
@@ -167,10 +170,13 @@
                     android:id="@+id/txtDepTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Bus Departure Time"
-                    android:inputType="text"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="Departure Time"
+                    android:inputType="none"
                     android:textColor="@color/lightGrey"
-                    android:textSize="@dimen/_14sdp" />
+                    android:textSize="@dimen/_16sdp" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -184,21 +190,25 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_16sdp" />
 
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_20sdp"
-                android:layout_marginVertical="10dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="@dimen/_10sdp"
                 android:padding="@dimen/_5sdp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtArrTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/bus_arrival_time"
-                    android:inputType="text"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="Arrival Time"
+                    android:inputType="none"
                     android:textColor="@color/lightGrey"
-                    android:textSize="@dimen/_14sdp" />
+                    android:textSize="@dimen/_16sdp" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -299,12 +309,13 @@
                 app:iconTint="@color/white" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_Highlights"
+                android:id="@+id/rvHighlights"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/select_btn"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/_20sdp" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/uploadBtn" />
 
             <View
                 android:layout_width="match_parent"

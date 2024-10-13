@@ -6,9 +6,7 @@ plugins {
 android {
     namespace = "za.co.varsitycollage.st10050487.knights"
     compileSdk = 34
-    viewBinding {
-        enable = true
-    }
+
     defaultConfig {
         applicationId = "za.co.varsitycollage.st10050487.knights"
         minSdk = 27
@@ -54,10 +52,15 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
     //Responsive Design for the Images/views
     implementation("com.intuit.sdp:sdp-android:1.1.1")
+
+    implementation("com.google.android.material:material:1.9.0")
+
     //Resposive Design for the text view
     implementation("com.intuit.ssp:ssp-android:1.1.1")
+
     // Updated Kotlin runtime dependency with actual version number
     implementation("org.jetbrains.kotlin:kotlin-script-runtime:1.7.10")
 
