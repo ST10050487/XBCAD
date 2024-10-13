@@ -58,6 +58,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".SuccessReg" />
 
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
