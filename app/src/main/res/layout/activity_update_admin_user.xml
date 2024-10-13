@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UpdateAdminUser">
+
+        <!-- Header Layout -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/header"
+            android:background="@color/backgroundtheme"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/backArrow"
+                android:background="@drawable/back_arrow" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="Back"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <!-- Header Title -->
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/header_title"
+            android:gravity="center"
+            android:padding="10dp"
+            android:fontFamily="@font/inter_bold"
+            android:text="Update Admin Profile"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/header"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- ScrollView for the rest of the form -->
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/scroll_view"
+            app:layout_constraintTop_toBottomOf="@+id/header_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <!-- Profile Picture -->
+                <ImageView
+                    android:id="@+id/profilePicture"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:src="@drawable/ic_profile_placeholder"
+                    android:contentDescription="Profile Picture" />
+
+                <!-- Camera Icon -->
+                <ImageView
+                    android:id="@+id/cameraIcon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="-48dp"
+                    android:layout_marginEnd="-40dp"
+                    android:contentDescription="Edit Profile Picture"
+                    android:src="@drawable/ic_camera" />
+
+                <!-- Name Field -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/userName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Name"
+                        android:inputType="textPersonName"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Surname Field -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/userSurname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Surname"
+                        android:inputType="textPersonName"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Email Field -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/userEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Email"
+                        android:inputType="textPersonName"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Password Field -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/userPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Email"
+                        android:inputType="textPersonName"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Date of Birth Field -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/userDateOfBirth"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Date of Birth"
+                        android:inputType="date"
+                        android:focusable="false"
+                        android:drawableEnd="@drawable/ic_calendar"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <!-- User Rights-->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/user_rights"
+                    android:fontFamily="@font/inter_bold"
+                    android:textColor="@color/black"
+                    android:textSize="16dp"
+                    android:layout_marginVertical="3dp"
+                    android:layout_marginHorizontal="5dp"/>
+
+
+                <CheckBox
+                    android:id="@+id/cbMngusers"
+                    android:textColor="@color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_bold"
+                    android:text="Manage user Profiles " />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Create, edit, and delete student sports profiles."
+                    android:fontFamily="@font/inter"
+                    android:textColor="@color/lightGrey"
+                    android:textSize="14dp"
+                    android:layout_marginHorizontal="31dp"/>
+                <CheckBox
+                    android:id="@+id/cbMngFixtures"
+                    android:textColor="@color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_bold"
+                    android:text="Manage Sports Fixtures" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Organize and update sports game schedules."
+                    android:fontFamily="@font/inter"
+                    android:textColor="@color/lightGrey"
+                    android:textSize="14dp"
+                    android:layout_marginHorizontal="31dp"/>
+                <CheckBox
+                    android:id="@+id/cbInteractions"
+                    android:textColor="@color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_bold"
+                    android:text="Interaction Reports" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="View student interaction stats with events."
+                    android:fontFamily="@font/inter"
+                    android:textColor="@color/lightGrey"
+                    android:textSize="14dp"
+                    android:layout_marginHorizontal="31dp"/>
+                <CheckBox
+                    android:id="@+id/cbCreateAdmin"
+                    android:textColor="@color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_bold"
+                    android:text="Create Admin User" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Set up new admin accounts with specific rights."
+                    android:fontFamily="@font/inter"
+                    android:textColor="@color/lightGrey"
+                    android:textSize="14dp"
+                    android:layout_marginHorizontal="31dp"/>
+
+
+                <Button
+                    android:id="@+id/saveBtn"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                    android:layout_width="215dp"
+                    android:layout_height="58dp"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginHorizontal="30dp"
+                    android:backgroundTint="@color/primaryColor"
+                    android:text="@string/save_changes"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/inter_bold"/>
+
+
+            </LinearLayout>
+        </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

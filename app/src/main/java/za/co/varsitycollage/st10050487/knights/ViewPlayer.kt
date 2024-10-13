@@ -1,6 +1,7 @@
 package za.co.varsitycollage.st10050487.knights
 
 import android.content.ContentValues
+import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -40,6 +41,8 @@ class ViewPlayer : AppCompatActivity() {
 
         backBtn.setOnClickListener {
             finish()
+            val intent = Intent(this, EditFixture::class.java)
+            startActivity(intent)
         }
 
         if (savedInstanceState == null) {
