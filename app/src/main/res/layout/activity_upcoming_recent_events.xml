@@ -44,16 +44,15 @@
     <!-- Event image occupying the top half of the screen -->
     <ImageView
         android:id="@+id/half_image"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="0dp"
-        android:src="@drawable/eventhomepic"
+        android:layout_width="415dp"
+        android:layout_height="254dp"
         android:scaleType="fitXY"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintWidth_percent="1.0"
-        app:layout_constraintHeight_percent="0.4"
+        android:src="@drawable/eventhomepic"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHeight_percent="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintWidth_percent="1.0" />
 
     <!-- Event Title Bar below image -->
     <LinearLayout
