@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
            // val intent = Intent(this@MainActivity, StudentParentReg::class.java)
             //val intent = Intent(this@MainActivity, GetStarted ::class.java)
           //  val intent = Intent(this@MainActivity, ViewPlayer::class.java)
-            val intent = Intent(this@MainActivity, CreateTimesheet::class.java)
+            val intent = Intent(this@MainActivity, SuccessReg ::class.java)
             startActivity(intent)
             // Finishing MainActivity so that the user cannot go back to it
             finish()
