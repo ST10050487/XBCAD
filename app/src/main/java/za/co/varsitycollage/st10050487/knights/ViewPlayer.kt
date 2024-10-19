@@ -40,9 +40,8 @@ class ViewPlayer : AppCompatActivity() {
         sports = findViewById(R.id.txtSports)
 
         backBtn.setOnClickListener {
-            finish()
-            val intent = Intent(this, EditFixture::class.java)
-            startActivity(intent)
+           Toast.makeText(this, "Back button clicked", Toast.LENGTH_SHORT).show()
+
         }
 
         if (savedInstanceState == null) {

@@ -74,14 +74,28 @@
 
             </LinearLayout>
 
-            <Button
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:orientation="vertical">
+                <CheckBox
+                    android:id="@+id/checkDel"
+                    android:textColor="@color/primaryColor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                </CheckBox>
+                <Button
                 android:id="@+id/btnEdit"
                 android:layout_width="39dp"
                 android:layout_height="36dp"
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="15dp"
                 android:background="@drawable/ic_edit"
-                android:padding="10dp" />
+                android:padding="10dp"/>
+            </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </FrameLayout>
