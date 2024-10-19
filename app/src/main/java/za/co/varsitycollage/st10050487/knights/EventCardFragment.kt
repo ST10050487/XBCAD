@@ -28,20 +28,27 @@ class EventCardFragment : Fragment() {
         return view
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dbHelper = DBHelper(requireContext())
         val events = dbHelper.getAllEvents()
-        eventAdapter = EventAdapter(events) { show ->
+        eventAdapter = EventAdapter(events, { show ->
             (activity as? EventManagement)?.showDeleteMenu(show)
-        }
+        }, { count ->
+            (activity as? EventManagement)?.updateDeleteButton(count)
+        })
         recyclerView.adapter = eventAdapter
+    }
+
+    fun clearSelection() {
+        eventAdapter.clearSelection()
     }
 
     fun deleteSelectedEvents() {
         val selectedEvents = eventAdapter.getSelectedEvents()
         Toast.makeText(requireContext(), "Deleting ${selectedEvents.size} events", Toast.LENGTH_SHORT).show()
-       // dbHelper.deleteEvents(selectedEvents)
+        dbHelper.deleteEvents(selectedEvents)
         eventAdapter.removeSelectedEvents()
         (activity as? EventManagement)?.showDeleteMenu(false)
     }

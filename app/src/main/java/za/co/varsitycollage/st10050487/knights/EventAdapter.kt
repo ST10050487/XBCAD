@@ -4,24 +4,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-
 class EventAdapter(
     private val events: MutableList<EventModel>,
-    private val showDeleteMenu: (Boolean) -> Unit
+    private val showDeleteMenu: (Boolean) -> Unit,
+    private val updateDeleteButton: (Int) -> Unit
 ) : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
     private val itemSelectedList = mutableListOf<EventModel>()
-
+    private var isSelectionMode = false
+    private var isLongPressHandled = false
 
     class EventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val eventName: TextView = itemView.findViewById(R.id.txtTitle)
         val eventDate: TextView = itemView.findViewById(R.id.txtDate)
         val eventLocation: TextView = itemView.findViewById(R.id.txtLocation)
+        var checkBox: CheckBox = itemView.findViewById(R.id.checkDel)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
@@ -40,14 +43,25 @@ class EventAdapter(
         }
 
         holder.itemView.setOnLongClickListener {
-            selectEvent(holder, event)
-            Toast.makeText(holder.itemView.context, "Long pressed on ${event.eventName}", Toast.LENGTH_SHORT).show()
+            if (!isLongPressHandled) {
+                isLongPressHandled = true
+                if (!isSelectionMode) {
+                    isSelectionMode = true
+                    showAllCheckBoxes()
+                }
+                selectEvent(holder, event)
+
+            }
             true
         }
 
-        holder.itemView.isSelected = event.selected
-        holder.itemView.setBackgroundResource(if (event.selected) R.color.lightBlue else R.color.white )
-        holder.itemView.focusable = View.FOCUSABLE
+        holder.checkBox.visibility = if (isSelectionMode) View.VISIBLE else View.GONE
+
+        holder.checkBox.setOnCheckedChangeListener(null) // Remove listener temporarily
+        holder.checkBox.isChecked = event.selected // Set the checkbox state
+        holder.checkBox.setOnCheckedChangeListener { _, isChecked -> // Reattach listener
+            selectEvent(holder, event)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -75,16 +89,39 @@ class EventAdapter(
             event.selected = true
         }
         showDeleteMenu(itemSelectedList.isNotEmpty())
+        updateDeleteButton(itemSelectedList.size)
         notifyItemChanged(holder.adapterPosition)
         Toast.makeText(holder.itemView.context, "Selected event: ${event.eventName}", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showAllCheckBoxes() {
+        for (event in events) {
+            event.selected = false
+        }
+        notifyDataSetChanged()
     }
 
     fun getSelectedEvents(): List<EventModel> {
         return itemSelectedList
     }
+
     fun removeSelectedEvents() {
         events.removeAll(itemSelectedList)
         itemSelectedList.clear()
+        isSelectionMode = false
+        isLongPressHandled = false
+        updateDeleteButton(0)
+        notifyDataSetChanged()
+    }
+
+    fun clearSelection() {
+        for (event in events) {
+            event.selected = false
+        }
+        itemSelectedList.clear()
+        isSelectionMode = false
+        isLongPressHandled = false
+        updateDeleteButton(0)
         notifyDataSetChanged()
     }
 }

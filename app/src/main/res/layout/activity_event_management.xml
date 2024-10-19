@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="30dp">
 
             <LinearLayout
                 android:id="@+id/back_btn"
@@ -114,22 +114,49 @@
             app:layout_constraintVertical_bias="0.0" />
     </ScrollView>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/btnDelete"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+<LinearLayout
+    android:id="@+id/selectLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    android:layout_marginBottom="@dimen/_10sdp"
+    android:visibility="gone"
+   >
+    <Button
+        android:id="@+id/btnCancel"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        android:layout_width="55dp"
+        android:layout_height="58dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginRight="10dp"
         android:backgroundTint="@color/primaryColor"
-        app:cardCornerRadius="14dp"
+        android:fontFamily="@font/inter_bold"
+        android:textColor="@color/white"
+        app:icon="@drawable/ic_cancel"
+        app:iconGravity="end"
+        app:iconTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone">
+        />
+    <Button
+        android:id="@+id/btnDelete"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        android:layout_width="215dp"
+        android:layout_height="58dp"
+        android:layout_gravity="center_horizontal"
+        android:backgroundTint="@color/maroon"
+        android:fontFamily="@font/inter_bold"
+        android:textColor="@color/white"
+        app:icon="@drawable/ic_delete"
+        app:iconGravity="end"
+        app:iconTint="@color/white"
+        />
 
-        <ImageView
-            android:layout_width="52dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginHorizontal="10dp"
-            android:foreground="@drawable/ic_delete" />
-    </androidx.cardview.widget.CardView>
+</LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
