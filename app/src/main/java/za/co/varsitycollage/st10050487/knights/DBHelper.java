@@ -126,6 +126,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "EVENT_TIME TEXT NOT NULL," +
                 "EVENT_LOCATION TEXT," +
                 "EVENT_PRICE REAL," +
+                "PICTURE BLOB," +
                 "USER_ID INTEGER NOT NULL," +
                 "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
         db.execSQL(CREATE_TABLE_EVENTS);
