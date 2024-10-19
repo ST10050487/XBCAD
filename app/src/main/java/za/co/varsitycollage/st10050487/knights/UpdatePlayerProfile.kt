@@ -63,6 +63,7 @@ class UpdatePlayerProfile : AppCompatActivity() {
         }
         val cancelBtn = findViewById<Button>(R.id.cancelButton)
         cancelBtn.setOnClickListener {
+            Toast.makeText(this, "Cancel clicked", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, CreateTimesheet::class.java)
             intent.putExtra("USER_ID", userId)
             startActivity(intent)
