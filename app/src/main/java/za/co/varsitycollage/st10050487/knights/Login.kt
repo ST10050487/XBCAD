@@ -75,8 +75,9 @@ class Login : AppCompatActivity() {
         val userId = dbHelper.validateUser(email,password)
 
         if (userId != null) {
-            // if user exists, navigate to Home Activity
-            val intent = Intent(this, UpdatePlayerProfile::class.java)
+
+            //val intent = Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, EditFixture::class.java)
             // Passing the USER_ID to Home Activity
             intent.putExtra("USER_ID", userId)
             startActivity(intent)

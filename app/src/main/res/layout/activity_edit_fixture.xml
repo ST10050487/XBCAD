@@ -96,6 +96,7 @@
                 android:paddingVertical="20dp">
 
                 <ImageView
+                    android:id="@+id/imgHomeLogo"
                     android:layout_width="84dp"
                     android:layout_height="69dp"
                     android:layout_gravity="center_vertical"
@@ -159,6 +160,7 @@
                 android:paddingVertical="20dp">
 
                 <ImageView
+                    android:id="@+id/imgAwayLogo"
                     android:layout_width="84dp"
                     android:layout_height="69dp"
                     android:layout_gravity="center_vertical"
@@ -221,17 +223,18 @@
                 <Spinner
                     android:id="@+id/spinnerTeam"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:hint="Sport"
                     android:inputType="text"
                     android:textColor="@color/lightGrey"
                     android:textSize="16dp" />
+
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Spinner for Team -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_marginVertical="10dp"
                 android:padding="5dp"
