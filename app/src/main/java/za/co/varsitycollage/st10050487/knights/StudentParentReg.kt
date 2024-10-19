@@ -41,9 +41,6 @@ class StudentParentReg : AppCompatActivity() {
         val checkBox = findViewById<CheckBox>(R.id.checkBox)
         val regButton = findViewById<ImageButton>(R.id.Regbtn)
         val textView: TextView = findViewById(R.id.textView7)
-        val togglePasswordVisibility = findViewById<ImageView>(R.id.togglePasswordVisibility)
-        val toggleConfirmPasswordVisibility =
-            findViewById<ImageView>(R.id.toggleConfirmPasswordVisibility)
 
         // Adding a color for the text view
         makeTxtColor(textView)
@@ -62,17 +59,6 @@ class StudentParentReg : AppCompatActivity() {
             emailField,
             checkBox
         )
-
-        // Toggle password visibility
-        togglePasswordVisibility.setOnClickListener {
-            togglePasswordVisibility(passwordField, togglePasswordVisibility)
-        }
-
-        // Toggle confirm password visibility
-        toggleConfirmPasswordVisibility.setOnClickListener {
-            togglePasswordVisibility(confirmPasswordField, toggleConfirmPasswordVisibility)
-        }
-
         // Date picker dialog for dateField
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
             calendar.set(Calendar.YEAR, year)
