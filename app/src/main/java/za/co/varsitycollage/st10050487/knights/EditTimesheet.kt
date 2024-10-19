@@ -13,14 +13,17 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import za.co.varsitycollage.st10050487.knights.databinding.ActivityCreateTimesheetBinding
-import java.util.*
+import za.co.varsitycollage.st10050487.knights.databinding.ActivityEditTimesheetBinding
+import java.util.Calendar
 
-class CreateTimesheet : AppCompatActivity() {
+class EditTimesheet : AppCompatActivity()  {
     // Binding object to access views in the layout
-    private lateinit var binding: ActivityCreateTimesheetBinding
+    private lateinit var binding: ActivityEditTimesheetBinding
     private lateinit var btnUpload: Button
     private lateinit var recycleView: RecyclerView
     private lateinit var adapter: MultipleImageAdapter
@@ -34,8 +37,8 @@ class CreateTimesheet : AppCompatActivity() {
         enableEdgeToEdge()
 
         // Set the content view to the layout
-        setContentView(R.layout.activity_create_timesheet)
-        binding = ActivityCreateTimesheetBinding.inflate(layoutInflater)
+        setContentView(R.layout.activity_edit_timesheet)
+        binding = ActivityEditTimesheetBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Initialize the RecyclerView and its adapter
