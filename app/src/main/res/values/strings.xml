@@ -10,7 +10,7 @@
     <string name="tab_text_2">Tab 2</string>
     <string name="terms">I agree to Term of Service and \nPrivacy Policy</string>
     <string name="admin_quick_access">Admin Quick Access</string>
-    <string name="welcome">Welcome</string>
+    <string name="WelcomeHomeScreenMessage">Welcome Knight Of The Round Table</string>
     <string name="application_management">Application Management</string>
     <string name="new_fixture">New Fixture</string>
     <string name="events">Events</string>
@@ -26,6 +26,9 @@
     <string name="user_rights">User Rights</string>
     <string name="save_changes">Save Changes</string>
     <string name="school_events">School Events</string>
+    <string name="welcome">welcome</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 
     <string-array name="teams_array">
         <item>First Eleven</item>
