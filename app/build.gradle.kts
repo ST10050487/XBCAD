@@ -72,5 +72,5 @@ dependencies {
     //implement the dependency com.intuit.ssp:ssp-android:1.1.1
     implementation("com.intuit.ssp:ssp-android:1.1.1")
     //Implementing the de.hdodenhof:circleimageview:3.1.0
-    implementation(libs.circleimageview)
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 }
