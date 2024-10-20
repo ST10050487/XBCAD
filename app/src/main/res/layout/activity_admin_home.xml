@@ -457,6 +457,18 @@
         </LinearLayout>
 
     </LinearLayout>
-
-
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:headerLayout="@layout/admin_nav_header"
+        app:menu="@menu/admin_nav_menu"
+        android:background="@color/backgroundtheme"
+        app:itemTextColor="@color/white"
+        app:itemIconTint="@color/white"
+        app:itemTextAppearance="@style/CustomNavigationViewItemText"
+        app:itemIconSize="25sp"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>
