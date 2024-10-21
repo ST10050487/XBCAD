@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
 
     // Constructor
@@ -87,7 +87,9 @@ public void onCreate(SQLiteDatabase db) {
             "MEETING_TIME TEXT," +
             "BUS_DEPATURE_TIME TEXT," +
             "BUS_RETURN_TIME TEXT," +
-            "MESSAGE TEXT)";
+            "MESSAGE TEXT," +
+            "HOME_SCORE INTEGER," +
+            "AWAY_SCORE INTEGER)";
     db.execSQL(CREATE_TABLE_TIMES);
 
     // Create SCHOOL_MERCH table
