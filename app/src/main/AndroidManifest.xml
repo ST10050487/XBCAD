@@ -29,7 +29,8 @@
             android:exported="false" />
         <activity
             android:name=".CreateSportFixture"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".UpcomingRecentEvents"
             android:exported="false" />
@@ -44,7 +45,8 @@
             android:exported="false" />
         <activity
             android:name=".CreateTimesheet"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".EditFixture"
             android:exported="false" />

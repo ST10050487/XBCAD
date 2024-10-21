@@ -7,9 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material3.Button
 import org.mindrot.jbcrypt.BCrypt
-import kotlin.math.log10
 
 class Login : AppCompatActivity() {
 
@@ -18,7 +16,6 @@ class Login : AppCompatActivity() {
     private lateinit var loginBtn: Button
     private lateinit var registerBtn: Button
     private lateinit var dbHelper: DBHelper
-    //Creating an instance of the Validations class
     private lateinit var valid: Validations
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +34,6 @@ class Login : AppCompatActivity() {
 
         // Set click listener for the Register button
         registerBtn.setOnClickListener {
-            // Redirect to the Register activity
             val intent = Intent(this, StudentParentReg::class.java)
             startActivity(intent)
         }
@@ -48,11 +44,9 @@ class Login : AppCompatActivity() {
         }
     }
 
-    // A method to get user input
     private fun getUserInput() {
         val email = emailTxt.text.toString()
         val password = passwordTxt.text.toString()
-        val encryptedPassword: String
 
         // Validating email
         if (email.isEmpty()) {
@@ -63,25 +57,22 @@ class Login : AppCompatActivity() {
             emailTxt.error = "Invalid email format"
             return
         }
-        // Validate password
-//        if (!valid.CheckPassword(password)) {
-//            Toast.makeText(this, "Invalid password", Toast.LENGTH_SHORT).show()
-//            return
-//        }
-        // Hashing the inputted password
-        //encryptedPassword = hashPassword(password)
+
         // Check if user exists in the database
-        val dbHelper = DBHelper(this)
-        val userId = dbHelper.validateUser(email,password)
+        val userId = dbHelper.validateUser(email, password)
 
         if (userId != null) {
+            // Pass the user ID to CreateSportFixture
+            val createSportFixtureIntent = Intent(this, CreateSportFixture::class.java)
+            createSportFixtureIntent.putExtra("USER_ID", userId)
+            startActivity(createSportFixtureIntent)
 
-            //val intent = Intent(this, HomeActivity::class.java)
-            val intent = Intent(this, EditFixture::class.java)
-            // Passing the USER_ID to Home Activity
-            intent.putExtra("USER_ID", userId)
-            startActivity(intent)
-            //Finishing the login activity once the user is logged in
+            // Pass the user ID to EditFixture
+            val editFixtureIntent = Intent(this, EditFixture::class.java)
+            editFixtureIntent.putExtra("USER_ID", userId)
+            startActivity(editFixtureIntent)
+
+            // Finishing the login activity once the user is logged in
             finish()
         } else {
             // User does not exist or incorrect password
@@ -89,11 +80,9 @@ class Login : AppCompatActivity() {
             passwordTxt.error = "Invalid email or password"
             Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show()
         }
-
     }
-    //A method to hash the entered password
+
     fun hashPassword(password: String): String {
         return BCrypt.hashpw(password, BCrypt.gensalt())
     }
 }
-
