@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 10;
 
 
     // Constructor
@@ -89,7 +89,9 @@ public void onCreate(SQLiteDatabase db) {
             "BUS_RETURN_TIME TEXT," +
             "MESSAGE TEXT," +
             "HOME_SCORE INTEGER," +
-            "AWAY_SCORE INTEGER)";
+            "AWAY_SCORE INTEGER," +
+            "USER_ID INTEGER NOT NULL," +
+            "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
     db.execSQL(CREATE_TABLE_TIMES);
 
     // Create SCHOOL_MERCH table
@@ -150,10 +152,8 @@ public void onCreate(SQLiteDatabase db) {
             "MATCH_TIME TEXT NOT NULL," +
             "MATCH_DESCRIPTION TEXT," +
             "PICTURE BLOB," +
-            "TIME_ID INTEGER NOT NULL," +
             "USER_ID INTEGER NOT NULL," +
             "LEAGUE_ID INTEGER," +
-            "FOREIGN KEY (TIME_ID) REFERENCES TIMES(TIME_ID)," +
             "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID)," +
             "FOREIGN KEY (LEAGUE_ID) REFERENCES HIGH_SCHOOL_LEAGUE(LEAGUE_ID))";
     db.execSQL(CREATE_TABLE_SPORT_FIXTURES);
@@ -204,10 +204,13 @@ public void onCreate(SQLiteDatabase db) {
 
     // Insert data into HIGH_SCHOOL_LEAGUE table
     String INSERT_HIGH_SCHOOL_LEAGUE = "INSERT INTO HIGH_SCHOOL_LEAGUE (LEAGUE) VALUES " +
+            "('WP League')," +
             "('Inter-School')," +
             "('Provincial')," +
             "('National')," +
-            "('International')";
+            "('International')," +
+            "('Friendly')," +
+            "('Tournament')";
     db.execSQL(INSERT_HIGH_SCHOOL_LEAGUE);
 }
 
