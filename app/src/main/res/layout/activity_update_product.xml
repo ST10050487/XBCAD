@@ -57,13 +57,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="226dp"
                     android:layout_margin="@dimen/_10sdp">
+
                     <ImageView
                         android:id="@+id/prodImage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/ic_sample"
                         android:layout_marginHorizontal="20dp"
-                        android:layout_marginVertical="@dimen/_10sdp"/>
+                        android:layout_marginVertical="@dimen/_10sdp"
+                        android:background="@drawable/ic_sample"
+                        app:srcCompat="@drawable/ic_sample"
+                        tools:srcCompat="@drawable/ic_sample" />
 
                 </androidx.cardview.widget.CardView>
 
@@ -100,13 +103,13 @@
                     android:padding="@dimen/_5sdp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/txtTime"
+                        android:id="@+id/txtTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clickable="true"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:inputType="none"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:inputType="text"
                         android:textColor="@color/lightGrey"
                         android:textSize="@dimen/_16sdp" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -133,9 +136,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clickable="true"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:inputType="none"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:inputType="numberDecimal"
                         android:textColor="@color/lightGrey"
                         android:textSize="@dimen/_16sdp" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -160,13 +163,14 @@
                     android:padding="@dimen/_5sdp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/txtArrTime"
+                        android:id="@+id/txtDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clickable="true"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:inputType="none"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:inputType="text"
+                        android:singleLine="false"
                         android:textColor="@color/lightGrey"
                         android:textSize="@dimen/_16sdp" />
                 </com.google.android.material.textfield.TextInputLayout>
