@@ -668,4 +668,15 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
             return false;
         }
     }
+
+    public boolean deleteFixture(int fixtureId) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            int isDeleted = db.delete("SPORT_FIXTURES", "FIXTURE_ID = ?", new String[]{String.valueOf(fixtureId)});
+            db.close();
+            return isDeleted > 0;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

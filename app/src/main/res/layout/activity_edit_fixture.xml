@@ -389,8 +389,14 @@
                 android:layout_marginHorizontal="30dp"
                 android:text="Save Changes" />
 
-
-
+            <Button
+                android:id="@+id/btnDelete"
+                android:layout_width="215dp"
+                android:layout_height="58dp"
+                android:layout_margin="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginHorizontal="30dp"
+                android:text="Delete" />
 
         </LinearLayout>
     </ScrollView>
