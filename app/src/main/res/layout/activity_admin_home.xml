@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="192dp"
         android:layout_gravity="fill_horizontal"
-        android:background="@drawable/dash_head"
+        android:background="@drawable/dash_banner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialToolbar" />
@@ -471,7 +471,6 @@
                 android:textColor="@color/primaryColor"
                 android:textSize="10dp" />
         </LinearLayout>
-
     </LinearLayout>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"

@@ -1,6 +1,10 @@
 package za.co.varsitycollage.st10050487.knights
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -17,4 +21,6 @@ class Admin_Home : AppCompatActivity() {
             insets
         }
     }
+
+
 }

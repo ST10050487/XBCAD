@@ -24,38 +24,39 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-public void onCreate(SQLiteDatabase db) {
-    // Create USERS table
-    String CREATE_TABLE_USERS = "CREATE TABLE USERS (" +
-            "USER_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "NAME TEXT NOT NULL," +
-            "SURNAME TEXT NOT NULL," +
-            "DATEOFBIRTH TEXT NOT NULL," +
-            "EMAIL TEXT NOT NULL," +
-            "PASSWORD TEXT NOT NULL," +
-            "ROLE_ID INTEGER," +
-            "FOREIGN KEY (ROLE_ID) REFERENCES ROLES(ROLE_ID))";
-    db.execSQL(CREATE_TABLE_USERS);
+    public void onCreate(SQLiteDatabase db) {
+        // Create USERS table
+        String CREATE_TABLE_USERS = "CREATE TABLE USERS (" +
+                "USER_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "NAME TEXT NOT NULL," +
+                "SURNAME TEXT NOT NULL," +
+                "DATEOFBIRTH TEXT NOT NULL," +
+                "EMAIL TEXT NOT NULL," +
+                "PHOTO BLOB," +
+                "PASSWORD TEXT NOT NULL," +
+                "ROLE_ID INTEGER," +
+                "FOREIGN KEY (ROLE_ID) REFERENCES ROLES(ROLE_ID))";
+        db.execSQL(CREATE_TABLE_USERS);
 
-    // Create ROLES table
-    String CREATE_TABLE_ROLES = "CREATE TABLE ROLES (" +
-            "ROLE_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "ROLE TEXT NOT NULL)";
-    db.execSQL(CREATE_TABLE_ROLES);
+        // Create ROLES table
+        String CREATE_TABLE_ROLES = "CREATE TABLE ROLES (" +
+                "ROLE_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "ROLE TEXT NOT NULL)";
+        db.execSQL(CREATE_TABLE_ROLES);
 
-    // Insert dummy data into ROLES table
-    String INSERT_ROLES = "INSERT INTO ROLES (ROLE) VALUES " +
-            "('Admin')," +
-            "('Student')," +
-            "('Parent')";
-    db.execSQL(INSERT_ROLES);
+        // Insert dummy data into ROLES table
+        String INSERT_ROLES = "INSERT INTO ROLES (ROLE) VALUES " +
+                "('Admin')," +
+                "('Student')," +
+                "('Parent')";
+        db.execSQL(INSERT_ROLES);
 
-    // Insert dummy data into USERS table
-    String INSERT_USERS = "INSERT INTO USERS (NAME, SURNAME, DATEOFBIRTH, EMAIL, PASSWORD, ROLE_ID) VALUES " +
-            "('John', 'Doe', '1990-01-01', 'john.doe@example.com', 'Password@123', 1)," +
-            "('Jane', 'Smith', '1992-02-02', 'jane.smith@example.com', 'password456', 2)," +
-            "('Alice', 'Johnson', '1994-03-03', 'alice.johnson@example.com', 'password789', 3)";
-    db.execSQL(INSERT_USERS);
+        // Insert dummy data into USERS table
+        String INSERT_USERS = "INSERT INTO USERS (NAME, SURNAME, DATEOFBIRTH, EMAIL, PASSWORD, ROLE_ID) VALUES " +
+                "('John', 'Doe', '1990-01-01', 'john.doe@example.com', 'Password@123', 1)," +
+                "('Jane', 'Smith', '1992-02-02', 'jane.smith@example.com', 'password456', 2)," +
+                "('Alice', 'Johnson', '1994-03-03', 'alice.johnson@example.com', 'password789', 3)";
+        db.execSQL(INSERT_USERS);
 
     // Create PLAYER_PROFILE table
     String CREATE_TABLE_PLAYER_PROFILE = "CREATE TABLE PLAYER_PROFILE (" +
@@ -105,37 +106,37 @@ public void onCreate(SQLiteDatabase db) {
             "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
     db.execSQL(CREATE_TABLE_SCHOOL_MERCH);
 
-    // Create BANNED_WORDS table
-    String CREATE_TABLE_BANNED_WORDS = "CREATE TABLE BANNED_WORDS (" +
-            "WORD_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "WORD TEXT NOT NULL," +
-            "USER_ID INTEGER NOT NULL," +
-            "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
-    db.execSQL(CREATE_TABLE_BANNED_WORDS);
+        // Create BANNED_WORDS table
+        String CREATE_TABLE_BANNED_WORDS = "CREATE TABLE BANNED_WORDS (" +
+                "WORD_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "WORD TEXT NOT NULL," +
+                "USER_ID INTEGER NOT NULL," +
+                "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
+        db.execSQL(CREATE_TABLE_BANNED_WORDS);
 
-    // Create PREVIOUS_REPORTS table
-    String CREATE_TABLE_PREVIOUS_REPORTS = "CREATE TABLE PREVIOUS_REPORTS (" +
-            "REPORT_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "REPORT_NAME TEXT NOT NULL," +
-            "REPORT_DATE TEXT NOT NULL," +
-            "REPORT_TYPE TEXT," +
-            "REPORT_INFORMATION TEXT NOT NULL," +
-            "USER_ID INTEGER NOT NULL," +
-            "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
-    db.execSQL(CREATE_TABLE_PREVIOUS_REPORTS);
+        // Create PREVIOUS_REPORTS table
+        String CREATE_TABLE_PREVIOUS_REPORTS = "CREATE TABLE PREVIOUS_REPORTS (" +
+                "REPORT_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "REPORT_NAME TEXT NOT NULL," +
+                "REPORT_DATE TEXT NOT NULL," +
+                "REPORT_TYPE TEXT," +
+                "REPORT_INFORMATION TEXT NOT NULL," +
+                "USER_ID INTEGER NOT NULL," +
+                "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
+        db.execSQL(CREATE_TABLE_PREVIOUS_REPORTS);
 
-    // Create EVENTS table
-    String CREATE_TABLE_EVENTS = "CREATE TABLE EVENTS (" +
-            "EVENT_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "EVENT_NAME TEXT NOT NULL," +
-            "EVENT_DATE TEXT NOT NULL," +
-            "EVENT_TIME TEXT NOT NULL," +
-            "EVENT_LOCATION TEXT," +
-            "EVENT_PRICE REAL," +
-            "PICTURE BLOB," +
-            "USER_ID INTEGER NOT NULL," +
-            "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
-    db.execSQL(CREATE_TABLE_EVENTS);
+        // Create EVENTS table
+        String CREATE_TABLE_EVENTS = "CREATE TABLE EVENTS (" +
+                "EVENT_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "EVENT_NAME TEXT NOT NULL," +
+                "EVENT_DATE TEXT NOT NULL," +
+                "EVENT_TIME TEXT NOT NULL," +
+                "EVENT_LOCATION TEXT," +
+                "EVENT_PRICE REAL," +
+                "PICTURE BLOB," +
+                "USER_ID INTEGER NOT NULL," +
+                "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
+        db.execSQL(CREATE_TABLE_EVENTS);
 
     // Create SPORT_FIXTURES table
     String CREATE_TABLE_SPORT_FIXTURES = "CREATE TABLE SPORT_FIXTURES (" +
@@ -233,7 +234,7 @@ public void onCreate(SQLiteDatabase db) {
         // Recreate tables
         onCreate(db);
     }
-    /* HANNAH ADDED, CAUSE NO PASSWORD IN addUsers and to log user in ********************************/
+    // HANNAH ADDED, CAUSE NO PASSWORD IN addUsers and to log user in ********************************/  /*********************************/  /*********************************/
     public boolean addUser(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -269,8 +270,248 @@ public void onCreate(SQLiteDatabase db) {
         return events;
     }
 
+    // Method to delete selected events
+    public void deleteEvents(List<EventModel> selectedEvents) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            for (EventModel event : selectedEvents) {
+                db.delete("EVENTS", "EVENT_ID = ?", new String[]{String.valueOf(event.getEventId())});
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        db.close();
+    }
 
-    /*********************************/
+    //MUST ADD A PERMISSION TABLE TO ALLOW ADMIN TO ADD PERMISSIONS TO USERS
+    public AdminModel getAdminUserDetails() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query("USERS", null, "ROLE_ID = ?", new String[]{"1"}, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int userIdIndex = cursor.getColumnIndex("USER_ID");
+            int nameIndex = cursor.getColumnIndex("NAME");
+            int surnameIndex = cursor.getColumnIndex("SURNAME");
+            int emailIndex = cursor.getColumnIndex("EMAIL");
+            int photoIndex = cursor.getColumnIndex("PHOTO");
+            int passwordIndex = cursor.getColumnIndex("PASSWORD");
+            int dateOfBirthIndex = cursor.getColumnIndex("DATEOFBIRTH");
+
+            if (userIdIndex >= 0 && nameIndex >= 0 && surnameIndex >= 0 && emailIndex >= 0 && passwordIndex >= 0 && dateOfBirthIndex >= 0) {
+                AdminModel adminUser = new AdminModel(
+                        cursor.getInt(userIdIndex),
+                        cursor.getString(nameIndex),
+                        cursor.getString(surnameIndex),
+                        cursor.getString(emailIndex),
+                        cursor.getBlob(photoIndex),
+                        cursor.getString(passwordIndex),
+                        cursor.getString(dateOfBirthIndex),
+                        true,
+                        true,
+                        true,
+                        true
+                );
+                cursor.close();
+                return adminUser;
+            }
+            cursor.close();
+        }
+        return null;
+    }
+
+    public int updateAdminUser(AdminModel adminUser) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("NAME", adminUser.getName());
+        values.put("SURNAME", adminUser.getSurname());
+        values.put("EMAIL", adminUser.getEmail());
+        values.put("PHOTO", adminUser.getProfilePicture());
+        values.put("PASSWORD", adminUser.getPassword());
+        values.put("DATEOFBIRTH", adminUser.getDateOfBirth());
+
+        // Update the row and return the number of rows affected
+        return db.update("USERS", values, "USER_ID = ?", new String[]{String.valueOf(adminUser.getUserId())});
+    }
+    // Method to get user details
+    public UserModel getUserDetails(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query("USERS", null, "ROLE_ID = ?", new String[]{"1"}, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int userIdIndex = cursor.getColumnIndex("USER_ID");
+            int nameIndex = cursor.getColumnIndex("NAME");
+            int surnameIndex = cursor.getColumnIndex("SURNAME");
+            int emailIndex = cursor.getColumnIndex("EMAIL");
+            int photoIndex = cursor.getColumnIndex("PHOTO");
+            int dateOfBirthIndex = cursor.getColumnIndex("DATEOFBIRTH");
+
+            if  (userIdIndex >= 0 && nameIndex >= 0 && surnameIndex >= 0 && emailIndex >= 0 && dateOfBirthIndex >= 0) {
+                UserModel user = new UserModel(
+                        cursor.getInt(userIdIndex),
+                        cursor.getString(nameIndex),
+                        cursor.getString(surnameIndex),
+                        cursor.getBlob(photoIndex),
+                        cursor.getString(emailIndex),
+                        null, // No password
+                        cursor.getString(dateOfBirthIndex)
+                );
+                cursor.close();
+                return user;
+            }
+            cursor.close();
+        }
+        return null;
+    }
+
+    // Method to update user details
+    public int updateUser(UserModel user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("NAME", user.getName());
+        values.put("SURNAME", user.getSurname());
+        values.put("EMAIL", user.getEmail());
+        values.put("PHOTO", user.getProfilePicture());
+        values.put("DATEOFBIRTH", user.getDateOfBirth());
+
+        // Update the row and return the number of rows affected
+        return db.update("USERS", values, "USER_ID = ?", new String[]{String.valueOf(user.getUserId())});
+    }
+
+    public List<String> getAllSports() {
+        List<String> sportsList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT SPORT FROM SPORT", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                sportsList.add(cursor.getString(cursor.getColumnIndexOrThrow("SPORT")));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return sportsList;
+    }
+    public List<String> getAllAgeGroups() {
+        List<String> ageGroupList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT AGE_GROUP FROM AGE_GROUP", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                ageGroupList.add(cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP")));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return ageGroupList;
+    }
+    public long addDummyFixtureWithUserId(int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("SPORT", "Soccer");
+        values.put("HOME_TEAM", "Team A");
+        values.put("AWAY_TEAM", "Team B");
+        values.put("AGE_GROUP", "Boys Under 18");
+        values.put("LEAGUE", "Premier League");
+        values.put("SET_DATE", "2023-10-01");
+        values.put("SET_TIME", "15:00");
+        values.put("SET_LOCATION", "Stadium A");
+        values.put("HOME_LOGO", (byte[]) null); // Assuming no logo for dummy data
+        values.put("AWAY_LOGO", (byte[]) null); // Assuming no logo for dummy data
+        values.put("MATCH_LOCATION", "Stadium A");
+        values.put("MATCH_DATE", "2023-10-01");
+        values.put("MATCH_TIME", "15:00");
+        values.put("PRICE", 10.0);
+        values.put("MATCH_DISCRIPTION", "Friendly match");
+        values.put("PIICTURE", (byte[]) null); // Assuming no picture for dummy data
+        values.put("TIME_ID", 1); // Assuming a valid TIME_ID
+        values.put("USER_ID", userId); // Link to the current user
+
+       long fixid =  db.insert("SPORT_FIXTURES", null, values);
+       return (fixid);
+    }
+
+    public FixtureModel getFixtureDetails(int fixtureId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM SPORT_FIXTURES WHERE FIXTURE_ID = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(fixtureId)});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            FixtureModel fixture = new FixtureModel(
+                    cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("SPORT")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("LEAGUE")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("SET_DATE")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("SET_TIME")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("SET_LOCATION")),
+                    cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
+                    cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_LOCATION")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DATE")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_TIME")),
+                    cursor.getDouble(cursor.getColumnIndexOrThrow("PRICE")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DISCRIPTION")),
+                    cursor.getBlob(cursor.getColumnIndexOrThrow("PIICTURE")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("TIME_ID"))
+            );
+            cursor.close();
+            return fixture;
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+        return null;
+    }
+    public long insertProduct(int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put("NAME", "School T-Shirt");
+        values.put("DESCRIPTION", "A blue Bosmansdam hoodie with the school crest on the front, Bosmansdam Pride on the back, and white drawstrings. Simple and stylish");
+        values.put("PRICE", 20.0); // Assuming a price for the dummy data
+        values.put("PHOTO", new byte[0]); // Assuming no photo for dummy data
+        values.put("USER_ID", userId);
+
+        long newProductId = db.insert("SCHOOL_MERCH", null, values);
+        return newProductId;
+    }
+    public int updateProduct(ProductModel prod) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("NAME", prod.getProdName());
+        values.put("DESCRIPTION", prod.getProdDescription());
+        values.put("PRICE", prod.getProdPrice());
+        values.put("PHOTO", prod.getProdPicture());
+        values.put("USER_ID",prod.getUserId());
+
+        return db.update("SCHOOL_MERCH", values, "PRODUCT_ID = ?", new String[]{String.valueOf(prod.getProdId())});
+    }
+    public ProductModel getProduct(int productId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query("SCHOOL_MERCH", null, "PRODUCT_ID = ?", new String[]{String.valueOf(productId)}, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            ProductModel product = new ProductModel(
+                    cursor.getInt(cursor.getColumnIndexOrThrow("PRODUCT_ID")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("NAME")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("DESCRIPTION")),
+                    cursor.getDouble(cursor.getColumnIndexOrThrow("PRICE")),
+                    cursor.getBlob(cursor.getColumnIndexOrThrow("PHOTO"))
+            );
+            cursor.close();
+            return product;
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+        return null;
+    }
+    /*********************************/  /*********************************/  /*********************************/  /*********************************/
     // A method to add users to the database
 public void addUsers(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
     // Add users to the database
@@ -485,40 +726,6 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
     }
     // DBHelper.java
 
-public List<String> getAllSports() {
-    List<String> sports = new ArrayList<>();
-    SQLiteDatabase db = this.getReadableDatabase();
-    Cursor cursor = db.rawQuery("SELECT SPORT FROM SPORT", null);
-
-    if (cursor.moveToFirst()) {
-        do {
-            sports.add(cursor.getString(cursor.getColumnIndexOrThrow("SPORT")));
-        } while (cursor.moveToNext());
-    } else {
-        Log.d("DBHelper", "No sports found in the database.");
-    }
-    cursor.close();
-    Log.d("DBHelper", "Sports: " + sports);
-    return sports;
-}
-
-public List<String> getAllAgeGroups() {
-    List<String> ageGroups = new ArrayList<>();
-    SQLiteDatabase db = this.getReadableDatabase();
-    Cursor cursor = db.rawQuery("SELECT AGE_GROUP FROM AGE_GROUP", null);
-
-    if (cursor.moveToFirst()) {
-        do {
-            ageGroups.add(cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP")));
-        } while (cursor.moveToNext());
-    } else {
-        Log.d("DBHelper", "No age groups found in the database.");
-    }
-    cursor.close();
-    Log.d("DBHelper", "Age Groups: " + ageGroups);
-    return ageGroups;
-}
-
 public List<String> getAllLeagues() {
     List<String> leagues = new ArrayList<>();
     SQLiteDatabase db = this.getReadableDatabase();
@@ -535,119 +742,7 @@ public List<String> getAllLeagues() {
     Log.d("DBHelper", "Leagues: " + leagues);
     return leagues;
 }
-    // Method to delete selected events
-    public void deleteEvents(List<EventModel> selectedEvents) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.beginTransaction();
-        try {
-            for (EventModel event : selectedEvents) {
-                db.delete("EVENTS", "EVENT_ID = ?", new String[]{String.valueOf(event.getEventId())});
-            }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-        db.close();
-    }
-    //MUST ADD A PERMISSION TABLE TO ALLOW ADMIN TO ADD PERMISSIONS TO USERS
-    public AdminModel getAdminUserDetails() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query("USERS", null, "ROLE_ID = ?", new String[]{"1"}, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            int userIdIndex = cursor.getColumnIndex("USER_ID");
-            int nameIndex = cursor.getColumnIndex("NAME");
-            int surnameIndex = cursor.getColumnIndex("SURNAME");
-            int emailIndex = cursor.getColumnIndex("EMAIL");
-            int passwordIndex = cursor.getColumnIndex("PASSWORD");
-            int dateOfBirthIndex = cursor.getColumnIndex("DATEOFBIRTH");
-            if (userIdIndex >= 0 && nameIndex >= 0 && surnameIndex >= 0 && emailIndex >= 0 && passwordIndex >= 0 && dateOfBirthIndex >= 0) {
-                AdminModel adminUser = new AdminModel(
-                        cursor.getInt(userIdIndex),
-                        cursor.getString(nameIndex),
-                        cursor.getString(surnameIndex),
-                        cursor.getString(emailIndex),
-                        cursor.getString(passwordIndex),
-                        cursor.getString(dateOfBirthIndex),
-                        true, // Assuming admin has all rights
-                        true,
-                        true,
-                        true,
-                        null
-                );
-                cursor.close();
-                return adminUser;
-            }
-            cursor.close();
-        }
-        return null;
-    }
-    public int updateAdminUser(AdminModel adminUser) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("NAME", adminUser.getName());
-        values.put("SURNAME", adminUser.getSurname());
-        values.put("EMAIL", adminUser.getEmail());
-        values.put("PASSWORD", adminUser.getPassword());
-        values.put("DATEOFBIRTH", adminUser.getDateOfBirth());
-        // Update the row and return the number of rows affected
-        return db.update("USERS", values, "USER_ID = ?", new String[]{String.valueOf(adminUser.getUserId())});
-    }
-    public long addDummyFixtureWithUserId(int userId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("SPORT", "Soccer");
-        values.put("HOME_TEAM", "Team A");
-        values.put("AWAY_TEAM", "Team B");
-        values.put("AGE_GROUP", "Boys Under 18");
-        values.put("LEAGUE", "Premier League");
-        values.put("SET_DATE", "2023-10-01");
-        values.put("SET_TIME", "15:00");
-        values.put("SET_LOCATION", "Stadium A");
-        values.put("HOME_LOGO", (byte[]) null); // Assuming no logo for dummy data
-        values.put("AWAY_LOGO", (byte[]) null); // Assuming no logo for dummy data
-        values.put("MATCH_LOCATION", "Stadium A");
-        values.put("MATCH_DATE", "2023-10-01");
-        values.put("MATCH_TIME", "15:00");
-        values.put("PRICE", 10.0);
-        values.put("MATCH_DESCRIPTION", "Friendly match");
-        values.put("PICTURE", (byte[]) null); // Assuming no picture for dummy data
-        values.put("TIME_ID", 1); // Assuming a valid TIME_ID
-        values.put("USER_ID", userId); // Link to the current user
-        long fixid =  db.insert("SPORT_FIXTURES", null, values);
-        return (fixid);
-    }
-    public FixtureModel getFixtureDetails(int fixtureId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM SPORT_FIXTURES WHERE FIXTURE_ID = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(fixtureId)});
-        if (cursor != null && cursor.moveToFirst()) {
-            FixtureModel fixture = new FixtureModel(
-                    cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("SPORT")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("LEAGUE")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("SET_DATE")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("SET_TIME")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("SET_LOCATION")),
-                    cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
-                    cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_LOCATION")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DATE")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_TIME")),
-                    cursor.getDouble(cursor.getColumnIndexOrThrow("PRICE")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DESCRIPTION")),
-                    cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("TIME_ID"))
-            );
-            cursor.close();
-            return fixture;
-        }
-        if (cursor != null) {
-            cursor.close();
-        }
-        return null;
-    }
+
+
+
 }
