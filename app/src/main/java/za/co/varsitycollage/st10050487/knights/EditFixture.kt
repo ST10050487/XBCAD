@@ -1,10 +1,13 @@
 package za.co.varsitycollage.st10050487.knights
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -45,6 +48,33 @@ class EditFixture : AppCompatActivity() {
        // val id = dbHelper.addDummyFixtureWithUserId(dummyId)
       //  Toast.makeText(this, id.toString(), Toast.LENGTH_SHORT).show()
         loadFixture(3)
+        val deleteFixture = findViewById<Button>(R.id.btnDelete)
+        deleteFixture.setOnClickListener {
+            if (!dbHelper.checkIsAdmin(dummyId)) {
+                deleteFixture.visibility = View.GONE
+            } else {
+                deleteFixture.setOnClickListener {
+                    showConfirmationDialog(3)
+                }
+            }
+        }
+    }
+
+    private fun showConfirmationDialog(fixtureId: Int) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Delete Fixture")
+        builder.setMessage("Are you sure you want to delete this Fixture?")
+
+        builder.setPositiveButton("Yes") { dialog: DialogInterface, which: Int ->
+            // Handle the delete operation here
+            dbHelper.deleteFixture(fixtureId)
+        }
+        builder.setNegativeButton("No") { dialog: DialogInterface, which: Int ->
+            // Dismiss the dialog
+            dialog.dismiss()
+        }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 
 
