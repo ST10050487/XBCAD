@@ -9,19 +9,16 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
-import za.co.varsitycollage.st10050487.knights.databinding.ActivityUpdateAdminUserBinding
+import za.co.varsitycollage.st10050487.knights.databinding.ActivityUpdateUserBinding
 import java.io.ByteArrayOutputStream
 import java.util.Calendar
 
-class UpdateAdminUser : AppCompatActivity() {
-    private lateinit var binding: ActivityUpdateAdminUserBinding
+class UpdateUser : AppCompatActivity() {
+    private lateinit var binding: ActivityUpdateUserBinding
     private lateinit var dbHelper: DBHelper
     private var userId: Int = 0
     private var dummyId: Int = 0
@@ -34,7 +31,7 @@ class UpdateAdminUser : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityUpdateAdminUserBinding.inflate(layoutInflater)
+        binding = ActivityUpdateUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Initializing your database helper
@@ -61,28 +58,22 @@ class UpdateAdminUser : AppCompatActivity() {
         binding.saveBtn.setOnClickListener {
             // Save the user details
             if (validateInputs()) {
-                updateAdminData()
+                updateUserData()
             }
         }
 
         // Loading and displaying the player data based on userId
-        loadAdminUserDetails()
+        loadUserDetails()
     }
 
-    private fun loadAdminUserDetails() {
-        //val adminUser = dbHelper.getAdminUserDetails(userId)
-        val adminUser = dbHelper.getAdminUserDetails()
-        adminUser?.let {
+    private fun loadUserDetails() {
+        val user = dbHelper.getUserDetails(userId);
+        user?.let {
             binding.userName.setText(it.name)
             binding.userSurname.setText(it.surname)
             binding.userEmail.setText(it.email)
-            binding.userPassword.setText(it.password)
             binding.userDateOfBirth.setText(it.dateOfBirth)
-            binding.cbMngusers.isChecked = it.manageUsers
-            binding.cbMngFixtures.isChecked = it.manageFixtures
-            binding.cbInteractions.isChecked = it.interactionReports
-            binding.cbCreateAdmin.isChecked = it.createAdmin
-            imageHolder = adminUser?.profilePicture
+            imageHolder = user?.profilePicture
             // Load profile picture if available
             // if product picture is not null
             if (imageHolder != null)
@@ -91,44 +82,35 @@ class UpdateAdminUser : AppCompatActivity() {
             }
         }
         //REMOVE AND CHANAGE TO REAL ID
-        dummyId = adminUser?.userId ?: 0
+        dummyId = user?.userId ?: 0
     }
-    private fun updateAdminData() {
+    private fun updateUserData() {
         val name = binding.userName.text.toString()
         val surname = binding.userSurname.text.toString()
         val email = binding.userEmail.text.toString()
-        val password = binding.userPassword.text.toString()
         val dateOfBirth = binding.userDateOfBirth.text.toString()
-        val manageUsers = binding.cbMngusers.isChecked
-        val manageFixtures = binding.cbMngFixtures.isChecked
-        val interactionReports = binding.cbInteractions.isChecked
-        val createAdmin = binding.cbCreateAdmin.isChecked
 
-        val adminUser = AdminModel(
+        val user = UserModel(
             userId = dummyId,
             name = name,
             surname = surname,
             email = email,
-            password = password,
-            dateOfBirth = dateOfBirth,
-            manageUsers = manageUsers,
-            manageFixtures = manageFixtures,
-            interactionReports = interactionReports,
-            createAdmin = createAdmin,
-            profilePicture = imageHolder
+            profilePicture = imageHolder,
+            dateOfBirth = dateOfBirth ,
+            password = null
         )
 
-        val result = dbHelper.updateAdminUser(adminUser)
+        val result = dbHelper.updateUser(user)
 
         if (result > 0) {
-            Toast.makeText(this, "Admin profile updated successfully", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "User profile updated successfully", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, Login::class.java)
             intent.putExtra("USER_ID", userId)
             startActivity(intent)
             finish()
         }
         else {
-            Toast.makeText(this, "Failed to update admin profile", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Failed to update user profile", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -240,7 +222,6 @@ class UpdateAdminUser : AppCompatActivity() {
         val name = binding.userName.text.toString()
         val surname = binding.userSurname.text.toString()
         val email = binding.userEmail.text.toString()
-        val password = binding.userPassword.text.toString()
         val dateOfBirth = binding.userDateOfBirth.text.toString()
 
         if (name.isEmpty()) {
@@ -253,10 +234,6 @@ class UpdateAdminUser : AppCompatActivity() {
         }
         if (email.isEmpty()) {
             binding.userEmail.error = "Email is required"
-            return false
-        }
-        if (password.isEmpty()) {
-            binding.userPassword.error = "Password is required"
             return false
         }
         if (dateOfBirth.isEmpty()) {

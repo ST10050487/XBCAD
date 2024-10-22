@@ -24,7 +24,7 @@ class EventManagement : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_event_management)
 
-       // GetDummyData()
+        GetDummyData()
 
         if (savedInstanceState == null) {
             val fragment = EventCardFragment.newInstance("param1", "param2")
