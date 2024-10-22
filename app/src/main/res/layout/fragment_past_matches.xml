@@ -55,12 +55,14 @@
 
                             <!-- Team 1 Logo -->
                             <ImageView
+                                android:id="@+id/team1_logo"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:src="@drawable/bosemansdamhig" />
 
                             <!-- Team 1 Name -->
                             <TextView
+                                android:id="@+id/team1_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
@@ -82,6 +84,7 @@
 
                             <!-- Score Text -->
                             <TextView
+                                android:id="@+id/score_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="22 : 19"
@@ -91,6 +94,7 @@
 
                             <!-- Full-Time Box -->
                             <TextView
+
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/green_box_background"
@@ -109,12 +113,14 @@
 
                             <!-- Team 2 Logo -->
                             <ImageView
+                                android:id="@+id/team2_logo"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:src="@drawable/egmeadhigh" />
 
                             <!-- Team 2 Name -->
                             <TextView
+                                android:id="@+id/team2_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
@@ -137,6 +143,7 @@
 
                         <!-- Match Type -->
                         <TextView
+                            android:id="@+id/match_type"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rugby"
@@ -146,6 +153,7 @@
 
                         <!-- Age Group -->
                         <TextView
+                            android:id="@+id/age_group"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
@@ -154,6 +162,7 @@
 
                         <!-- Match Date -->
                         <TextView
+                            android:id="@+id/match_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"

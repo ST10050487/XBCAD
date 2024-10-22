@@ -18,43 +18,30 @@ class upcomingMatchesFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_upcoming_matches, container, false)
-        val linearLayout = view.findViewById<LinearLayout>(R.id.linear_layout)
 
-        val matches = listOf(
-            Match(
-                "Saturday - August 26",
-                R.drawable.bosemansdamhig,
-                "BOSMANSDAM",
-                R.drawable.egmeadhigh,
-                "EGMEAD HIGH",
-                "22 : 19",
-                "Netball",
-                "Under 16's",
-                "26 August"
-            ),
-            // Add more matches here
-        )
+        // Find views by their IDs
+        val fixtureDate = view.findViewById<TextView>(R.id.fixture_date)
+        val team1Logo = view.findViewById<ImageView>(R.id.team1_logo)
+        val team1Name = view.findViewById<TextView>(R.id.team1_name)
+        val fixtureTime = view.findViewById<TextView>(R.id.fixture_time)
+        val fixtureDateBox = view.findViewById<TextView>(R.id.fixture_date_box)
+        val team2Logo = view.findViewById<ImageView>(R.id.team2_logo)
+        val team2Name = view.findViewById<TextView>(R.id.team2_name)
+        val matchType = view.findViewById<TextView>(R.id.match_type)
+        val ageGroup = view.findViewById<TextView>(R.id.age_group)
 
-        for (match in matches) {
-            linearLayout.addView(createMatchCard(match))
-        }
+        // Set the text and image resources
+        fixtureDate.text = "Friday, October 5, 2023"
+        team1Logo.setImageResource(R.drawable.bosemansdamhig)
+        team1Name.text = "BOSMANSDAM"
+        fixtureTime.text = "10:00"
+        fixtureDateBox.text = "5 OCT"
+        team2Logo.setImageResource(R.drawable.egmeadhigh)
+        team2Name.text = "EGMEAD"
+        matchType.text = "Netball"
+        ageGroup.text = "Under 17's"
+
 
         return view
-    }
-
-    private fun createMatchCard(match: Match): View {
-        val cardView = layoutInflater.inflate(R.layout.fragment_upcoming_matches, null)
-
-        cardView.findViewById<TextView>(R.id.fixture_date).text = match.date
-        cardView.findViewById<ImageView>(R.id.team1_logo).setImageResource(match.team1Logo)
-        cardView.findViewById<TextView>(R.id.team1_name).text = match.team1Name
-        cardView.findViewById<ImageView>(R.id.team2_logo).setImageResource(match.team2Logo)
-        cardView.findViewById<TextView>(R.id.team2_name).text = match.team2Name
-        cardView.findViewById<TextView>(R.id.fixture_time).text = match.score
-        cardView.findViewById<TextView>(R.id.match_type).text = match.matchType
-        cardView.findViewById<TextView>(R.id.age_group).text = match.ageGroup
-        cardView.findViewById<TextView>(R.id.fixture_date_box).text = match.matchDate
-
-        return cardView
     }
 }

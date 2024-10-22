@@ -58,9 +58,9 @@ class HomeScreen : AppCompatActivity() {
                 R.id.nav_profile -> {
                     // Handle the Profile action
                 }
-//                R.id.nav_logout -> {
-//                    // Handle the Logout action
-//                }
+                R.id.nav_logout -> {
+                    // Handle the Logout action
+                }
             }
             true
         }
