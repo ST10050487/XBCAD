@@ -71,6 +71,7 @@
             android:name=".StudentParentReg"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".SuccessReg" />
+        <activity android:name = ".EventDetailActivity"/>
 
         <meta-data
             android:name="preloaded_fonts"

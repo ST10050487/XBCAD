@@ -1,6 +1,6 @@
-// File: src/main/java/za/co/varsitycollage/st10050487/knights/UpcomingRecentEvents.kt
 package za.co.varsitycollage.st10050487.knights
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -13,8 +13,8 @@ class UpcomingRecentEvents : AppCompatActivity() {
         setContentView(R.layout.activity_upcoming_recent_events)
 
         val events = listOf(
-            Events("Knights Golf Day", "Date: 12th August", "Time: 9:00 AM", "Location: Golf Course", R.drawable.home_image),
-            Events("Science Fair", "Date: 20th August", "Time: 10:00 AM", "Location: School Hall", R.drawable.home_image)
+            Events("Knights Golf Day", "Date: 12th August", "Time: 9:00 AM", "Location: Golf Course", 0.0,R.drawable.event_image),
+            Events("Science Fair", "Date: 20th August", "Time: 10:00 AM", "Location: School Hall", 0.0,R.drawable.home_image)
         )
 
         val eventsContainer = findViewById<LinearLayout>(R.id.events_container)
@@ -23,15 +23,23 @@ class UpcomingRecentEvents : AppCompatActivity() {
 
             val eventName = eventView.findViewById<TextView>(R.id.event_name)
             val eventDate = eventView.findViewById<TextView>(R.id.event_date)
-            val eventTime = eventView.findViewById<TextView>(R.id.event_time)
             val eventLocation = eventView.findViewById<TextView>(R.id.event_location)
             val eventImage = eventView.findViewById<ImageView>(R.id.event_image)
 
-            eventName.text = event.name
-            eventDate.text = event.date
-            eventTime.text = event.time
-            eventLocation.text = event.location
+            eventName.text = event.eventName
+            eventDate.text = event.eventDate
+            eventLocation.text = event.eventLocation
             eventImage.setImageResource(event.imageResId)
+
+            eventView.setOnClickListener {
+                val intent = Intent(this, EventDetailActivity::class.java).apply {
+                    putExtra("EVENT_NAME", event.eventName)
+                    putExtra("EVENT_DATE", event.eventDate)
+                    putExtra("EVENT_LOCATION", event.eventLocation)
+                    putExtra("EVENT_IMAGE", event.imageResId) // Update this as needed
+                }
+                startActivity(intent)
+            }
 
             eventsContainer.addView(eventView)
         }
