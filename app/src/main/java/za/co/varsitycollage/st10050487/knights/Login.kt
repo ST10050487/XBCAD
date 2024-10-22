@@ -76,8 +76,7 @@ class Login : AppCompatActivity() {
 
         if (userId != null) {
 
-            //val intent = Intent(this, HomeActivity::class.java)
-            val intent = Intent(this, EditFixture::class.java)
+            val intent = Intent(this, HomeActivity::class.java)
             // Passing the USER_ID to Home Activity
             intent.putExtra("USER_ID", userId)
             startActivity(intent)
