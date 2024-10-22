@@ -6,11 +6,12 @@ data class AdminModel(
     val name: String,
     val surname: String,
     val email: String,
+    val profilePicture: ByteArray?,
     val password: String,
     val dateOfBirth: String,
     val manageUsers: Boolean,
     val manageFixtures: Boolean,
     val interactionReports: Boolean,
     val createAdmin: Boolean,
-    val profilePicture: ByteArray?
+
 )
