@@ -50,7 +50,7 @@ class EditFixture : AppCompatActivity() {
         loadFixture(3)
         val deleteFixture = findViewById<Button>(R.id.btnDelete)
         deleteFixture.setOnClickListener {
-            if (!dbHelper.isAdmin(dummyId)) {
+            if (!dbHelper.checkIsAdmin(dummyId)) {
                 deleteFixture.visibility = View.GONE
             } else {
                 deleteFixture.setOnClickListener {

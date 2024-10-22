@@ -72,7 +72,7 @@ class UpdatePlayerProfile : AppCompatActivity() {
             finish()
         }
         val deleteBtn = findViewById<Button>(R.id.deleteButton)
-        if (!databaseHelper.isAdmin(userId)) {
+        if (!databaseHelper.checkIsAdmin(userId)) {
             deleteBtn.visibility = View.GONE
         } else {
             deleteBtn.setOnClickListener {
