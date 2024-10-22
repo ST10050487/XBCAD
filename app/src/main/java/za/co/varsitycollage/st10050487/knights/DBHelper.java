@@ -724,6 +724,17 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
 
         return db.update("PLAYER_PROFILE", values, "PLAYER_ID = ?", new String[]{String.valueOf(playerId)});
     }
+
+    public boolean deletePlayerProfile(int playerId) {
+        try{
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete("PLAYER_PROFILE", "PLAYER_ID = ?", new String[]{String.valueOf(playerId)});
+            return true;
+        } catch (Exception e) {
+            Log.e("DBHelper", "Error deleting player profile: " + e.getMessage());
+            return false;
+        }
+    }
     // DBHelper.java
 
 public List<String> getAllLeagues() {
@@ -743,6 +754,27 @@ public List<String> getAllLeagues() {
     return leagues;
 }
 
+public boolean deleteFixture(int fixtureId) {
+    try{
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("SPORT_FIXTURES", "FIXTURE_ID = ?", new String[]{String.valueOf(fixtureId)});
+        return true;
+    } catch (Exception e) {
+        Log.e("DBHelper", "Error deleting fixture: " + e.getMessage());
+        return false;
+    }
+}
+
+public boolean checkIsAdmin(int userId) {
+    SQLiteDatabase db = this.getReadableDatabase();
+    Cursor cursor = db.rawQuery("SELECT ROLE_ID FROM USERS WHERE USER_ID = ?", new String[]{String.valueOf(userId)});
+    if (cursor != null && cursor.moveToFirst()) {
+        int roleId = cursor.getInt(cursor.getColumnIndexOrThrow("ROLE_ID"));
+        cursor.close();
+        return roleId == 1;
+    }
+    return false;
+}
 
 
 }

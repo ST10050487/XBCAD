@@ -3,12 +3,14 @@ package za.co.varsitycollage.st10050487.knights
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
@@ -68,6 +70,42 @@ class UpdatePlayerProfile : AppCompatActivity() {
             intent.putExtra("USER_ID", userId)
             startActivity(intent)
             finish()
+        }
+        val deleteBtn = findViewById<Button>(R.id.deleteButton)
+        if (!databaseHelper.checkIsAdmin(userId)) {
+            deleteBtn.visibility = View.GONE
+        } else {
+            deleteBtn.setOnClickListener {
+                showConfirmationDialog()
+            }
+        }
+    }
+
+    //Handles deletion and Dialog Box
+    private fun showConfirmationDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Delete Record")
+        builder.setMessage("Are you sure you want to delete this record?")
+
+        builder.setPositiveButton("Yes") { dialog: DialogInterface, which: Int ->
+            // Handle the delete operation here
+            deleteRecord()
+        }
+        builder.setNegativeButton("No") { dialog: DialogInterface, which: Int ->
+            // Dismiss the dialog
+            dialog.dismiss()
+        }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+
+    private fun deleteRecord(){
+        // Deletes Player Profile
+        val isDeleted = databaseHelper.deletePlayerProfile(playerId)
+        if (isDeleted) {
+            Toast.makeText(this, "Player profile deleted successfully", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Failed to delete player profile", Toast.LENGTH_SHORT).show()
         }
     }
 
