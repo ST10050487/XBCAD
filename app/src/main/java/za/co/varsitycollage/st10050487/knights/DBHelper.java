@@ -264,8 +264,6 @@ public class DBHelper extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndexOrThrow("EVENT_TIME")),
                         cursor.getString(cursor.getColumnIndexOrThrow("EVENT_LOCATION")),
                         cursor.getDouble(cursor.getColumnIndexOrThrow("EVENT_PRICE")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DESCRIPTION")),
-                        cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")), // Retrieve picture
                         false // Default value for 'selected'
                 );
                 events.add(event);
@@ -800,5 +798,16 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
-
+    //A method to get the ROLE_ID
+    public int getRoleId(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT ROLE_ID FROM USERS WHERE USER_ID = ?", new String[]{String.valueOf(userId)});
+        if (cursor != null && cursor.moveToFirst()) {
+            int roleId = cursor.getInt(cursor.getColumnIndexOrThrow("ROLE_ID"));
+            cursor.close();
+            return roleId;
+        }
+        return -1;
+    }
 }
+
