@@ -127,7 +127,8 @@
                 android:fontFamily="@font/inter_bold"
                 android:text="Meet Time"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_16sdp" />
+                android:textSize="@dimen/_16sdp"
+                android:textAlignment="center"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
