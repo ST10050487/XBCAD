@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
 
 
     // Constructor
@@ -91,8 +91,8 @@ public class DBHelper extends SQLiteOpenHelper {
             "MESSAGE TEXT," +
             "HOME_SCORE INTEGER," +
             "AWAY_SCORE INTEGER," +
-            "USER_ID INTEGER NOT NULL," +
-            "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
+            "FIXTURE_ID INTEGER NOT NULL," +
+            "FOREIGN KEY (FIXTURE_ID) REFERENCES SPORT_FIXTURES(FIXTURE_ID))";
     db.execSQL(CREATE_TABLE_TIMES);
 
     // Create SCHOOL_MERCH table
@@ -133,6 +133,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "EVENT_TIME TEXT NOT NULL," +
                 "EVENT_LOCATION TEXT," +
                 "EVENT_PRICE REAL," +
+                "EVENT_DESCRIPTION TEXT," +
                 "PICTURE BLOB," +
                 "USER_ID INTEGER NOT NULL," +
                 "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
