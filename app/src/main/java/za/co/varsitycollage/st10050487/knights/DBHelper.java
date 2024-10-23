@@ -406,4 +406,49 @@ public class DBHelper extends SQLiteOpenHelper {
 
         return db.update("PLAYER_PROFILE", values, "PLAYER_ID = ?", new String[]{String.valueOf(playerId)});
     }
+
+
+    public List<Match> getUpcomingFixtures() {
+        List<Match> fixtures = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM SPORT_FIXTURES WHERE SET_DATE >= date('now')", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Match fixture = new Match(
+                        cursor.getString(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SET_TIME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SET_DATE")),
+                        MatchStatus.UPCOMING
+                );
+                fixtures.add(fixture);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return fixtures;
+    }
+
+    public List<Match> getPastFixtures() {
+        List<Match> fixtures = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM SPORT_FIXTURES WHERE SET_DATE < date('now')", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Match fixture = new Match(
+                        cursor.getString(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SET_TIME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SET_DATE")),
+                        MatchStatus.FINISHED
+                );
+                fixtures.add(fixture);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return fixtures;
+    }
 }
