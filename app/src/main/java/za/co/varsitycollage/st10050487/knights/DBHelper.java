@@ -250,6 +250,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
+    // DBHelper.java
     public List<EventModel> getAllEvents() {
         List<EventModel> events = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -264,6 +265,8 @@ public class DBHelper extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndexOrThrow("EVENT_TIME")),
                         cursor.getString(cursor.getColumnIndexOrThrow("EVENT_LOCATION")),
                         cursor.getDouble(cursor.getColumnIndexOrThrow("EVENT_PRICE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DESCRIPTION")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("EVENT_PICTURE")), // Retrieve picture
                         false // Default value for 'selected'
                 );
                 events.add(event);
