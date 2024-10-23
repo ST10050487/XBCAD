@@ -58,53 +58,53 @@ public class DBHelper extends SQLiteOpenHelper {
                 "('Alice', 'Johnson', '1994-03-03', 'alice.johnson@example.com', 'password789', 3)";
         db.execSQL(INSERT_USERS);
 
-    // Create PLAYER_PROFILE table
-    String CREATE_TABLE_PLAYER_PROFILE = "CREATE TABLE PLAYER_PROFILE (" +
-            "PLAYER_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "NAME TEXT NOT NULL," +
-            "SURNAME TEXT NOT NULL," +
-            "NICKNAME TEXT NOT NULL," +
-            "AGE INTEGER NOT NULL," +
-            "GRADE TEXT NOT NULL," +
-            "HEIGHT TEXT NOT NULL," +
-            "POSITION TEXT NOT NULL," +
-            "DATEOFBIRTH TEXT NOT NULL," +
-            "PICTURE BLOB," +
-            "AGE_GROUP TEXT NOT NULL," +
-            "USER_ID INTEGER NOT NULL," +
-            "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
-    db.execSQL(CREATE_TABLE_PLAYER_PROFILE);
+        // Create PLAYER_PROFILE table
+        String CREATE_TABLE_PLAYER_PROFILE = "CREATE TABLE PLAYER_PROFILE (" +
+                "PLAYER_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "NAME TEXT NOT NULL," +
+                "SURNAME TEXT NOT NULL," +
+                "NICKNAME TEXT NOT NULL," +
+                "AGE INTEGER NOT NULL," +
+                "GRADE TEXT NOT NULL," +
+                "HEIGHT TEXT NOT NULL," +
+                "POSITION TEXT NOT NULL," +
+                "DATEOFBIRTH TEXT NOT NULL," +
+                "PICTURE BLOB," +
+                "AGE_GROUP TEXT NOT NULL," +
+                "USER_ID INTEGER NOT NULL," +
+                "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
+        db.execSQL(CREATE_TABLE_PLAYER_PROFILE);
 
-    // Insert dummy data into PLAYER_PROFILE table
-    String INSERT_PLAYER_PROFILE = "INSERT INTO PLAYER_PROFILE (NAME, SURNAME, NICKNAME, AGE, GRADE, HEIGHT, POSITION, DATEOFBIRTH, PICTURE, AGE_GROUP, USER_ID) VALUES " +
-            "('Michael', 'Jordan', 'MJ', 15, 'Grade 10', '2m', 'Shooting Guard', '2007-06-18', NULL, 'Under 18', 1)," +
-            "('Serena', 'Williams', 'Rena', 17, 'Grade 12', '1.3m', 'Tennis Player', '2005-09-26', NULL, 'Under 18', 2)," +
-            "('Lionel', 'Messi', 'Leo', 16, 'Grade 11', '1.8m', 'Forward', '2006-06-24', NULL, 'Under 18', 3)";
-    db.execSQL(INSERT_PLAYER_PROFILE);
+        // Insert dummy data into PLAYER_PROFILE table
+        String INSERT_PLAYER_PROFILE = "INSERT INTO PLAYER_PROFILE (NAME, SURNAME, NICKNAME, AGE, GRADE, HEIGHT, POSITION, DATEOFBIRTH, PICTURE, AGE_GROUP, USER_ID) VALUES " +
+                "('Michael', 'Jordan', 'MJ', 15, 'Grade 10', '2m', 'Shooting Guard', '2007-06-18', NULL, 'Under 18', 1)," +
+                "('Serena', 'Williams', 'Rena', 17, 'Grade 12', '1.3m', 'Tennis Player', '2005-09-26', NULL, 'Under 18', 2)," +
+                "('Lionel', 'Messi', 'Leo', 16, 'Grade 11', '1.8m', 'Forward', '2006-06-24', NULL, 'Under 18', 3)";
+        db.execSQL(INSERT_PLAYER_PROFILE);
 
-    // Create TIMES table
-    String CREATE_TABLE_TIMES = "CREATE TABLE TIMES (" +
-            "TIME_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "MEETING_TIME TEXT," +
-            "BUS_DEPATURE_TIME TEXT," +
-            "BUS_RETURN_TIME TEXT," +
-            "MESSAGE TEXT," +
-            "HOME_SCORE INTEGER," +
-            "AWAY_SCORE INTEGER," +
-            "FIXTURE_ID INTEGER NOT NULL," +
-            "FOREIGN KEY (FIXTURE_ID) REFERENCES SPORT_FIXTURES(FIXTURE_ID))";
-    db.execSQL(CREATE_TABLE_TIMES);
+        // Create TIMES table
+        String CREATE_TABLE_TIMES = "CREATE TABLE TIMES (" +
+                "TIME_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "MEETING_TIME TEXT," +
+                "BUS_DEPATURE_TIME TEXT," +
+                "BUS_RETURN_TIME TEXT," +
+                "MESSAGE TEXT," +
+                "HOME_SCORE INTEGER," +
+                "AWAY_SCORE INTEGER," +
+                "FIXTURE_ID INTEGER NOT NULL," +
+                "FOREIGN KEY (FIXTURE_ID) REFERENCES SPORT_FIXTURES(FIXTURE_ID))";
+        db.execSQL(CREATE_TABLE_TIMES);
 
-    // Create SCHOOL_MERCH table
-    String CREATE_TABLE_SCHOOL_MERCH = "CREATE TABLE SCHOOL_MERCH (" +
-            "PRODUCT_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "NAME TEXT NOT NULL," +
-            "PRICE REAL NOT NULL," +
-            "DESCRIPTION TEXT NOT NULL," +
-            "PHOTO BLOB NOT NULL," +
-            "USER_ID INTEGER NOT NULL," +
-            "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
-    db.execSQL(CREATE_TABLE_SCHOOL_MERCH);
+        // Create SCHOOL_MERCH table
+        String CREATE_TABLE_SCHOOL_MERCH = "CREATE TABLE SCHOOL_MERCH (" +
+                "PRODUCT_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "NAME TEXT NOT NULL," +
+                "PRICE REAL NOT NULL," +
+                "DESCRIPTION TEXT NOT NULL," +
+                "PHOTO BLOB NOT NULL," +
+                "USER_ID INTEGER NOT NULL," +
+                "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
+        db.execSQL(CREATE_TABLE_SCHOOL_MERCH);
 
         // Create BANNED_WORDS table
         String CREATE_TABLE_BANNED_WORDS = "CREATE TABLE BANNED_WORDS (" +
@@ -139,82 +139,82 @@ public class DBHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
         db.execSQL(CREATE_TABLE_EVENTS);
 
-    // Create SPORT_FIXTURES table
-    String CREATE_TABLE_SPORT_FIXTURES = "CREATE TABLE SPORT_FIXTURES (" +
-            "FIXTURE_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "SPORT TEXT NOT NULL," +
-            "HOME_TEAM TEXT NOT NULL," +
-            "AWAY_TEAM TEXT NOT NULL," +
-            "AGE_GROUP TEXT NOT NULL," +
-            "LEAGUE TEXT NOT NULL," +
-            "HOME_LOGO BLOB," +
-            "AWAY_LOGO BLOB," +
-            "MATCH_LOCATION TEXT NOT NULL," +
-            "MATCH_DATE TEXT NOT NULL," +
-            "MATCH_TIME TEXT NOT NULL," +
-            "MATCH_DESCRIPTION TEXT," +
-            "PICTURE BLOB," +
-            "USER_ID INTEGER NOT NULL," +
-            "LEAGUE_ID INTEGER," +
-            "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID)," +
-            "FOREIGN KEY (LEAGUE_ID) REFERENCES HIGH_SCHOOL_LEAGUE(LEAGUE_ID))";
-    db.execSQL(CREATE_TABLE_SPORT_FIXTURES);
+        // Create SPORT_FIXTURES table
+        String CREATE_TABLE_SPORT_FIXTURES = "CREATE TABLE SPORT_FIXTURES (" +
+                "FIXTURE_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "SPORT TEXT NOT NULL," +
+                "HOME_TEAM TEXT NOT NULL," +
+                "AWAY_TEAM TEXT NOT NULL," +
+                "AGE_GROUP TEXT NOT NULL," +
+                "LEAGUE TEXT NOT NULL," +
+                "HOME_LOGO BLOB," +
+                "AWAY_LOGO BLOB," +
+                "MATCH_LOCATION TEXT NOT NULL," +
+                "MATCH_DATE TEXT NOT NULL," +
+                "MATCH_TIME TEXT NOT NULL," +
+                "MATCH_DESCRIPTION TEXT," +
+                "PICTURE BLOB," +
+                "USER_ID INTEGER NOT NULL," +
+                "LEAGUE_ID INTEGER," +
+                "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID)," +
+                "FOREIGN KEY (LEAGUE_ID) REFERENCES HIGH_SCHOOL_LEAGUE(LEAGUE_ID))";
+        db.execSQL(CREATE_TABLE_SPORT_FIXTURES);
 
-    // Create AGE_GROUP table
-    String CREATE_TABLE_AGE_GROUP = "CREATE TABLE AGE_GROUP (" +
-            "AGE_GROUP_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "AGE_GROUP TEXT NOT NULL)";
-    db.execSQL(CREATE_TABLE_AGE_GROUP);
+        // Create AGE_GROUP table
+        String CREATE_TABLE_AGE_GROUP = "CREATE TABLE AGE_GROUP (" +
+                "AGE_GROUP_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "AGE_GROUP TEXT NOT NULL)";
+        db.execSQL(CREATE_TABLE_AGE_GROUP);
 
-    // Insert data into AGE_GROUP table
-    String INSERT_AGE_GROUP = "INSERT INTO AGE_GROUP (AGE_GROUP) VALUES " +
-            "('Boys Under 15')," +
-            "('Girls Under 15')," +
-            "('Boys Under 16')," +
-            "('Girls Under 16')," +
-            "('Boys Under 17')," +
-            "('Girls Under 17')," +
-            "('Boys Under 18')," +
-            "('Girls Under 18')," +
-            "('Open')";
-    db.execSQL(INSERT_AGE_GROUP);
+        // Insert data into AGE_GROUP table
+        String INSERT_AGE_GROUP = "INSERT INTO AGE_GROUP (AGE_GROUP) VALUES " +
+                "('Boys Under 15')," +
+                "('Girls Under 15')," +
+                "('Boys Under 16')," +
+                "('Girls Under 16')," +
+                "('Boys Under 17')," +
+                "('Girls Under 17')," +
+                "('Boys Under 18')," +
+                "('Girls Under 18')," +
+                "('Open')";
+        db.execSQL(INSERT_AGE_GROUP);
 
-    // Create SPORT table
-    String CREATE_TABLE_SPORT = "CREATE TABLE SPORT (" +
-            "SPORT_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "SPORT TEXT NOT NULL)";
-    db.execSQL(CREATE_TABLE_SPORT);
+        // Create SPORT table
+        String CREATE_TABLE_SPORT = "CREATE TABLE SPORT (" +
+                "SPORT_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "SPORT TEXT NOT NULL)";
+        db.execSQL(CREATE_TABLE_SPORT);
 
-    // Insert data into SPORT table
-    String INSERT_SPORT = "INSERT INTO SPORT (SPORT) VALUES " +
-            "('Soccer')," +
-            "('Netball')," +
-            "('Rugby')," +
-            "('Hockey')," +
-            "('Cricket')," +
-            "('Tennis')," +
-            "('Basketball')," +
-            "('Athletics')," +
-            "('Swimming')";
-    db.execSQL(INSERT_SPORT);
+        // Insert data into SPORT table
+        String INSERT_SPORT = "INSERT INTO SPORT (SPORT) VALUES " +
+                "('Soccer')," +
+                "('Netball')," +
+                "('Rugby')," +
+                "('Hockey')," +
+                "('Cricket')," +
+                "('Tennis')," +
+                "('Basketball')," +
+                "('Athletics')," +
+                "('Swimming')";
+        db.execSQL(INSERT_SPORT);
 
-    // Create HIGH_SCHOOL_LEAGUE table
-    String CREATE_TABLE_HIGH_SCHOOL_LEAGUE = "CREATE TABLE HIGH_SCHOOL_LEAGUE (" +
-            "LEAGUE_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "LEAGUE TEXT NOT NULL)";
-    db.execSQL(CREATE_TABLE_HIGH_SCHOOL_LEAGUE);
+        // Create HIGH_SCHOOL_LEAGUE table
+        String CREATE_TABLE_HIGH_SCHOOL_LEAGUE = "CREATE TABLE HIGH_SCHOOL_LEAGUE (" +
+                "LEAGUE_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "LEAGUE TEXT NOT NULL)";
+        db.execSQL(CREATE_TABLE_HIGH_SCHOOL_LEAGUE);
 
-    // Insert data into HIGH_SCHOOL_LEAGUE table
-    String INSERT_HIGH_SCHOOL_LEAGUE = "INSERT INTO HIGH_SCHOOL_LEAGUE (LEAGUE) VALUES " +
-            "('WP League')," +
-            "('Inter-School')," +
-            "('Provincial')," +
-            "('National')," +
-            "('International')," +
-            "('Friendly')," +
-            "('Tournament')";
-    db.execSQL(INSERT_HIGH_SCHOOL_LEAGUE);
-}
+        // Insert data into HIGH_SCHOOL_LEAGUE table
+        String INSERT_HIGH_SCHOOL_LEAGUE = "INSERT INTO HIGH_SCHOOL_LEAGUE (LEAGUE) VALUES " +
+                "('WP League')," +
+                "('Inter-School')," +
+                "('Provincial')," +
+                "('National')," +
+                "('International')," +
+                "('Friendly')," +
+                "('Tournament')";
+        db.execSQL(INSERT_HIGH_SCHOOL_LEAGUE);
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -235,6 +235,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // Recreate tables
         onCreate(db);
     }
+
     // HANNAH ADDED, CAUSE NO PASSWORD IN addUsers and to log user in ********************************/  /*********************************/  /*********************************/
     public boolean addUser(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -248,6 +249,7 @@ public class DBHelper extends SQLiteOpenHelper {
         long result = db.insert("USERS", null, values);
         return result != -1;
     }
+
     public List<EventModel> getAllEvents() {
         List<EventModel> events = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -262,6 +264,8 @@ public class DBHelper extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndexOrThrow("EVENT_TIME")),
                         cursor.getString(cursor.getColumnIndexOrThrow("EVENT_LOCATION")),
                         cursor.getDouble(cursor.getColumnIndexOrThrow("EVENT_PRICE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DESCRIPTION")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")), // Retrieve picture
                         false // Default value for 'selected'
                 );
                 events.add(event);
@@ -334,6 +338,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // Update the row and return the number of rows affected
         return db.update("USERS", values, "USER_ID = ?", new String[]{String.valueOf(adminUser.getUserId())});
     }
+
     // Method to get user details
     public UserModel getUserDetails(int userId) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -346,7 +351,7 @@ public class DBHelper extends SQLiteOpenHelper {
             int photoIndex = cursor.getColumnIndex("PHOTO");
             int dateOfBirthIndex = cursor.getColumnIndex("DATEOFBIRTH");
 
-            if  (userIdIndex >= 0 && nameIndex >= 0 && surnameIndex >= 0 && emailIndex >= 0 && dateOfBirthIndex >= 0) {
+            if (userIdIndex >= 0 && nameIndex >= 0 && surnameIndex >= 0 && emailIndex >= 0 && dateOfBirthIndex >= 0) {
                 UserModel user = new UserModel(
                         cursor.getInt(userIdIndex),
                         cursor.getString(nameIndex),
@@ -391,6 +396,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         return sportsList;
     }
+
     public List<String> getAllAgeGroups() {
         List<String> ageGroupList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -404,6 +410,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         return ageGroupList;
     }
+
     public long addDummyFixtureWithUserId(int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -426,8 +433,8 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("TIME_ID", 1); // Assuming a valid TIME_ID
         values.put("USER_ID", userId); // Link to the current user
 
-       long fixid =  db.insert("SPORT_FIXTURES", null, values);
-       return (fixid);
+        long fixid = db.insert("SPORT_FIXTURES", null, values);
+        return (fixid);
     }
 
     public FixtureModel getFixtureDetails(int fixtureId) {
@@ -466,6 +473,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return null;
     }
+
     public long insertProduct(int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -479,6 +487,7 @@ public class DBHelper extends SQLiteOpenHelper {
         long newProductId = db.insert("SCHOOL_MERCH", null, values);
         return newProductId;
     }
+
     public int updateProduct(ProductModel prod) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -486,10 +495,11 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("DESCRIPTION", prod.getProdDescription());
         values.put("PRICE", prod.getProdPrice());
         values.put("PHOTO", prod.getProdPicture());
-        values.put("USER_ID",prod.getUserId());
+        values.put("USER_ID", prod.getUserId());
 
         return db.update("SCHOOL_MERCH", values, "PRODUCT_ID = ?", new String[]{String.valueOf(prod.getProdId())});
     }
+
     public ProductModel getProduct(int productId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query("SCHOOL_MERCH", null, "PRODUCT_ID = ?", new String[]{String.valueOf(productId)}, null, null, null);
@@ -512,20 +522,22 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return null;
     }
-    /*********************************/  /*********************************/  /*********************************/  /*********************************/
+    /*********************************/  /*********************************/  /*********************************/
+    /*********************************/
     // A method to add users to the database
-public void addUsers(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
-    // Add users to the database
-    SQLiteDatabase db = this.getWritableDatabase();
-    ContentValues values = new ContentValues();
-    values.put("NAME", name);
-    values.put("SURNAME", surname);
-    values.put("DATEOFBIRTH", dateOfBirth);
-    values.put("EMAIL", email);
-    values.put("PASSWORD", password);
-    values.put("ROLE_ID", roleId);
-    db.insert("USERS", null, values);
-}
+    public void addUsers(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
+        // Add users to the database
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("NAME", name);
+        values.put("SURNAME", surname);
+        values.put("DATEOFBIRTH", dateOfBirth);
+        values.put("EMAIL", email);
+        values.put("PASSWORD", password);
+        values.put("ROLE_ID", roleId);
+        db.insert("USERS", null, values);
+    }
+
     //A method to add roles to the database
     public void addRoles(String role) {
         // Add roles to the database
@@ -534,6 +546,7 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
         values.put("ROLE", role);
         db.insert("ROLES", null, values);
     }
+
     //A method to add player profiles to the database
     public void addPlayerProfile(String name, String surname, String nickname, int age, String grade, String height, String position, String dateOfBirth, int userId) {
         // Add player profiles to the database
@@ -550,6 +563,7 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
         values.put("USER_ID", userId);
         db.insert("PLAYER_PROFILE", null, values);
     }
+
     //A method to add times to the database
     public void addTimes(String meetingTime, String busDepatureTime, String busReturnTime, String message) {
         // Add times to the database
@@ -561,6 +575,7 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
         values.put("MESSAGE", message);
         db.insert("TIMES", null, values);
     }
+
     //A method to add school merch to the database
     public void addSchoolMerch(String name, double price, byte[] photo, int userId) {
         // Add school merch to the database
@@ -572,6 +587,7 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
         values.put("USER_ID", userId);
         db.insert("SCHOOL_MERCH", null, values);
     }
+
     //A method to add banned words to the database
     public void addBannedWords(String word, int userId) {
         // Add banned words to the database
@@ -581,6 +597,7 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
         values.put("USER_ID", userId);
         db.insert("BANNED_WORDS", null, values);
     }
+
     //A method to add previous reports to the database
     public void addPreviousReports(String reportName, String reportDate, String reportType, String reportInformation, int userId) {
         // Add previous reports to the database
@@ -593,6 +610,7 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
         values.put("USER_ID", userId);
         db.insert("PREVIOUS_REPORTS", null, values);
     }
+
     //A method to add events to the database
     public void addEvents(String eventName, String eventDate, String eventTime, String eventLocation, double eventPrice, int userId) {
         // Add events to the database
@@ -606,6 +624,7 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
         values.put("USER_ID", userId);
         db.insert("EVENTS", null, values);
     }
+
     //A method to add matches to the database
     public void addMatches(String matchLocation, String matchDate, String matchTime, double price, String matchDiscription, byte[] picture, int timeId) {
         // Add matches to the database
@@ -620,6 +639,7 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
         values.put("TIME_ID", timeId);
         db.insert("MATCHES", null, values);
     }
+
     //A method to add sport fixtures to the database
     public void addSportFixtures(String sport, String homeTeam, String awayTeam, String ageGroup, String league, String setDate, String setTime, String setLocation, byte[] homeLogo, byte[] awayLogo, int matchId, int userId) {
         // Add sport fixtures to the database
@@ -639,6 +659,7 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
         values.put("USER_ID", userId);
         db.insert("SPORT_FIXTURES", null, values);
     }
+
     // Method to check if a user exists and retrieve USER_ID
     public Integer validateUser(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -666,6 +687,7 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
         // Returning the USER_ID or null
         return userId;
     }
+
     // Method to check if a user exists and retrieve ROLE_ID
     public PlayerProfileModel getPlayerProfile(int userId) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -717,6 +739,7 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
         // Update and return the number of rows affected
         return db.update("PLAYER_PROFILE", values, "PLAYER_ID = ?", new String[]{String.valueOf(playerId)});
     }
+
     // A method to update profile picture
     public int updatePlayerProfilePicture(int playerId, byte[] picture) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -727,7 +750,7 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
     }
 
     public boolean deletePlayerProfile(int playerId) {
-        try{
+        try {
             SQLiteDatabase db = this.getWritableDatabase();
             db.delete("PLAYER_PROFILE", "PLAYER_ID = ?", new String[]{String.valueOf(playerId)});
             return true;
@@ -738,44 +761,44 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
     }
     // DBHelper.java
 
-public List<String> getAllLeagues() {
-    List<String> leagues = new ArrayList<>();
-    SQLiteDatabase db = this.getReadableDatabase();
-    Cursor cursor = db.rawQuery("SELECT LEAGUE FROM HIGH_SCHOOL_LEAGUE", null);
+    public List<String> getAllLeagues() {
+        List<String> leagues = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT LEAGUE FROM HIGH_SCHOOL_LEAGUE", null);
 
-    if (cursor.moveToFirst()) {
-        do {
-            leagues.add(cursor.getString(cursor.getColumnIndexOrThrow("LEAGUE")));
-        } while (cursor.moveToNext());
-    } else {
-        Log.d("DBHelper", "No leagues found in the database.");
+        if (cursor.moveToFirst()) {
+            do {
+                leagues.add(cursor.getString(cursor.getColumnIndexOrThrow("LEAGUE")));
+            } while (cursor.moveToNext());
+        } else {
+            Log.d("DBHelper", "No leagues found in the database.");
+        }
+        cursor.close();
+        Log.d("DBHelper", "Leagues: " + leagues);
+        return leagues;
     }
-    cursor.close();
-    Log.d("DBHelper", "Leagues: " + leagues);
-    return leagues;
-}
 
-public boolean deleteFixture(int fixtureId) {
-    try{
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete("SPORT_FIXTURES", "FIXTURE_ID = ?", new String[]{String.valueOf(fixtureId)});
-        return true;
-    } catch (Exception e) {
-        Log.e("DBHelper", "Error deleting fixture: " + e.getMessage());
+    public boolean deleteFixture(int fixtureId) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete("SPORT_FIXTURES", "FIXTURE_ID = ?", new String[]{String.valueOf(fixtureId)});
+            return true;
+        } catch (Exception e) {
+            Log.e("DBHelper", "Error deleting fixture: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean checkIsAdmin(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT ROLE_ID FROM USERS WHERE USER_ID = ?", new String[]{String.valueOf(userId)});
+        if (cursor != null && cursor.moveToFirst()) {
+            int roleId = cursor.getInt(cursor.getColumnIndexOrThrow("ROLE_ID"));
+            cursor.close();
+            return roleId == 1;
+        }
         return false;
     }
-}
-
-public boolean checkIsAdmin(int userId) {
-    SQLiteDatabase db = this.getReadableDatabase();
-    Cursor cursor = db.rawQuery("SELECT ROLE_ID FROM USERS WHERE USER_ID = ?", new String[]{String.valueOf(userId)});
-    if (cursor != null && cursor.moveToFirst()) {
-        int roleId = cursor.getInt(cursor.getColumnIndexOrThrow("ROLE_ID"));
-        cursor.close();
-        return roleId == 1;
-    }
-    return false;
-}
 
 
 }
