@@ -20,6 +20,7 @@ class UpcomingRecentEvents : AppCompatActivity() {
 
         dbHelper = DBHelper(this) // Initialize the DBHelper
 
+        NavigatingTohomeScreen()
 
         SettingTheCurrentDate()
 
@@ -56,6 +57,17 @@ class UpcomingRecentEvents : AppCompatActivity() {
             }
 
             eventsContainer.addView(eventView)
+        }
+    }
+
+    private fun NavigatingTohomeScreen() {
+        // Initialize the back button
+        val backButton = findViewById<LinearLayout>(R.id.back_btn)
+        backButton.setOnClickListener {
+            // Navigate to the home screen
+            val intent = Intent(this, HomeScreen::class.java)
+            startActivity(intent)
+            finish() // Optional: finish the current activity
         }
     }
 

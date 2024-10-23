@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         // Delay of 3 seconds (3000 milliseconds)
         Handler(Looper.getMainLooper()).postDelayed({
-           val intent = Intent(this@MainActivity, StudentParentReg::class.java)
+           val intent = Intent(this@MainActivity, UpcomingRecentEvents::class.java)
             startActivity(intent)
             // Finishing MainActivity so that the user cannot go back to it
             finish()
