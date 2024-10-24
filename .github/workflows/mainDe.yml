@@ -24,6 +24,7 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: ${{ matrix.java-version }}
+        distribution: 'adopt'  # Specify the distribution, e.g., 'adopt', 'zulu', 'temurin', etc.
 
     - name: Cache Gradle packages
       uses: actions/cache@v2
@@ -54,6 +55,7 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: 1.8
+        distribution: 'adopt'  # Specify the distribution
 
     - name: Run static analysis
       run: ./gradlew check
