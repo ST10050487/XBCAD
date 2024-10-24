@@ -1,6 +1,7 @@
 package za.co.varsitycollage.st10050487.knights
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,15 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 
 class upcomingMatchesFragment : Fragment() {
+
+    // This method is called to handle the fixtureID passed from the activity
+    fun onFixtureIDReceived(fixtureID: Long) {
+        // Now you can use the fixtureID in this fragment
+        // Perform any actions like updating data or UI
+        Log.d("UpcomingMatchesFragment", "Fixture ID received: $fixtureID")
+
+        // You can also update the list of upcoming matches here or refresh the view
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

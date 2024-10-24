@@ -54,6 +54,18 @@ class CreateSportFixture : AppCompatActivity() {
     private var isHomeTeamLogo: Boolean = true
     private var userId: Int? = null // Declare a variable to hold the user ID
 
+    private val leagueIdMapping = mapOf(
+        "WP League" to 1,
+        "Inter-School" to 2,
+        "Provincial" to 3,
+        "National" to 4,
+        "International" to 5,
+        "Friendly" to 6,
+        "Tournament" to 7
+    )
+
+    private var leagueId: Int? = null // Variable to hold the selected league ID
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -158,6 +170,8 @@ class CreateSportFixture : AppCompatActivity() {
                 id: Long
             ) {
                 selectedLeague = parent.getItemAtPosition(position) as String
+                leagueId =
+                    leagueIdMapping[selectedLeague] // Get the league ID based on selected league
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -276,8 +290,6 @@ class CreateSportFixture : AppCompatActivity() {
             }
         }
 
-        val leagueId = 1 // Replace with actual league ID
-
         val values = ContentValues().apply {
             put("SPORT", selectedSport)
             put("HOME_TEAM", homeTeamName)
@@ -295,7 +307,8 @@ class CreateSportFixture : AppCompatActivity() {
         }
 
         dbHelper.writableDatabase.insert("SPORT_FIXTURES", null, values)
-        Toast.makeText(this, "You have successfully created the sports fixture", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "You have successfully created the sports fixture", Toast.LENGTH_LONG)
+            .show()
 
         // Clear the input fields
         homeTeamNameEditText.text.clear()
