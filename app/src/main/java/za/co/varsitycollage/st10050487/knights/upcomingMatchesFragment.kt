@@ -1,5 +1,6 @@
 package za.co.varsitycollage.st10050487.knights
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,20 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 
 class upcomingMatchesFragment : Fragment() {
 
-    // This method is called to handle the fixtureID passed from the activity
-    fun onFixtureIDReceived(fixtureID: Long) {
-        // Now you can use the fixtureID in this fragment
-        // Perform any actions like updating data or UI
-        Log.d("UpcomingMatchesFragment", "Fixture ID received: $fixtureID")
-
-        // You can also update the list of upcoming matches here or refresh the view
-    }
+    private var fixtureId: Long = 6// Retrieve the static fixture ID
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,17 +32,31 @@ class upcomingMatchesFragment : Fragment() {
         val matchType = view.findViewById<TextView>(R.id.match_type)
         val ageGroup = view.findViewById<TextView>(R.id.age_group)
 
-        // Set the text and image resources
-        fixtureDate.text = "Friday, October 5, 2023"
-        team1Logo.setImageResource(R.drawable.bosemansdamhig)
-        team1Name.text = "BOSMANSDAM"
-        fixtureTime.text = "10:00"
-        fixtureDateBox.text = "5 OCT"
-        team2Logo.setImageResource(R.drawable.egmeadhigh)
-        team2Name.text = "EGMEAD"
-        matchType.text = "Netball"
-        ageGroup.text = "Under 17's"
+        // Create an instance of your database helper
+        val dbHelper = DBHelper(requireContext())
 
+        // Retrieve fixture details using the fixture ID
+        val fixture = dbHelper.getFixtureDetails(fixtureId.toInt())
+
+        if (fixture != null) {
+            // Update the UI with the retrieved data
+            fixtureDate.text = fixture.matchDate // Use matchDate
+            fixture.homeLogo?.let {
+                team1Logo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
+            }
+            team1Name.text = fixture.homeTeam
+            fixtureTime.text = fixture.matchTime // Use matchTime
+            fixtureDateBox.text = fixture.matchDate // Use matchDate
+            fixture.awayLogo?.let {
+                team2Logo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
+            }
+            team2Name.text = fixture.awayTeam
+            matchType.text = fixture.sport
+            ageGroup.text = fixture.ageGroup
+        } else {
+            // Handle the case where no fixture is found
+            Log.e("UpcomingMatchesFragment", "No fixture found for ID: $fixtureId")
+        }
 
         return view
     }

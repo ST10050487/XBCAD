@@ -445,25 +445,20 @@ public class DBHelper extends SQLiteOpenHelper {
 
         if (cursor != null && cursor.moveToFirst()) {
             FixtureModel fixture = new FixtureModel(
-                    cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
                     cursor.getString(cursor.getColumnIndexOrThrow("SPORT")),
                     cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
                     cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
                     cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP")),
                     cursor.getString(cursor.getColumnIndexOrThrow("LEAGUE")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("SET_DATE")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("SET_TIME")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("SET_LOCATION")),
-                    cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
-                    cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_LOCATION")),
                     cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DATE")),
                     cursor.getString(cursor.getColumnIndexOrThrow("MATCH_TIME")),
-                    cursor.getDouble(cursor.getColumnIndexOrThrow("PRICE")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DISCRIPTION")),
-                    cursor.getBlob(cursor.getColumnIndexOrThrow("PIICTURE")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("TIME_ID"))
+                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_LOCATION")),
+                    cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
+                    cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DESCRIPTION")),
+                    cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE"))
             );
             cursor.close();
             return fixture;

@@ -1,3 +1,4 @@
+// CreateSportFixture.kt
 package za.co.varsitycollage.st10050487.knights
 
 import android.app.Activity
@@ -25,6 +26,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.Calendar
 
 class CreateSportFixture : AppCompatActivity() {
+    companion object {
+        var fixtureID: Long = -1 // Static variable to hold the fixture ID
+    }
+
     private lateinit var dbHelper: DBHelper
     private lateinit var homeTeamLogo: ImageView
     private lateinit var awayTeamLogo: ImageView
@@ -77,6 +82,8 @@ class CreateSportFixture : AppCompatActivity() {
         }
 
         dbHelper = DBHelper(this)
+
+        NavigatingBackBtn()
 
         // Retrieve the USER_ID from the Intent
         userId = intent.getIntExtra("USER_ID", -1) // Default value is -1 if not found
@@ -195,6 +202,17 @@ class CreateSportFixture : AppCompatActivity() {
         }
     }
 
+    private fun NavigatingBackBtn() {
+        // Find the back button TextView
+        val backButton = findViewById<TextView>(R.id.back_btn)
+
+        // Set an OnClickListener to navigate to HomeScreen
+        backButton.setOnClickListener {
+            val intent = Intent(this, HomeScreen::class.java)
+            startActivity(intent)
+        }
+    }
+
     private fun populateSpinner(spinner: Spinner, data: List<String>) {
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, data)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -277,7 +295,7 @@ class CreateSportFixture : AppCompatActivity() {
         Log.d("CreateSportFixture", "Away Team Logo URI: $awayTeamLogoUri")
     }
 
-    private fun insertFixtureIntoDatabase() {
+    private fun insertFixtureIntoDatabase(): Long {
         val homeLogoBlob = homeTeamLogoUri?.let { uri ->
             contentResolver.openInputStream(uri)?.use { inputStream ->
                 inputStream.readBytes()
@@ -306,7 +324,13 @@ class CreateSportFixture : AppCompatActivity() {
             put("LEAGUE_ID", leagueId)
         }
 
-        dbHelper.writableDatabase.insert("SPORT_FIXTURES", null, values)
+        val fixtureId = dbHelper.writableDatabase.insert("SPORT_FIXTURES", null, values)
+        if (fixtureId == -1L) {
+            Toast.makeText(this, "Failed to create sports fixture", Toast.LENGTH_LONG).show()
+        }
+
+        fixtureID = fixtureId // Set the static fixture ID
+        Log.d("CreateSportFixture", "Generated Fixture ID: $fixtureID") // Log the fixture ID
         Toast.makeText(this, "You have successfully created the sports fixture", Toast.LENGTH_LONG)
             .show()
 
@@ -321,5 +345,7 @@ class CreateSportFixture : AppCompatActivity() {
         awayTeamLogo.setImageURI(null)
         homeTeamLogoUri = null
         awayTeamLogoUri = null
+
+        return fixtureId // Return the generated fixture ID
     }
 }
