@@ -5,401 +5,401 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditFixture">
+    tools:context=".EditFixture"
+    android:background="@color/white">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primaryColor"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="30dp"
-                android:src="@drawable/back_btn"/>
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:background="@color/backgroundtheme">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/back_btn"
-                android:textColor="@color/white"
-                android:textSize="16dp"
-                android:layout_gravity="center_vertical"/>
+                android:paddingTop="10dp"
+                android:paddingLeft="@dimen/_20sdp"
+                android:drawableStart="@drawable/back_arrow"
+                android:text="Back"
+                android:textSize="20sp"
+                android:textColor="@color/white"/>
         </LinearLayout>
-    </androidx.appcompat.widget.Toolbar>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="665dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-         <!-- Team 1 -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TEAM 1"
-                android:fontFamily="@font/inter_bold"
-                android:textColor="@color/black"
-                android:textSize="20dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"/>
-            <!-- Input field for Home Team -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Home Team"
-                android:fontFamily="@font/inter_bold"
-                android:textColor="@color/black"
-                android:textSize="18dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginHorizontal="26dp"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                android:padding="5dp"
-                android:layout_marginHorizontal="20dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtHomeTeam"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Home Team"
-                    android:inputType="text"
-                    android:textColor="@color/lightGrey"
-                    android:textSize="16dp" />
-            </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingHorizontal="40dp"
-                android:paddingVertical="20dp">
-
-                <ImageView
-                    android:id="@+id/imgHomeLogo"
-                    android:layout_width="84dp"
-                    android:layout_height="69dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_sample" />
-
-                <Button
-                    android:layout_width="215dp"
-                    android:layout_height="58dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginHorizontal="30dp"
-                    android:text="Upload Image" />
-            </LinearLayout>
-
-
-            <!-- Team 2 -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TEAM 2"
-                android:fontFamily="@font/inter_bold"
-                android:textColor="@color/black"
-                android:textSize="20dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"/>
-
-            <!-- Input field for Away Team -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Away Team"
-                android:fontFamily="@font/inter_bold"
-                android:textColor="@color/black"
-                android:textSize="18dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginHorizontal="26dp"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                android:padding="5dp"
-                android:layout_marginHorizontal="20dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtAwayTeam"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Away Team"
-                    android:inputType="text"
-                    android:textColor="@color/lightGrey"
-                    android:textSize="16dp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingHorizontal="40dp"
-                android:paddingVertical="20dp">
-
-                <ImageView
-                    android:id="@+id/imgAwayLogo"
-                    android:layout_width="84dp"
-                    android:layout_height="69dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_sample" />
-
-                <Button
-                    android:layout_width="215dp"
-                    android:layout_height="58dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginHorizontal="30dp"
-                    android:text="Upload Image" />
-            </LinearLayout>
-
-            <!-- Input field for Venue -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Venue"
-                android:fontFamily="@font/inter_bold"
-                android:textColor="@color/black"
-                android:textSize="18dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginHorizontal="26dp"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                android:padding="5dp"
-                android:layout_marginHorizontal="20dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtVenue"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Venue"
-                    android:inputType="text"
-                    android:textColor="@color/lightGrey"
-                    android:textSize="16dp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Spinner for Sport -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sport"
-                android:fontFamily="@font/inter_bold"
-                android:textColor="@color/black"
-                android:textSize="18dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginHorizontal="26dp"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                android:padding="5dp"
-                android:layout_marginHorizontal="20dp">
-
-                <Spinner
-                    android:id="@+id/spinnerTeam"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="Sport"
-                    android:inputType="text"
-                    android:textColor="@color/lightGrey"
-                    android:textSize="16dp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Spinner for Team -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_marginVertical="10dp"
-                android:padding="5dp"
-                android:layout_marginHorizontal="20dp">
+                android:orientation="vertical">
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TEAM 1"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:paddingStart="24dp"
+                    android:paddingTop="16dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Home Team"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingStart="24dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Team"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"
+                    android:padding="5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtHomeTeam"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Home Team"
+                        android:layout_marginBottom="24dp"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/imgHomeLogo"
+                        android:layout_width="110dp"
+                        android:layout_height="90dp"
+                        android:background="@drawable/ic_sample"
+                        android:scaleType="centerCrop"/>
+
+                    <TextView
+                        android:id="@+id/btnHomeUpload"
+                        android:layout_width="210dp"
+                        android:layout_height="55dp"
+                        android:layout_marginStart="15dp"
+                        android:background="@drawable/rounded_upload_button"
+                        android:clickable="true"
+                        android:drawableEnd="@drawable/ic_upload"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingEnd="8dp"
+                        android:text="Upload Image"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TEAM 2"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:paddingStart="12dp"
+                    android:paddingTop="30dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Away Team"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingStart="24dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"
+                    android:padding="5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtAwayTeam"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Away Team"
+                        android:layout_marginBottom="15dp"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/imgAwayLogo"
+                        android:layout_width="110dp"
+                        android:layout_height="90dp"
+                        android:background="@drawable/ic_sample"
+                        android:scaleType="centerCrop"/>
+
+                    <TextView
+                        android:id="@+id/btnAwayUpload"
+                        android:layout_width="210dp"
+                        android:layout_height="55dp"
+                        android:layout_marginStart="15dp"
+                        android:background="@drawable/rounded_upload_button"
+                        android:clickable="true"
+                        android:drawableEnd="@drawable/ic_upload"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingEnd="8dp"
+                        android:text="Upload Image"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Venue"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingStart="24dp"
+                    android:layout_marginTop="30dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"
+                    android:padding="5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtVenue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Venue"
+                        android:drawableEnd="@drawable/ic_location"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sport"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingStart="24dp"
+                    android:layout_marginTop="20dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"
+                    android:padding="5dp">
+
+                    <Spinner
+                        android:id="@+id/spinnerSport"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:drawableEnd="@drawable/ic_drop_down_icon"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Age Group"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingStart="24dp"
+                    android:layout_marginTop="20dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"
+                    android:padding="5dp">
+
+                    <Spinner
+                        android:id="@+id/spinnerAgeGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:drawableEnd="@drawable/ic_drop_down_icon"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="League"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingStart="24dp"
+                    android:layout_marginTop="20dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"
+                    android:padding="5dp">
+
+                    <Spinner
+                        android:id="@+id/spinnerLeague"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:drawableEnd="@drawable/ic_drop_down_icon"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Time"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingStart="24dp"
+                    android:layout_marginTop="20dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"
+                    android:padding="5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Select Time"
+                        android:drawableEnd="@drawable/ic_clock_icon"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingStart="24dp"
+                    android:layout_marginTop="20dp"/>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/txtDateLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"
+                    android:padding="5dp"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@drawable/ic_date_icon"
+                    app:endIconCheckable="false">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="date"
+                        android:hint="Select Date"
+                        >
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingStart="24dp"
+                    android:layout_marginTop="20dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"
+                    android:padding="5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtDescrip"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Description"
+                        android:drawableEnd="@drawable/ic_description_icon"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="START PLAYERS"
+                    android:textColor="@color/backgroundtheme"
                     android:fontFamily="@font/inter_bold"
-                    android:textColor="@color/black"
-                    android:textSize="18dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginHorizontal="2dp"/>
-                <Spinner
-                    android:id="@+id/spinnerSport"
+                    android:textSize="30sp"
+                    android:layout_marginTop="30dp"/>
+                <Button
+                    android:id="@+id/btnPlayers"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                    android:layout_width="@dimen/_215sdp"
+                    android:layout_height="@dimen/_58sdp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginHorizontal="@dimen/_30sdp"
+                    android:backgroundTint="@color/lightBlue"
+                    android:fontFamily="@font/inter_bold"
+                    android:text="Get Players"
+                    android:textColor="@color/white"
+                    app:icon="@drawable/ic_add_user_icon"
+                    app:iconSize="30dp"
+                    app:iconGravity="end"
+                    app:iconTint="@color/white" />
+
+                <View
                     android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:layout_marginHorizontal="@dimen/_50sdp"
+                    android:layout_marginTop="@dimen/_30sdp"
+                    android:background="@color/primaryColor" />
+
+                <Button
+                    android:id="@+id/btnUpdate"
+                    android:layout_width="wrap_content"
+                    android:layout_margin="@dimen/_30sdp"
                     android:layout_height="wrap_content"
-                    android:spinnerMode="dropdown" />
+                    android:layout_gravity="center_horizontal"
+                    android:text="UPDATE FIXTURE"/>
+
+                <Button
+                    android:id="@+id/btnDelete"
+                    android:layout_width="wrap_content"
+                    android:layout_margin="@dimen/_30sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="DELETE FIXTURE"/>
             </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 
-            <!-- Input field for Time -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Time"
-                android:fontFamily="@font/inter_bold"
-                android:textColor="@color/black"
-                android:textSize="18dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginHorizontal="26dp"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                android:padding="5dp"
-                android:layout_marginHorizontal="20dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Time"
-                    android:inputType="text"
-                    android:textColor="@color/lightGrey"
-                    android:textSize="16dp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Input field for Date-->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Date"
-                android:fontFamily="@font/inter_bold"
-                android:textColor="@color/black"
-                android:textSize="18dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginHorizontal="26dp"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                android:padding="5dp"
-                android:layout_marginHorizontal="20dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Date"
-                    android:inputType="date"
-                    android:textColor="@color/lightGrey"
-                    android:textSize="16dp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <!-- Input field for Results -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="RESULTS"
-                android:fontFamily="@font/inter_bold"
-                android:textColor="@color/black"
-                android:textSize="18dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginHorizontal="26dp"/>
-
-            <!-- Input field for Home Result -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Home Result (Optional)"
-                android:fontFamily="@font/inter_bold"
-                android:textColor="@color/black"
-                android:textSize="18dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginHorizontal="26dp"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                android:padding="5dp"
-                android:layout_marginHorizontal="20dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtHomeResult"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="0"
-                    android:inputType="number"
-                    android:textColor="@color/lightGrey"
-                    android:textSize="16dp" />
-            </com.google.android.material.textfield.TextInputLayout>
-            <!-- Input field for Home Result -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Away Result (Optional)"
-                android:fontFamily="@font/inter_bold"
-                android:textColor="@color/black"
-                android:textSize="18dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginHorizontal="26dp"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                android:padding="5dp"
-                android:layout_marginHorizontal="20dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtAwayResult"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="0"
-                    android:inputType="number"
-                    android:textColor="@color/lightGrey"
-                    android:textSize="16dp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <Button
-                android:id="@+id/btnSave"
-                android:layout_width="215dp"
-                android:layout_height="58dp"
-                android:layout_margin="40dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginHorizontal="30dp"
-                android:text="Save Changes" />
-
-            <Button
-                android:id="@+id/btnDelete"
-                android:layout_width="215dp"
-                android:layout_height="58dp"
-                android:layout_margin="40dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginHorizontal="30dp"
-                android:text="Delete" />
-
-        </LinearLayout>
-    </ScrollView>
-
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_plus_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:backgroundTint="@color/backgroundtheme"
+        app:tint="@color/white" />
 </androidx.constraintlayout.widget.ConstraintLayout>
