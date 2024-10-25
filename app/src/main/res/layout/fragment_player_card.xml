@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ViewPlayer">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="379dp"
-        android:layout_height="163dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:backgroundTint="#8D0E50"
         app:cardCornerRadius="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="1dp"
+        android:layout_marginBottom="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
-        <LinearLayout
-            android:layout_width="382dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:paddingHorizontal="15dp"
             android:paddingTop="15dp">
 
             <LinearLayout
+                android:id="@+id/linearLayout5"
                 android:layout_width="69dp"
                 android:layout_height="144dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:layout_width="50dp"
@@ -43,39 +47,47 @@
                     android:background="@drawable/yellow_barrier" />
             </LinearLayout>
 
+
             <LinearLayout
-                android:layout_width="279dp"
-                android:layout_height="140dp"
+                android:id="@+id/linearLayout3"
+                android:layout_width="240dp"
+                android:layout_height="142dp"
                 android:layout_gravity="center_horizontal"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/linearLayout4"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/linearLayout5"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0">
 
                 <TextView
                     android:id="@+id/txtFullname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
-                    android:layout_marginVertical="17dp"
                     android:layout_marginHorizontal="15dp"
+                    android:layout_marginVertical="17dp"
                     android:fontFamily="@font/inter_bold"
                     android:text=""
-                    android:textSize="16dp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="16dp" />
 
                 <TextView
-                    android:id="@+id/txtEmail"
+                    android:id="@+id/txtNickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:fontFamily="@font/inter"
-                    android:text="Email:"
+                    android:text=""
                     android:textColor="@color/white" />
 
                 <TextView
-                    android:id="@+id/txtGrade"
+                    android:id="@+id/txtPosition"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter"
-                    android:text="Grade:"
+                    android:text=""
                     android:textColor="@color/white" />
 
                 <TextView
@@ -83,10 +95,38 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter"
-                    android:text="Age:"
+                    android:text=""
                     android:textColor="@color/white" />
 
+
             </LinearLayout>
-        </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout4"
+                android:layout_width="40dp"
+                android:layout_height="84dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/linearLayout3"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <CheckBox
+                    android:id="@+id/checkSelect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <Button
+                    android:id="@+id/btnEdit"
+                    android:layout_width="39dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/ic_edit"
+                    android:padding="10dp"
+                    android:textColorLink="@color/black"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

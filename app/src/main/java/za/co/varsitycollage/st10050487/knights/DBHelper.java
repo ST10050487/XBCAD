@@ -10,12 +10,10 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.Arrays;
-
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 13;
 
 
     // Constructor
@@ -73,16 +71,46 @@ public class DBHelper extends SQLiteOpenHelper {
                 "AGE_GROUP TEXT NOT NULL," +
                 "USER_ID INTEGER NOT NULL," +
                 "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
-        db.execSQL(CREATE_TABLE_PLAYER_PROFILE);
-
-        // Insert dummy data into PLAYER_PROFILE table
+        db.execSQL(CREATE_TABLE_PLAYER_PROFILE);    // Insert dummy player profiles into PLAYER_PROFILE table
         String INSERT_PLAYER_PROFILE = "INSERT INTO PLAYER_PROFILE (NAME, SURNAME, NICKNAME, AGE, GRADE, HEIGHT, POSITION, DATEOFBIRTH, PICTURE, AGE_GROUP, USER_ID) VALUES " +
                 "('Michael', 'Jordan', 'MJ', 15, 'Grade 10', '2m', 'Shooting Guard', '2007-06-18', NULL, 'Under 18', 1)," +
                 "('Serena', 'Williams', 'Rena', 17, 'Grade 12', '1.3m', 'Tennis Player', '2005-09-26', NULL, 'Under 18', 2)," +
-                "('Lionel', 'Messi', 'Leo', 16, 'Grade 11', '1.8m', 'Forward', '2006-06-24', NULL, 'Under 18', 3)";
+                "('Lionel', 'Messi', 'Leo', 16, 'Grade 11', '1.8m', 'Forward', '2006-06-24', NULL, 'Under 18', 3)," +
+                "('LeBron', 'James', 'King', 16, 'Grade 11', '2.1m', 'Small Forward', '2006-12-30', NULL, 'Under 18', 4)," +
+                "('Roger', 'Federer', 'FedEx', 17, 'Grade 12', '1.85m', 'Tennis Player', '2005-08-08', NULL, 'Under 18', 5)," +
+                "('Cristiano', 'Ronaldo', 'CR7', 17, 'Grade 12', '1.87m', 'Forward', '2005-02-05', NULL, 'Under 18', 6)," +
+                "('Usain', 'Bolt', 'Lightning', 16, 'Grade 11', '1.95m', 'Sprinter', '2006-08-21', NULL, 'Under 18', 7)," +
+                "('Tom', 'Brady', 'TB12', 17, 'Grade 12', '1.93m', 'Quarterback', '2005-08-03', NULL, 'Under 18', 8)," +
+                "('Tiger', 'Woods', 'Tiger', 17, 'Grade 12', '1.85m', 'Golfer', '2005-12-30', NULL, 'Under 18', 9)," +
+                "('Kobe', 'Bryant', 'Black Mamba', 16, 'Grade 11', '1.98m', 'Shooting Guard', '2006-08-23', NULL, 'Under 18', 10)";
         db.execSQL(INSERT_PLAYER_PROFILE);
 
-        // Create TIMES table
+
+    String CREATE_TABLE_FIXTURE_PLAYERS =  "CREATE TABLE IF NOT EXISTS FIXTURE_PLAYERS (" +
+                "FIXTURE_PLAYER_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "FIXTURE_ID INTEGER NOT NULL," +
+                "PLAYER_ID INTEGER NOT NULL," +
+                "FOREIGN KEY (FIXTURE_ID) REFERENCES SPORT_FIXTURES(FIXTURE_ID)," +
+                "FOREIGN KEY (PLAYER_ID) REFERENCES PLAYER_PROFILE(PLAYER_ID))";
+        db.execSQL(CREATE_TABLE_FIXTURE_PLAYERS);
+
+// Step 2: Insert corresponding entries Player Profiles for Fixture (ID)1
+        String INSERT_FIXTURE_PLAYERS = "INSERT INTO FIXTURE_PLAYERS (FIXTURE_ID, PLAYER_ID) VALUES " +
+                "(1, 1)," +
+                "(1, 2)," +
+                "(1, 3)," +
+                "(1, 4)," +
+                "(1, 5)," +
+                "(1, 6)," +
+                "(1, 7)," +
+                "(1, 8)," +
+                "(1, 9)," +
+                "(1, 10)";
+        db.execSQL(INSERT_FIXTURE_PLAYERS);
+
+
+
+      // Create TIMES table
         String CREATE_TABLE_TIMES = "CREATE TABLE TIMES (" +
                 "TIME_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "MEETING_TIME TEXT," +
@@ -156,8 +184,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 "PICTURE BLOB," +
                 "USER_ID INTEGER NOT NULL," +
                 "LEAGUE_ID INTEGER," +
+                "MATCH_STATUS_ID INTEGER," +
                 "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID)," +
-                "FOREIGN KEY (LEAGUE_ID) REFERENCES HIGH_SCHOOL_LEAGUE(LEAGUE_ID))";
+                "FOREIGN KEY (LEAGUE_ID) REFERENCES HIGH_SCHOOL_LEAGUE(LEAGUE_ID)," +
+                "FOREIGN KEY (MATCH_STATUS_ID) REFERENCES MATCH_STATUS(MATCH_STATUS_ID))";
         db.execSQL(CREATE_TABLE_SPORT_FIXTURES);
 
         // Create AGE_GROUP table
@@ -214,6 +244,21 @@ public class DBHelper extends SQLiteOpenHelper {
                 "('Friendly')," +
                 "('Tournament')";
         db.execSQL(INSERT_HIGH_SCHOOL_LEAGUE);
+
+        // Creating the Match Status table
+        String CREATE_TABLE_MATCH_STATUS = "CREATE TABLE MATCH_STATUS (" +
+                "MATCH_STATUS_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "MATCH_STATUS TEXT NOT NULL)";
+        db.execSQL(CREATE_TABLE_MATCH_STATUS);
+
+        // Inserting data into the Match Status table
+        String INSERT_MATCH_STATUS = "INSERT INTO MATCH_STATUS (MATCH_STATUS) VALUES " +
+                "('Upcoming')," +
+                "('First Half')," +
+                "('Half Time')," +
+                "('Second Half')," +
+                "('Match Over')," +
+                "('Cancelled')";
     }
 
     @Override
@@ -232,6 +277,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS AGE_GROUP");
         db.execSQL("DROP TABLE IF EXISTS SPORT");
         db.execSQL("DROP TABLE IF EXISTS HIGH_SCHOOL_LEAGUE");
+        db.execSQL("DROP TABLE IF EXISTS MATCH_STATUS");
         // Recreate tables
         onCreate(db);
     }
@@ -250,31 +296,30 @@ public class DBHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    // DBHelper.java
     public List<EventModel> getAllEvents() {
-        List<EventModel> events = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM EVENTS", null);
+    List<EventModel> events = new ArrayList<>();
+    SQLiteDatabase db = this.getReadableDatabase();
+    Cursor cursor = db.rawQuery("SELECT * FROM EVENTS", null);
 
-        if (cursor.moveToFirst()) {
-            do {
-                EventModel event = new EventModel(
-                        cursor.getInt(cursor.getColumnIndexOrThrow("EVENT_ID")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_NAME")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DATE")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_TIME")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_LOCATION")),
-                        cursor.getDouble(cursor.getColumnIndexOrThrow("EVENT_PRICE")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DESCRIPTION")),
-                        cursor.getBlob(cursor.getColumnIndexOrThrow("EVENT_PICTURE")),
-                        false // Default value for 'selected'
-                );
-                events.add(event);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return events;
+    if (cursor.moveToFirst()) {
+        do {
+            EventModel event = new EventModel(
+                cursor.getInt(cursor.getColumnIndexOrThrow("EVENT_ID")),
+                cursor.getString(cursor.getColumnIndexOrThrow("EVENT_NAME")),
+                cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DATE")),
+                cursor.getString(cursor.getColumnIndexOrThrow("EVENT_TIME")),
+                cursor.getString(cursor.getColumnIndexOrThrow("EVENT_LOCATION")),
+                cursor.getDouble(cursor.getColumnIndexOrThrow("EVENT_PRICE")),
+                cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
+                cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DESCRIPTION")), // Add this line
+                false // Default value for 'selected'
+            );
+            events.add(event);
+        } while (cursor.moveToNext());
     }
+    cursor.close();
+    return events;
+}
 
     // Method to delete selected events
     public void deleteEvents(List<EventModel> selectedEvents) {
@@ -291,7 +336,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    //MUST ADD A PERMISSION TABLE TO ALLOW ADMIN TO ADD PERMISSIONS TO USERS
+    //Admin User
     public AdminModel getAdminUserDetails() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query("USERS", null, "ROLE_ID = ?", new String[]{"1"}, null, null, null);
@@ -339,8 +384,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // Update the row and return the number of rows affected
         return db.update("USERS", values, "USER_ID = ?", new String[]{String.valueOf(adminUser.getUserId())});
     }
-
-    // Method to get user details
+    // User
     public UserModel getUserDetails(int userId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query("USERS", null, "ROLE_ID = ?", new String[]{"1"}, null, null, null);
@@ -383,7 +427,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // Update the row and return the number of rows affected
         return db.update("USERS", values, "USER_ID = ?", new String[]{String.valueOf(user.getUserId())});
     }
-
+    //Fixture
     public List<String> getAllSports() {
         List<String> sportsList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -397,7 +441,6 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         return sportsList;
     }
-
     public List<String> getAllAgeGroups() {
         List<String> ageGroupList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -412,6 +455,28 @@ public class DBHelper extends SQLiteOpenHelper {
         return ageGroupList;
     }
 
+    public int updateFixture(FixtureModel fixture) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("SPORT", fixture.getSport());
+        values.put("HOME_TEAM", fixture.getHomeTeam());
+        values.put("AWAY_TEAM", fixture.getAwayTeam());
+        values.put("AGE_GROUP", fixture.getAgeGroup());
+        values.put("LEAGUE", fixture.getLeague());
+        values.put("MATCH_LOCATION", fixture.getMatchLocation());
+        values.put("MATCH_DATE", fixture.getMatchDate());
+        values.put("MATCH_TIME", fixture.getMatchTime());
+        values.put("MATCH_DESCRIPTION", fixture.getMatchDescription());
+        values.put("HOME_LOGO", fixture.getHomeLogo());
+        values.put("AWAY_LOGO", fixture.getAwayLogo());
+        values.put("PICTURE", fixture.getPicture());
+        values.put("USER_ID", fixture.getUserId());
+        values.put("LEAGUE_ID", fixture.getLeagueId());
+
+        // Update the row and return the number of rows affected
+        return db.update("SPORT_FIXTURES", values, "FIXTURE_ID = ?", new String[]{String.valueOf(fixture.getFixtureId())});
+    }
+
     public long addDummyFixtureWithUserId(int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -420,22 +485,18 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("AWAY_TEAM", "Team B");
         values.put("AGE_GROUP", "Boys Under 18");
         values.put("LEAGUE", "Premier League");
-        values.put("SET_DATE", "2023-10-01");
-        values.put("SET_TIME", "15:00");
-        values.put("SET_LOCATION", "Stadium A");
         values.put("HOME_LOGO", (byte[]) null); // Assuming no logo for dummy data
         values.put("AWAY_LOGO", (byte[]) null); // Assuming no logo for dummy data
         values.put("MATCH_LOCATION", "Stadium A");
         values.put("MATCH_DATE", "2023-10-01");
         values.put("MATCH_TIME", "15:00");
-        values.put("PRICE", 10.0);
-        values.put("MATCH_DISCRIPTION", "Friendly match");
-        values.put("PIICTURE", (byte[]) null); // Assuming no picture for dummy data
-        values.put("TIME_ID", 1); // Assuming a valid TIME_ID
+        values.put("MATCH_DESCRIPTION", "Friendly match");
+        values.put("PICTURE", (byte[]) null); // Assuming no picture for dummy data
         values.put("USER_ID", userId); // Link to the current user
+        values.put("LEAGUE_ID", 1); // Assuming a valid LEAGUE_ID
 
         long fixid = db.insert("SPORT_FIXTURES", null, values);
-        return (fixid);
+        return fixid;
     }
 
     public FixtureModel getFixtureDetails(int fixtureId) {
@@ -445,20 +506,21 @@ public class DBHelper extends SQLiteOpenHelper {
 
         if (cursor != null && cursor.moveToFirst()) {
             FixtureModel fixture = new FixtureModel(
-                    cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
                     cursor.getString(cursor.getColumnIndexOrThrow("SPORT")),
                     cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
                     cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
                     cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP")),
                     cursor.getString(cursor.getColumnIndexOrThrow("LEAGUE")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_LOCATION")),
                     cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DATE")),
                     cursor.getString(cursor.getColumnIndexOrThrow("MATCH_TIME")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_LOCATION")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DESCRIPTION")),
                     cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
                     cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DESCRIPTION")),
-                    cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE"))
+                    cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID"))
             );
             cursor.close();
             return fixture;
@@ -470,7 +532,99 @@ public class DBHelper extends SQLiteOpenHelper {
         return null;
     }
 
+    public void addPlayerToFixture(int fixtureId, int playerId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("FIXTURE_ID", fixtureId);
+        values.put("PLAYER_ID", playerId);
+        db.insert("FIXTURE_PLAYERS", null, values);
+    }
 
+// DBHelper.java
+
+    public List<PlayerProfileModel> getAllPlayers() {
+        List<PlayerProfileModel> players = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM PLAYER_PROFILE", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                PlayerProfileModel player = new PlayerProfileModel(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("PLAYER_ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("NAME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SURNAME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("NICKNAME")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("AGE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("GRADE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("HEIGHT")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("POSITION")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("DATEOFBIRTH")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
+                        false,
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE"))
+
+
+                );
+                players.add(player);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return players;
+    }
+
+    public List<PlayerProfileModel> getAllFixturePlayers(int fixtureId) {
+        List<PlayerProfileModel> players = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM PLAYER_PROFILE pp " +
+                "INNER JOIN FIXTURE_PLAYERS fp ON pp.PLAYER_ID = fp.PLAYER_ID " +
+                "WHERE fp.FIXTURE_ID = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(fixtureId)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                PlayerProfileModel player = new PlayerProfileModel(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("PLAYER_ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("NAME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SURNAME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("NICKNAME")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("AGE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("GRADE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("HEIGHT")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("POSITION")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("DATEOFBIRTH")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
+                        true,
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE"))
+                );
+                players.add(player);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return players;
+    }
+    public void updateFixturePlayers(int fixtureId, List<Integer> selectedPlayers) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            // Delete existing players for the fixture
+            db.delete("FIXTURE_PLAYERS", "FIXTURE_ID = ?", new String[]{String.valueOf(fixtureId)});
+
+            // Insert new players for the fixture
+            for (int playerId : selectedPlayers) {
+                ContentValues values = new ContentValues();
+                values.put("FIXTURE_ID", fixtureId);
+                values.put("PLAYER_ID", playerId);
+                db.insert("FIXTURE_PLAYERS", null, values);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+// Product
     public long insertProduct(int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -519,22 +673,46 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return null;
     }
-    /*********************************/  /*********************************/  /*********************************/
-    /*********************************/
-    // A method to add users to the database
-    public void addUsers(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
-        // Add users to the database
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("NAME", name);
-        values.put("SURNAME", surname);
-        values.put("DATEOFBIRTH", dateOfBirth);
-        values.put("EMAIL", email);
-        values.put("PASSWORD", password);
-        values.put("ROLE_ID", roleId);
-        db.insert("USERS", null, values);
-    }
 
+    /*********************************/  /*********************************/  /*********************************/  /*********************************/
+    // A method to add users to the database
+public void addUsers(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
+    // Add users to the database
+    SQLiteDatabase db = this.getWritableDatabase();
+    ContentValues values = new ContentValues();
+    values.put("NAME", name);
+    values.put("SURNAME", surname);
+    values.put("DATEOFBIRTH", dateOfBirth);
+    values.put("EMAIL", email);
+    values.put("PASSWORD", password);
+    values.put("ROLE_ID", roleId);
+    db.insert("USERS", null, values);
+}
+
+
+    public UserModel getUser(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query("USERS", null, "USER_ID = ?", new String[]{String.valueOf(userId)}, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            UserModel user = new UserModel(
+                    cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("NAME")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("SURNAME")),
+                    cursor.getBlob(cursor.getColumnIndexOrThrow("PHOTO")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("EMAIL")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("PASSWORD")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("DATEOFBIRTH"))
+            );
+            cursor.close();
+            return user;
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+        return null;
+    }
     //A method to add roles to the database
     public void addRoles(String role) {
         // Add roles to the database
@@ -704,6 +882,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     cursor.getString(cursor.getColumnIndexOrThrow("DATEOFBIRTH")),
                     cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
+                    false,
                     cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")) // Fetch profile picture as byte array
             );
             cursor.close();
@@ -807,6 +986,46 @@ public class DBHelper extends SQLiteOpenHelper {
             return roleId;
         }
         return -1;
+    }
+
+    // A method to get event details
+    public EventModel getEventDetails(int eventId) {
+    SQLiteDatabase db = this.getReadableDatabase();
+    Cursor cursor = db.query("EVENTS", null, "EVENT_ID = ?", new String[]{String.valueOf(eventId)}, null, null, null);
+
+    if (cursor != null && cursor.moveToFirst()) {
+        EventModel event = new EventModel(
+            cursor.getInt(cursor.getColumnIndexOrThrow("EVENT_ID")),
+            cursor.getString(cursor.getColumnIndexOrThrow("EVENT_NAME")),
+            cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DATE")),
+            cursor.getString(cursor.getColumnIndexOrThrow("EVENT_TIME")),
+            cursor.getString(cursor.getColumnIndexOrThrow("EVENT_LOCATION")),
+            cursor.getDouble(cursor.getColumnIndexOrThrow("EVENT_PRICE")),
+            cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")), // Fetch the image
+            cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DESCRIPTION")), // Add this line
+            false // Default value for 'selected'
+        );
+        cursor.close();
+        return event;
+    }
+    if (cursor != null) {
+        cursor.close();
+    }
+    return null;
+}
+
+    // A method to update event details
+    public int updateEventDetails(EventModel event) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("EVENT_NAME", event.getEventName());
+        values.put("EVENT_DATE", event.getEventDate());
+        values.put("EVENT_TIME", event.getEventTime());
+        values.put("EVENT_LOCATION", event.getEventLocation());
+        values.put("EVENT_PRICE", event.getEventPrice());
+        values.put("PICTURE", event.getEventPicture());
+
+        return db.update("EVENTS", values, "EVENT_ID = ?", new String[]{String.valueOf(event.getEventId())});
     }
 }
 
