@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        java-version: [1.8, 11]  # Test on multiple Java versions
+        java-version: [1.8, 27]  # Test on multiple Java versions
 
     steps:
     - name: Checkout code
