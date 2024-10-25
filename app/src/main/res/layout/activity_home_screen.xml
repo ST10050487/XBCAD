@@ -12,21 +12,27 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- Background ImageView with dynamic scaling -->
         <ImageView
             android:id="@+id/imageView4"
-            android:layout_width="409dp"
-            android:layout_height="167dp"
-            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:layout_constraintDimensionRatio="2:1"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.25"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.9"
             app:srcCompat="@drawable/home_screen_background" />
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@id/imageView4"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <!-- Vertical Layout for the Content -->
             <LinearLayout
@@ -45,24 +51,27 @@
 
                     <!-- Gold Bar -->
                     <View
-                        android:layout_width="5dp"
+                        android:layout_width="5sp"
                         android:layout_height="match_parent"
                         android:background="@color/gold" />
 
                     <!-- Welcome Text -->
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginStart="16dp">
+                        android:layout_marginStart="16sp">
 
+                        <!-- Auto-size text for welcome message -->
                         <TextView
                             android:id="@+id/welcomeMessage"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/WelcomeHomeScreenMessage"
                             android:textColor="@color/white"
-                            android:textSize="18sp"
+                            android:autoSizeTextType="uniform"
+                            android:autoSizeMinTextSize="12sp"
+                            android:autoSizeMaxTextSize="50sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -71,29 +80,35 @@
                             android:layout_height="wrap_content"
                             android:text="Failed To Fetch Date"
                             android:textColor="@color/white"
-                            android:textSize="16sp" />
+                            android:autoSizeTextType="uniform"
+                            android:autoSizeMinTextSize="12sp"
+                            android:autoSizeMaxTextSize="20sp" />
 
                         <TextView
                             android:id="@+id/term"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Failed To Calaculate Term"
+                            android:text="Failed To Calculate Term"
                             android:textColor="@color/white"
-                            android:textSize="16sp" />
+                            android:autoSizeTextType="uniform"
+                            android:autoSizeMinTextSize="12sp"
+                            android:autoSizeMaxTextSize="20sp" />
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- RecyclerView for Events -->
+                <!-- RecyclerView for Events with dynamic size -->
+
                 <TextView
                     android:id="@+id/title"
+                    android:autoSizeTextType="uniform"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginTop="16dp"
                     android:text="School Events"
                     android:textColor="@color/black"
                     android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:layout_gravity="center"/>
+                    android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/events_recycler_view"
