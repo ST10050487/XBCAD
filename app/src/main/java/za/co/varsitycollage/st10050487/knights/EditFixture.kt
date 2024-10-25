@@ -6,11 +6,11 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.app.AlertDialog
 import android.content.DialogInterface
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
@@ -77,6 +77,14 @@ class EditFixture : AppCompatActivity() {
             intent.putExtra("FIXTURE_ID", fixtureId) // Pass fixtureId
             startActivity(intent)
         }
+        binding.btnDelete.setOnClickListener {
+            if (!dbHelper.checkIsAdmin(userId)) {
+            } else {
+                binding.btnDelete.setOnClickListener {
+                    showConfirmationDialog(fixtureId)
+                }
+            }
+        }
         // take out
        // val id = dbHelper.addDummyFixtureWithUserId(fixtureId)
        // Toast.makeText(this, id.toString(), Toast.LENGTH_SHORT).show()
@@ -133,7 +141,7 @@ class EditFixture : AppCompatActivity() {
         loadFixture(3)
         val deleteFixture = findViewById<Button>(R.id.btnDelete)
         deleteFixture.setOnClickListener {
-            if (!dbHelper.checkIsAdmin(dummyId)) {
+            if (!dbHelper.checkIsAdmin(userId)) {
                 deleteFixture.visibility = View.GONE
             } else {
                 deleteFixture.setOnClickListener {

@@ -73,29 +73,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "AGE_GROUP TEXT NOT NULL," +
                 "USER_ID INTEGER NOT NULL," +
                 "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
-        db.execSQL(CREATE_TABLE_PLAYER_PROFILE);
-
-        // Insert dummy data into PLAYER_PROFILE table
-        String INSERT_PLAYER_PROFILE = "INSERT INTO PLAYER_PROFILE (NAME, SURNAME, NICKNAME, AGE, GRADE, HEIGHT, POSITION, DATEOFBIRTH, PICTURE, AGE_GROUP, USER_ID) VALUES " +
-                "('Michael', 'Jordan', 'MJ', 15, 'Grade 10', '2m', 'Shooting Guard', '2007-06-18', NULL, 'Under 18', 1)," +
-                "('Serena', 'Williams', 'Rena', 17, 'Grade 12', '1.3m', 'Tennis Player', '2005-09-26', NULL, 'Under 18', 2)," +
-                "('Lionel', 'Messi', 'Leo', 16, 'Grade 11', '1.8m', 'Forward', '2006-06-24', NULL, 'Under 18', 3)";
-        db.execSQL(INSERT_PLAYER_PROFILE);
-    // Insert dummy data into PLAYER_PROFILE table
-//    String INSERT_PLAYER_PROFILE = "INSERT INTO PLAYER_PROFILE (NAME, SURNAME, NICKNAME, AGE, GRADE, HEIGHT, POSITION, DATEOFBIRTH, PICTURE, AGE_GROUP, USER_ID) VALUES " +
-//            "('Michael', 'Jordan', 'MJ', 15, 'Grade 10', '2m', 'Shooting Guard', '2007-06-18', NULL, 'Under 18', 1)," +
-//            "('Serena', 'Williams', 'Rena', 17, 'Grade 12', '1.3m', 'Tennis Player', '2005-09-26', NULL, 'Under 18', 2)," +
-//            "('Lionel', 'Messi', 'Leo', 16, 'Grade 11', '1.8m', 'Forward', '2006-06-24', NULL, 'Under 18', 3)";
-//    db.execSQL(INSERT_PLAYER_PROFILE);
-
-    String CREATE_TABLE_FIXTURE_PLAYERS = "CREATE TABLE FIXTURE_PLAYERS (" +
-                "FIXTURE_PLAYER_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "FIXTURE_ID INTEGER NOT NULL," +
-                "PLAYER_ID INTEGER NOT NULL," +
-                "FOREIGN KEY (FIXTURE_ID) REFERENCES SPORT_FIXTURES(FIXTURE_ID)," +
-                "FOREIGN KEY (PLAYER_ID) REFERENCES PLAYER_PROFILE(PLAYER_ID))";
-        db.execSQL(CREATE_TABLE_FIXTURE_PLAYERS);
-// Step 1: Insert dummy player profiles into PLAYER_PROFILE table
+        db.execSQL(CREATE_TABLE_PLAYER_PROFILE);    // Insert dummy player profiles into PLAYER_PROFILE table
         String INSERT_PLAYER_PROFILE = "INSERT INTO PLAYER_PROFILE (NAME, SURNAME, NICKNAME, AGE, GRADE, HEIGHT, POSITION, DATEOFBIRTH, PICTURE, AGE_GROUP, USER_ID) VALUES " +
                 "('Michael', 'Jordan', 'MJ', 15, 'Grade 10', '2m', 'Shooting Guard', '2007-06-18', NULL, 'Under 18', 1)," +
                 "('Serena', 'Williams', 'Rena', 17, 'Grade 12', '1.3m', 'Tennis Player', '2005-09-26', NULL, 'Under 18', 2)," +
@@ -107,14 +85,20 @@ public class DBHelper extends SQLiteOpenHelper {
                 "('Tom', 'Brady', 'TB12', 17, 'Grade 12', '1.93m', 'Quarterback', '2005-08-03', NULL, 'Under 18', 8)," +
                 "('Tiger', 'Woods', 'Tiger', 17, 'Grade 12', '1.85m', 'Golfer', '2005-12-30', NULL, 'Under 18', 9)," +
                 "('Kobe', 'Bryant', 'Black Mamba', 16, 'Grade 11', '1.98m', 'Shooting Guard', '2006-08-23', NULL, 'Under 18', 10)";
-
         db.execSQL(INSERT_PLAYER_PROFILE);
 
-// Step 2: Insert corresponding entries into FIXTURE_PLAYERS table
+
+    String CREATE_TABLE_FIXTURE_PLAYERS =  "CREATE TABLE IF NOT EXISTS FIXTURE_PLAYERS (" +
+                "FIXTURE_PLAYER_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "FIXTURE_ID INTEGER NOT NULL," +
+                "PLAYER_ID INTEGER NOT NULL," +
+                "FOREIGN KEY (FIXTURE_ID) REFERENCES SPORT_FIXTURES(FIXTURE_ID)," +
+                "FOREIGN KEY (PLAYER_ID) REFERENCES PLAYER_PROFILE(PLAYER_ID))";
+        db.execSQL(CREATE_TABLE_FIXTURE_PLAYERS);
+
+// Step 2: Insert corresponding entries Player Profiles for Fixture (ID)1
         String INSERT_FIXTURE_PLAYERS = "INSERT INTO FIXTURE_PLAYERS (FIXTURE_ID, PLAYER_ID) VALUES " +
                 "(1, 1)," +
-
-
                 "(1, 2)," +
                 "(1, 3)," +
                 "(1, 4)," +
@@ -124,7 +108,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 "(1, 8)," +
                 "(1, 9)," +
                 "(1, 10)";
-
         db.execSQL(INSERT_FIXTURE_PLAYERS);
 
 
@@ -687,7 +670,7 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
     values.put("ROLE_ID", roleId);
     db.insert("USERS", null, values);
 }
-// DBHelper.java
+
 
     public UserModel getUser(int userId) {
         SQLiteDatabase db = this.getReadableDatabase();
