@@ -24,15 +24,11 @@ class MainActivity : AppCompatActivity() {
         // Delay of 3 seconds (3000 milliseconds)
         Handler(Looper.getMainLooper()).postDelayed({
             // Navigate to StudentParentReg Activity after the delay
-          // val intent = Intent(this, CreateTimesheet::class.java)
-        //  val intent = Intent(this, CreateSportFixture::class.java)
-         //  val intent = Intent(this,EditFixture::class.java)
-              val intent = Intent(this,EditTimesheet::class.java)
+           //val intent = Intent(this, EditTimesheet::class.java)
            //val intent = Intent(this, EventManagement::class.java)
            //  val intent = Intent(this, UpdateUser::class.java)
            // val intent = Intent(this, UpdateProduct::class.java)
-           //  val intent = Intent(this, Admin_Home::class.java)
-            // val intent = Intent(this, ViewPlayer::class.java)
+             val intent = Intent(this, Admin_Home::class.java)
            // val intent = Intent(this@MainActivity, HomeScreen::class.java)
             startActivity(intent)
             // Finishing MainActivity so that the user cannot go back to it
