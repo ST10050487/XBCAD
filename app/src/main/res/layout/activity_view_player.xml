@@ -118,7 +118,7 @@
                     android:id="@+id/txtAgeGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Age Groups: "
+                    android:text="Age Group: "
                     android:textSize="16sp"
                     android:textColor="@color/black" />
 
@@ -126,15 +126,15 @@
                     android:id="@+id/txtPosition"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Positions: "
+                    android:text="Position: "
                     android:textSize="16sp"
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:id="@+id/txtSports"
+                    android:id="@+id/txtHeight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sports: "
+                    android:text="Height: "
                     android:textSize="16sp"
                     android:textColor="@color/black" />
             </LinearLayout>
