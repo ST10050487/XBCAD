@@ -8,11 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 
 class upcomingMatchesFragment : Fragment() {
-
-    private var fixtureId: Long = 6// Retrieve the static fixture ID
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -21,41 +20,53 @@ class upcomingMatchesFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_upcoming_matches, container, false)
 
-        // Find views by their IDs
-        val fixtureDate = view.findViewById<TextView>(R.id.fixture_date)
-        val team1Logo = view.findViewById<ImageView>(R.id.team1_logo)
-        val team1Name = view.findViewById<TextView>(R.id.team1_name)
-        val fixtureTime = view.findViewById<TextView>(R.id.fixture_time)
-        val fixtureDateBox = view.findViewById<TextView>(R.id.fixture_date_box)
-        val team2Logo = view.findViewById<ImageView>(R.id.team2_logo)
-        val team2Name = view.findViewById<TextView>(R.id.team2_name)
-        val matchType = view.findViewById<TextView>(R.id.match_type)
-        val ageGroup = view.findViewById<TextView>(R.id.age_group)
+        // Find the LinearLayout that will hold all fixture cards
+        val linearLayout = view.findViewById<LinearLayout>(R.id.linear_layout)
 
         // Create an instance of your database helper
         val dbHelper = DBHelper(requireContext())
 
-        // Retrieve fixture details using the fixture ID
-        val fixture = dbHelper.getFixtureDetails(fixtureId.toInt())
+        // Retrieve all fixtures sorted from latest to oldest
+        val fixtures = dbHelper.getAllFixturesSorted()
 
-        if (fixture != null) {
-            // Update the UI with the retrieved data
-            fixtureDate.text = fixture.matchDate // Use matchDate
-            fixture.homeLogo?.let {
-                team1Logo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
+        if (fixtures.isNotEmpty()) {
+            for (fixture in fixtures) {
+                // Inflate a new fixture card layout
+                val fixtureCard =
+                    inflater.inflate(R.layout.fragment_upcoming_matches, linearLayout, false)
+
+                // Find views by their IDs in the fixture card
+                val fixtureDate = fixtureCard.findViewById<TextView>(R.id.fixture_date)
+                val team1Logo = fixtureCard.findViewById<ImageView>(R.id.team1_logo)
+                val team1Name = fixtureCard.findViewById<TextView>(R.id.team1_name)
+                val fixtureTime = fixtureCard.findViewById<TextView>(R.id.fixture_time)
+                val fixtureDateBox = fixtureCard.findViewById<TextView>(R.id.fixture_date_box)
+                val team2Logo = fixtureCard.findViewById<ImageView>(R.id.team2_logo)
+                val team2Name = fixtureCard.findViewById<TextView>(R.id.team2_name)
+                val matchType = fixtureCard.findViewById<TextView>(R.id.match_type)
+                val ageGroup = fixtureCard.findViewById<TextView>(R.id.age_group)
+
+                // Update the UI with the retrieved data
+                fixtureDate.text = fixture.matchDate
+                fixture.homeLogo?.let {
+                    team1Logo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
+                }
+                team1Name.text = fixture.homeTeam
+                fixtureTime.text = fixture.matchTime
+                fixtureDateBox.text = fixture.matchDate
+                fixture.awayLogo?.let {
+                    team2Logo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
+                }
+                team2Name.text = fixture.awayTeam
+                matchType.text = fixture.sport
+                ageGroup.text = fixture.ageGroup
+
+                // Add the inflated fixture card to the LinearLayout
+                linearLayout.addView(fixtureCard)
             }
-            team1Name.text = fixture.homeTeam
-            fixtureTime.text = fixture.matchTime // Use matchTime
-            fixtureDateBox.text = fixture.matchDate // Use matchDate
-            fixture.awayLogo?.let {
-                team2Logo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
-            }
-            team2Name.text = fixture.awayTeam
-            matchType.text = fixture.sport
-            ageGroup.text = fixture.ageGroup
         } else {
-            // Handle the case where no fixture is found
-            Log.e("UpcomingMatchesFragment", "No fixture found for ID: $fixtureId")
+            // Handle the case where no fixtures are found
+            Log.e("UpcomingMatchesFragment", "No fixtures found in the database.")
         }
 
         return view

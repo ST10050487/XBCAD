@@ -266,7 +266,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndexOrThrow("EVENT_LOCATION")),
                         cursor.getDouble(cursor.getColumnIndexOrThrow("EVENT_PRICE")),
                         cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DESCRIPTION")),
-                        cursor.getBlob(cursor.getColumnIndexOrThrow("EVENT_PICTURE")), // Retrieve picture
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("EVENT_PICTURE")),
                         false // Default value for 'selected'
                 );
                 events.add(event);
@@ -469,6 +469,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return null;
     }
+
 
     public long insertProduct(int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
