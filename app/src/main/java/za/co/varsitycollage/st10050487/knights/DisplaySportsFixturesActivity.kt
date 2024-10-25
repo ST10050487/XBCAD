@@ -6,12 +6,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import android.os.Handler
+import android.os.Looper
+import java.util.Calendar
+import java.text.SimpleDateFormat
+import java.util.*
 
 class DisplaySportsFixturesActivity : AppCompatActivity() {
 
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager2
     private lateinit var adapter: FixturesAdapter
+    private val handler = Handler(Looper.getMainLooper())
+    private val updateInterval = 60000L // 1 minute
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,52 +27,74 @@ class DisplaySportsFixturesActivity : AppCompatActivity() {
         tabLayout = findViewById(R.id.tabs)
         viewPager = findViewById(R.id.viewPager)
 
-        // Set up the adapter
-        adapter = FixturesAdapter(this)
 
-        // Set up the adapter
-        adapter = FixturesAdapter(this)
 
         // Fetch fixtures from the database
         val dbHelper = DBHelper(this)
         val upcomingFixtures = dbHelper.getUpcomingFixtures()
         val pastFixtures = dbHelper.getPastFixtures()
 
-        // Add upcoming fixtures to the adapter
-        for (fixture in upcomingFixtures) {
-            adapter.addFragment(
-                fixtureName = "${fixture.team1} vs ${fixture.team2}",
-                fixtureTime = fixture.startTime,
-                fixtureDate = fixture.date,
-                sportName = fixture.team1,
-                sportCategory = "Category",
-                title = "Upcoming"
-            )
-        }
+        // Combine fixtures into a single list
+        val allFixtures = upcomingFixtures + pastFixtures
 
-        // Add past fixtures to the adapter
-        for (fixture in pastFixtures) {
-            adapter.addFragment(
-                fixtureName = "${fixture.team1} vs ${fixture.team2}",
-                fixtureTime = fixture.startTime,
-                fixtureDate = fixture.date,
-                sportName = fixture.team1,
-                sportCategory = "Category",
-                title = "Past Matches"
-            )
-        }
+        // Set up the adapter
+        adapter = FixturesAdapter(allFixtures)
+        viewPager.adapter = adapter
+
+        // Link the TabLayout and ViewPager2
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = if (position == 0) "Upcoming" else "Past Matches"
+        }.attach()
+
+        // Start periodic update
+        handler.post(updateFixturesRunnable)
 
         viewPager.adapter = adapter
 
         // Link the TabLayout and ViewPager2
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = adapter.getPageTitle(position)
+            tab.text = if (position == 0) "Upcoming" else "Past Matches"
         }.attach()
+
+        // Start periodic update
+        handler.post(updateFixturesRunnable)
     }
-    private fun moveMatchToPast() {
-        // Here you would typically check if the match is finished
-        // For demonstration, we're just switching the tab
-        viewPager.currentItem = 1 // Move to Past Matches tab
+    private val updateFixturesRunnable = object : Runnable {
+        override fun run() {
+            updateFixtures()
+            handler.postDelayed(this, updateInterval)
+        }
+    }
+
+    private fun updateFixtures() {
+        val dbHelper = DBHelper(this)
+        val currentTime = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+
+        // Check upcoming fixtures
+        val upcomingFixtures = dbHelper.getUpcomingFixtures()
+        for (fixture in upcomingFixtures) {
+            val fixtureTime = dateFormat.parse(fixture.startTime)
+            if (fixtureTime != null && fixtureTime.before(currentTime)) {
+                // Move to past fixtures
+                dbHelper.moveFixtureToPast(fixture)
+            }
+        }
+
+
+        // Refresh the adapter data
+        val newUpcomingFixtures = dbHelper.getUpcomingFixtures()
+        val newPastFixtures = dbHelper.getPastFixtures()
+        val allFixtures = newUpcomingFixtures + newPastFixtures
+
+        adapter = FixturesAdapter(allFixtures)
+        viewPager.adapter = adapter
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(updateFixturesRunnable)
     }
 
 }
