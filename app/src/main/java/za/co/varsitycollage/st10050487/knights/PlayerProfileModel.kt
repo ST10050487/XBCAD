@@ -12,5 +12,6 @@ data class PlayerProfileModel(
     val dateOfBirth: String,
     val ageGroup: String,
     val userId: Int,
+    var selected: Boolean = false,
     val profilePicture: ByteArray?
 )
