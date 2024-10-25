@@ -79,8 +79,8 @@ class Login : AppCompatActivity() {
             val roleId = dbHelper.getRoleId(userId)
 
             val intent = when (roleId) {
-                1 -> Intent(this, Admin_Home::class.java) // Navigate to Admin_Home if ROLE_ID is 1
-                2, 3 -> Intent(this, HomeScreen::class.java) // Navigate to HomeScreen if ROLE_ID is 2 or 3
+                1 -> Intent(this, Admin_Home::class.java)
+                2, 3 -> Intent(this, HomeScreen::class.java)
                 else -> null
             }
 
