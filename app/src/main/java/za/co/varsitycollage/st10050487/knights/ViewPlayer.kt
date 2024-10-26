@@ -11,35 +11,31 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
+import za.co.varsitycollage.st10050487.knights.databinding.ActivityUpdateProductBinding
+import za.co.varsitycollage.st10050487.knights.databinding.ActivityViewPlayerBinding
 
 class ViewPlayer : AppCompatActivity() {
 
     private lateinit var dbHelper: DBHelper
-    private var userId: Int = 0
+    private var userId: Int = 1
     private var playerId: Int = 0
-    private lateinit var profilePicture: ImageView
-    private lateinit var backBtn: LinearLayout
+    private var profileImageHolder: ByteArray? = null
+    private lateinit var binding: ActivityViewPlayerBinding
 
-    private lateinit var ageGroups: TextView
-    private lateinit var positions: TextView
-    private lateinit var sports: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_view_player)
+        binding = ActivityViewPlayerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
 
         // Getting the userId from the Intent
-        userId = intent.getIntExtra("USER_ID", 0)
-        profilePicture = findViewById(R.id.profilePicture)
+        //userId = intent.getIntExtra("USER_ID", 0)
+
         // Initializing your database helper
         dbHelper = DBHelper(this)
-        backBtn = findViewById(R.id.back_btn)
-        ageGroups = findViewById(R.id.txtAgeGroup)
-        positions = findViewById(R.id.txtPosition)
-        sports = findViewById(R.id.txtSports)
 
-        backBtn.setOnClickListener {
+        binding.backBtn.setOnClickListener {
            Toast.makeText(this, "Back button clicked", Toast.LENGTH_SHORT).show()
 
         }
@@ -49,35 +45,29 @@ class ViewPlayer : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.player_card_container, fragment)
                 .commitNow()
-            //getPlayerData()
-            getDummyPlayerData()
+
+           // getDummyPlayerData()
         }
-    }
-    private fun getDummyPlayerData() {
-        // Dummy data
-        positions.text = "Forward"
-        ageGroups.text = "Under 17's"
-        sports.text = "Rugby"
-
+        loadPlayerData()
     }
 
-    private fun getPlayerData() {
+    private fun loadPlayerData() {
         val playerProfile = dbHelper.getPlayerProfile(userId)
-        if (playerProfile != null) {
-            val positionsList = playerProfile.position
-            val ageGroupList =  playerProfile.ageGroup
-            val sportsList = playerProfile.nickname
-            //val positionsString = positionsList.joinToString(", ")
-           // val ageGroupString = ageGroupList.joinToString(", ")
-            positions.text = positionsList
-            ageGroups.text = ageGroupList
-            sports.text = sportsList
 
-            // Load profile picture if available
-            val profilePictureBlob = playerProfile.profilePicture
-            if (profilePictureBlob != null) {
-                val profilePictureBitmap = BitmapFactory.decodeByteArray(profilePictureBlob, 0, profilePictureBlob.size)
-                profilePicture.setImageBitmap(profilePictureBitmap)
+        if (playerProfile != null) {
+
+            binding.txtAgeGroup.text = "Age Group: ${playerProfile.ageGroup}"
+            binding.txtPosition.text = "Position: ${playerProfile.position}"
+            binding.txtHeight.text =  "Height: ${playerProfile.height}"
+
+
+            // Set the product picture to image holder variable
+            profileImageHolder = playerProfile?.profilePicture
+
+            // if product picture is not null
+            if ( profileImageHolder!= null)
+            { // set UI image to product picture
+                binding.profilePicture.setImageBitmap( profileImageHolder?.size?.let { BitmapFactory.decodeByteArray( profileImageHolder, 0, it) })
             }
         }
         else {
