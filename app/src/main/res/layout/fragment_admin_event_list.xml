@@ -19,6 +19,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
                 android:text="August"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -39,24 +40,26 @@
                 android:padding="16dp">
 
                 <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:id="@+id/event_image"
+                    android:layout_width="86dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center_vertical"
                     android:src="@drawable/event_image" />
 
                 <LinearLayout
-                    android:layout_width="284dp"
-                    android:layout_height="111dp"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="8dp">
+                    android:padding="16dp">
 
                     <TextView
                         android:id="@+id/event_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="Fri, May 26 - 20.00 Pm"
-                        android:textSize="16sp" />
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/inter"
+                        android:text="Fri, May 26 · 20.00 Pm"
+                        android:textColor="@color/black" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -66,37 +69,51 @@
 
                         <TextView
                             android:id="@+id/event_name"
-                            android:layout_width="0dp"
+                            android:layout_width="207dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/inter_bold"
                             android:text="Golf Tournament"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:textColor="@color/black"
+                            android:textSize="18dp" />
 
                         <ImageView
                             android:id="@+id/event_edit"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
+                            android:layout_width="40dp"
+                            android:layout_height="30dp"
                             android:src="@drawable/admin_edit" />
 
                     </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/event_location"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Cancelled"
-                        android:textColor="@color/red"
-                        android:textSize="16sp" />
+                        android:orientation="horizontal"
+                        android:paddingTop="8dp">
+
+                        <ImageView
+                            android:id="@+id/location_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="2dp"
+                            android:src="@drawable/ic_location" />
+
+                        <TextView
+                            android:id="@+id/event_location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter"
+                            android:text="Bridge Rd, Milnerton"
+                            android:textColor="@color/black" />
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
-
-        <!-- Add more CardViews for each event -->
 
     </LinearLayout>
 
