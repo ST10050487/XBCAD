@@ -1099,6 +1099,90 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.update("EVENTS", values, "EVENT_ID = ?", new String[]{String.valueOf(event.getEventId())});
     }
 
+    // Method to move fixture to past
+    public void moveFixtureToPast(Match fixture) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("STATUS", "FINISHED");
+        db.update("SPORT_FIXTURES", values, "FIXTURE_ID = ?", new String[]{fixture.getFixtureId()});
+    }
+
+    // Method to get all fixtures
+    public List<Match> getUpcomingFixtures() {
+        List<Match> fixtures = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT FIXTURE_ID, HOME_TEAM, AWAY_TEAM, SET_TIME, SET_DATE, HOME_LOGO, AWAY_LOGO FROM SPORT_FIXTURES WHERE SET_DATE >= date('now')", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Match fixture = new Match(
+                        cursor.getString(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SET_TIME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SET_DATE")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
+                        MatchStatus.UPCOMING
+                );
+                fixtures.add(fixture);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return fixtures;
+    }
+
+
+    // Method to get all past fixtures
+    public List<Match> getPastFixtures() {
+        List<Match> fixtures = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT FIXTURE_ID, HOME_TEAM, AWAY_TEAM, SET_TIME, SET_DATE, HOME_LOGO, AWAY_LOGO FROM SPORT_FIXTURES WHERE SET_DATE < date('now')", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Match fixture = new Match(
+                        cursor.getString(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SET_TIME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SET_DATE")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
+                        MatchStatus.FINISHED
+                );
+                fixtures.add(fixture);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return fixtures;
+    }
+
+    public List<PlayerProfileView> getAllPlayerProfiles() {
+        List<PlayerProfileView> playerProfiles = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT pp.NAME, pp.SURNAME, pp.AGE, pp.GRADE, pp.AGE_GROUP, u.EMAIL " +
+                "FROM PLAYER_PROFILE pp " +
+                "JOIN USERS u ON pp.USER_ID = u.USER_ID " +
+                "WHERE u.ROLE_ID = (SELECT ROLE_ID FROM ROLES WHERE ROLE = 'User')";
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                PlayerProfileView profile = new PlayerProfileView(
+                        cursor.getString(cursor.getColumnIndexOrThrow("NAME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SURNAME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("EMAIL")), // Corrected to getString
+                        cursor.getInt(cursor.getColumnIndexOrThrow("AGE")),      // Corrected to getInt
+                        cursor.getString(cursor.getColumnIndexOrThrow("GRADE"))
+                );
+                playerProfiles.add(profile);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return playerProfiles;
+    }
+
 
 }
 
