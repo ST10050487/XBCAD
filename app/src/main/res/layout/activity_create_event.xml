@@ -45,7 +45,7 @@
             android:id="@+id/button3"
             android:layout_width="198dp"
             android:layout_height="wrap_content"
-            android:background="#4B8B9F"
+            android:background="#1B3067"
             android:drawableRight="@drawable/ic_upload"
             android:gravity="center"
             android:text="Upload Image"
@@ -163,6 +163,7 @@
                     android:id="@+id/button5"
                     android:layout_width="156dp"
                     android:layout_height="wrap_content"
+                    android:background="#1B3067"
                     android:gravity="center"
                     android:text="Create Event"
                     android:textAlignment="center" />
