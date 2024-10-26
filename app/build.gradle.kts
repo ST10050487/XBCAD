@@ -57,7 +57,8 @@ dependencies {
     //Responsive Design for the Images/views
     implementation("com.intuit.sdp:sdp-android:1.1.1")
 
-    implementation("com.google.android.material:material:1.9.0")
+    implementation("com.google.android.material:material:1.12.0")
+
 
     //Resposive Design for the text view
     implementation("com.intuit.ssp:ssp-android:1.1.1")
@@ -72,5 +73,5 @@ dependencies {
     //implement the dependency com.intuit.ssp:ssp-android:1.1.1
     implementation("com.intuit.ssp:ssp-android:1.1.1")
     //Implementing the de.hdodenhof:circleimageview:3.1.0
-    implementation(libs.circleimageview)
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 }
