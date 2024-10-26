@@ -28,6 +28,7 @@ class CreateTimesheet : AppCompatActivity() {
     // Lists to store image URIs and filenames
     private var imageUriList = mutableListOf<Uri?>()
     private var fileNameList = mutableListOf<String?>()
+    private var imageByteArrayList = mutableListOf<ByteArray?>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +40,7 @@ class CreateTimesheet : AppCompatActivity() {
         setContentView(binding.root)
 
         // Initialize the RecyclerView and its adapter
-        adapter = MultipleImageAdapter(imageUriList, fileNameList)
+        //adapter = MultipleImageAdapter(imageUriList, fileNameList)
         binding.rvHighlights.layoutManager = LinearLayoutManager(this)
         binding.rvHighlights.adapter = adapter
 
@@ -82,7 +83,7 @@ class CreateTimesheet : AppCompatActivity() {
                     }
 
                     if (uris.isNotEmpty()) {
-                        adapter.addItems(uris, filenames)
+                  //      adapter.addItems(uris, filenames)
                     } else {
                         Toast.makeText(this, "No images selected", Toast.LENGTH_SHORT).show()
                     }
