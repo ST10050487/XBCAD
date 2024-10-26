@@ -57,8 +57,7 @@ dependencies {
     //Responsive Design for the Images/views
     implementation("com.intuit.sdp:sdp-android:1.1.1")
 
-    implementation("com.google.android.material:material:1.12.0")
-
+    implementation("com.google.android.material:material:1.9.0")
 
     //Resposive Design for the text view
     implementation("com.intuit.ssp:ssp-android:1.1.1")
@@ -74,5 +73,7 @@ dependencies {
     implementation("net.zetetic:android-database-sqlcipher:4.5.0")
 
     //Implementing the de.hdodenhof:circleimageview:3.1.0
-    implementation("de.hdodenhof:circleimageview:3.1.0")
+    implementation(libs.circleimageview)
+    implementation("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 }

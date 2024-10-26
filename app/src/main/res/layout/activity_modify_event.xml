@@ -45,18 +45,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:orientation="vertical"/>
+                    android:orientation="vertical"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
 
                 <ImageView
                     android:id="@+id/eventImage"
-                    android:layout_width="380dp"
+                    android:layout_width="334dp"
                     android:layout_height="110dp"
                     android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_no_image_icon"/>
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_no_image_icon" />
 
                 <TextView
-                    android:layout_width="344dp"
+                    android:id="@+id/upLoadBtn"
+                    android:layout_width="293dp"
                     android:layout_height="55dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="16dp"
@@ -69,7 +72,7 @@
                     android:text="Upload Image"
                     android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -139,8 +142,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Select Time"
-                        android:drawableEnd="@drawable/ic_clock_icon"/>
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:drawableEnd="@drawable/ic_clock_icon"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:clickable="true"/>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -163,8 +169,36 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Select Date"
-                        android:drawableEnd="@drawable/ic_date_icon"/>
+                        android:drawableEnd="@drawable/ic_date_icon"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:clickable="true"/>
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Price"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingStart="24dp"
+                    android:layout_marginTop="20dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"
+                    android:padding="5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Price"
+                        android:drawableEnd="@drawable/ic_price_icon"
+                        android:inputType="numberDecimal"/>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -187,8 +221,22 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Description"
-                        android:drawableEnd="@drawable/ic_description_icon"/>
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:drawableEnd="@drawable/ic_description_icon"
+                        android:inputType="textMultiLine"
+                        android:minLines="1"
+                        android:maxLines="5"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/updateBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Save Changes"
+                    android:textSize="23sp"
+                    android:background="@drawable/rounded_upload_button"
+                    android:paddingBottom="5dp"
+                    android:enabled="true" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
