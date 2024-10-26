@@ -70,8 +70,9 @@ dependencies {
     implementation("org.mindrot:jbcrypt:0.4")
     //implement the dependency com.intuit.sdp:sdp-android:1.1.1
     implementation("com.intuit.sdp:sdp-android:1.1.1")
-    //implement the dependency com.intuit.ssp:ssp-android:1.1.1
-    implementation("com.intuit.ssp:ssp-android:1.1.1")
+    //implement the dependency net.zetetic:android-database-sqlcipher:4.5.0
+    implementation("net.zetetic:android-database-sqlcipher:4.5.0")
+
     //Implementing the de.hdodenhof:circleimageview:3.1.0
     implementation("de.hdodenhof:circleimageview:3.1.0")
 }
