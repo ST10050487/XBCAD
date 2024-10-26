@@ -78,17 +78,21 @@ class EditFixture : AppCompatActivity() {
             startActivity(intent)
         }
         binding.btnDelete.setOnClickListener {
-            if (!dbHelper.checkIsAdmin(userId)) {
-            } else {
+            if (dbHelper.checkIsAdmin(userId)) {
                 binding.btnDelete.setOnClickListener {
-                    showConfirmationDialog(fixtureId)
+                    val num =  dbHelper.checkFixtureId(2)
+                    if (num > 0) {
+                        showConfirmationDialog(2)
+                    } else {
+                        Toast.makeText(this, "Fixture does not exist", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
         // take out
-       // val id = dbHelper.addDummyFixtureWithUserId(fixtureId)
-       // Toast.makeText(this, id.toString(), Toast.LENGTH_SHORT).show()
-        loadFixture(fixtureId)
+       //val id = dbHelper.addDummyFixtureWithUserId(userId)
+       //Toast.makeText(this, id.toString(), Toast.LENGTH_SHORT).show()
+        loadFixture(2)
     }
 
     private fun updateFixtureData() {
@@ -138,17 +142,7 @@ class EditFixture : AppCompatActivity() {
         spinner.adapter = adapter
        // val id = dbHelper.addDummyFixtureWithUserId(dummyId)
       //  Toast.makeText(this, id.toString(), Toast.LENGTH_SHORT).show()
-        loadFixture(3)
-        val deleteFixture = findViewById<Button>(R.id.btnDelete)
-        deleteFixture.setOnClickListener {
-            if (!dbHelper.checkIsAdmin(userId)) {
-                deleteFixture.visibility = View.GONE
-            } else {
-                deleteFixture.setOnClickListener {
-                    showConfirmationDialog(3)
-                }
-            }
-        }
+       // loadFixture(3)
     }
 
     private fun showConfirmationDialog(fixtureId: Int) {
@@ -159,6 +153,9 @@ class EditFixture : AppCompatActivity() {
         builder.setPositiveButton("Yes") { dialog: DialogInterface, which: Int ->
             // Handle the delete operation here
             dbHelper.deleteFixture(fixtureId)
+            val num = dbHelper.countFixtures()
+            dialog.dismiss()
+            Toast.makeText(this, "Number of fixtures: $num", Toast.LENGTH_SHORT).show()
         }
         builder.setNegativeButton("No") { dialog: DialogInterface, which: Int ->
             // Dismiss the dialog
@@ -167,7 +164,6 @@ class EditFixture : AppCompatActivity() {
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
-
 
     private fun loadFixture(fixtureId: Int) {
         val fixture = dbHelper.getFixtureDetails(fixtureId)
