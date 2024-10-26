@@ -80,7 +80,8 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:drawableRight="@drawable/ic_location"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -94,6 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
+                    android:drawableRight="@drawable/ic_clock_icon"
                     android:inputType="time" />
 
                 <TextView
@@ -107,6 +109,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
+                    android:drawableRight="@drawable/ic_calendar"
                     android:inputType="date" />
 
                 <TextView
