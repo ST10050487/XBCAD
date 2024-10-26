@@ -994,14 +994,46 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public boolean deleteFixture(int fixtureId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
         try {
-            SQLiteDatabase db = this.getWritableDatabase();
-            db.delete("SPORT_FIXTURES", "FIXTURE_ID = ?", new String[]{String.valueOf(fixtureId)});
+            //Delete linked timsheet
+            int deletedTimes = db.delete("TIMES", "FIXTURE_ID = ?", new String[]{String.valueOf(fixtureId)});
+            Log.d("DBHelper", "Deleted TIMES entries: " + deletedTimes);
+
+            // Delete Sport Fixture
+            int deletedFixtures = db.delete("SPORT_FIXTURES", "FIXTURE_ID = ?", new String[]{String.valueOf(fixtureId)});
+            Log.d("DBHelper", "Deleted SPORT_FIXTURES entries: " + deletedFixtures);
+            db.setTransactionSuccessful();
             return true;
         } catch (Exception e) {
             Log.e("DBHelper", "Error deleting fixture: " + e.getMessage());
             return false;
+        }finally {
+            db.endTransaction();
         }
+    }
+
+    public int countFixtures() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String countQuery = "SELECT COUNT(*) FROM SPORT_FIXTURES";
+        Cursor cursor = db.rawQuery(countQuery, null);
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        return count;
+    }
+
+    public int checkFixtureId(int fixtureId){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM SPORT_FIXTURES WHERE FIXTURE_ID = ?", new String[]{String.valueOf(fixtureId)});
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
+        Log.d("DBHelper", "Count of SPORT_FIXTURES with ID " + fixtureId + ": " + count);
+        cursor.close();
+        return count;
     }
 
     public boolean checkIsAdmin(int userId) {
