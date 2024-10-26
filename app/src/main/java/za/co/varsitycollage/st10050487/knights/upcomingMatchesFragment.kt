@@ -35,7 +35,7 @@ class upcomingMatchesFragment : Fragment() {
         if (fixtures.isNotEmpty()) {
             for (fixture in fixtures) {
                 // Inflate a new fixture card layout
-                val fixtureCard = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_upcoming_matches, linearLayout, false)
+                val fixtureCard = LayoutInflater.from(requireContext()).inflate(R.layout.card_layout_upcoming, linearLayout, false)
 
                 // Find views by their IDs in the fixture card
                 val fixtureDate = fixtureCard.findViewById<TextView>(R.id.fixture_date)
