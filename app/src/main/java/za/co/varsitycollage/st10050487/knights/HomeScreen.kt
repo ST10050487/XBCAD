@@ -38,6 +38,9 @@ class HomeScreen : AppCompatActivity() {
             insets
         }
 
+
+        ExtractingFragmentContainer()
+
         toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -85,6 +88,18 @@ class HomeScreen : AppCompatActivity() {
         val termTextView: TextView = findViewById(R.id.term)
         termTextView.text = getCurrentTerm()
     }
+
+    private fun ExtractingFragmentContainer() {
+        // Load the SportsFixturesHomeScreen fragment into the container
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(
+            R.id.fixtures_fragment_container,
+            SportsFixturesHomeScreenFragment()
+        )
+        fragmentTransaction.commit()
+    }
+
     // A method to determine the current school term
     private fun getCurrentTerm(): String {
         val calendar = Calendar.getInstance()
