@@ -32,6 +32,4 @@ class Admin_Home : AppCompatActivity() {
             }
         })
     }
-
-
 }
