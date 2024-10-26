@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import java.text.SimpleDateFormat
+import java.util.*
 
 class upcomingMatchesFragment : Fragment() {
 
@@ -27,13 +29,13 @@ class upcomingMatchesFragment : Fragment() {
         val dbHelper = DBHelper(requireContext())
 
         // Retrieve all fixtures sorted from latest to oldest
-        val fixtures = dbHelper.getAllFixturesSorted()
+        val fixtures = dbHelper.getAllFixtures()
 
+        // Check if there are fixtures
         if (fixtures.isNotEmpty()) {
             for (fixture in fixtures) {
                 // Inflate a new fixture card layout
-                val fixtureCard =
-                    inflater.inflate(R.layout.fragment_upcoming_matches, linearLayout, false)
+                val fixtureCard = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_upcoming_matches, linearLayout, false)
 
                 // Find views by their IDs in the fixture card
                 val fixtureDate = fixtureCard.findViewById<TextView>(R.id.fixture_date)
@@ -46,14 +48,13 @@ class upcomingMatchesFragment : Fragment() {
                 val matchType = fixtureCard.findViewById<TextView>(R.id.match_type)
                 val ageGroup = fixtureCard.findViewById<TextView>(R.id.age_group)
 
-                // Update the UI with the retrieved data
-                fixtureDate.text = fixture.matchDate
+                FormattingDate(fixture, fixtureDate, fixtureDateBox)
+
                 fixture.homeLogo?.let {
                     team1Logo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
                 }
                 team1Name.text = fixture.homeTeam
                 fixtureTime.text = fixture.matchTime
-                fixtureDateBox.text = fixture.matchDate
                 fixture.awayLogo?.let {
                     team2Logo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
                 }
@@ -65,10 +66,34 @@ class upcomingMatchesFragment : Fragment() {
                 linearLayout.addView(fixtureCard)
             }
         } else {
-            // Handle the case where no fixtures are found
+            // Optionally, you can show a message or a placeholder view if no fixtures are found
             Log.e("UpcomingMatchesFragment", "No fixtures found in the database.")
+            // You could also add a TextView here to inform the user that no fixtures are available
         }
 
         return view
+    }
+
+    private fun FormattingDate(
+        fixture: FixtureModel,
+        fixtureDate: TextView,
+        fixtureDateBox: TextView
+    ) {
+        // Assuming fixture.matchDate is in a format like "dd-MM-yyyy"
+        val inputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        // Output format for fixtureDate
+        val outputFormat = SimpleDateFormat("EEEE -- MMMM dd", Locale.getDefault())
+        // Output format for fixtureDateBox
+        val outputFormatBox = SimpleDateFormat("dd MMMM", Locale.getDefault())
+
+        try {
+            val date = inputFormat.parse(fixture.matchDate)
+            fixtureDate.text = outputFormat.format(date) // For fixtureDate
+            fixtureDateBox.text = outputFormatBox.format(date) // For fixtureDateBox
+        } catch (e: Exception) {
+            Log.e("UpcomingMatchesFragment", "Error parsing date: ${e.message}")
+            fixtureDate.text = fixture.matchDate // Fallback to original if parsing fails
+            fixtureDateBox.text = fixture.matchDate // Fallback for fixtureDateBox
+        }
     }
 }

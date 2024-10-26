@@ -40,7 +40,7 @@ class EventDetailActivity : AppCompatActivity() {
             eventDescriptionTextView.text = event.eventDescription // Assuming you want to show the same description
 
             // Set the image from the byte array if available
-            event.picture?.let {
+            event.eventPicture?.let {
                 val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
                 eventImage.setImageBitmap(bitmap)
             } ?: eventImage.setImageResource(R.drawable.event_image) // Set a default image if none exists

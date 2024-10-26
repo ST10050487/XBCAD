@@ -21,7 +21,6 @@ class UpcomingRecentEvents : AppCompatActivity() {
         dbHelper = DBHelper(this) // Initialize the DBHelper
 
         NavigatingTohomeScreen()
-
         SettingTheCurrentDate()
 
         // Retrieve events from the database
@@ -41,17 +40,18 @@ class UpcomingRecentEvents : AppCompatActivity() {
             eventLocation.text = event.eventLocation
 
             // Set the image from the byte array if available
-            event.picture?.let {
+            event.eventPicture?.let {
                 val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
                 eventImage.setImageBitmap(bitmap)
-            } ?: eventImage.setImageResource(R.drawable.event_image) // Set a default image if none exists
+            }
+                ?: eventImage.setImageResource(R.drawable.event_image) // Set a default image if none exists
 
             eventView.setOnClickListener {
                 val intent = Intent(this, EventDetailActivity::class.java).apply {
                     putExtra("EVENT_NAME", event.eventName)
                     putExtra("EVENT_DATE", event.eventDate)
                     putExtra("EVENT_LOCATION", event.eventLocation)
-                    putExtra("EVENT_IMAGE", event.picture) // Pass the picture byte array
+                    putExtra("EVENT_IMAGE", event.eventPicture) // Pass the picture byte array
                 }
                 startActivity(intent)
             }
