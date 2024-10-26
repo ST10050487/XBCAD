@@ -1312,7 +1312,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // Method to move fixture to past
-    public void moveFixtureToPast(Match fixture) {
+    public void moveFixtureToPast(MatchDis fixture) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("STATUS", "FINISHED");
@@ -1320,14 +1320,14 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // Method to get all fixtures
-    public List<Match> getUpcomingFixtures() {
-        List<Match> fixtures = new ArrayList<>();
+    public List<MatchDis> getUpcomingFixtures() {
+        List<MatchDis> fixtures = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT FIXTURE_ID, HOME_TEAM, AWAY_TEAM, SET_TIME, SET_DATE, HOME_LOGO, AWAY_LOGO FROM SPORT_FIXTURES WHERE SET_DATE >= date('now')", null);
 
         if (cursor.moveToFirst()) {
             do {
-                Match fixture = new Match(
+                MatchDis fixture = new MatchDis(
                         cursor.getString(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
                         cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
                         cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
@@ -1346,14 +1346,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     // Method to get all past fixtures
-    public List<Match> getPastFixtures() {
-        List<Match> fixtures = new ArrayList<>();
+    public List<MatchDis> getPastFixtures() {
+        List<MatchDis> fixtures = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT FIXTURE_ID, HOME_TEAM, AWAY_TEAM, SET_TIME, SET_DATE, HOME_LOGO, AWAY_LOGO FROM SPORT_FIXTURES WHERE SET_DATE < date('now')", null);
 
         if (cursor.moveToFirst()) {
             do {
-                Match fixture = new Match(
+                MatchDis fixture = new MatchDis(
                         cursor.getString(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
                         cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
                         cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),

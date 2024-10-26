@@ -11,7 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class FixturesAdapter(private val fixtures: List<Match>) : RecyclerView.Adapter<FixturesAdapter.FixtureViewHolder>() {
+class FixturesAdapter(private val fixtures: List<MatchDis>) : RecyclerView.Adapter<FixturesAdapter.FixtureViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FixtureViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.fixtures_fragment, parent, false)
@@ -35,7 +35,7 @@ class FixturesAdapter(private val fixtures: List<Match>) : RecyclerView.Adapter<
         private val textView3: TextView = itemView.findViewById(R.id.textView3)
         private val textView4: TextView = itemView.findViewById(R.id.textView4)
 
-        fun bind(fixture: Match) {
+        fun bind(fixture: MatchDis) {
             textView1.text = fixture.startTime
             textView2.text = fixture.date
             textView3.text = fixture.homeTeam
