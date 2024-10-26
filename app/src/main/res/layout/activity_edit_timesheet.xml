@@ -20,7 +20,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:id="@+id/btnBack"
+                android:id="@+id/back_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -54,20 +54,21 @@
                 <!-- Team 1 -->
                 <!-- Input field for Home Team -->
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_30sdp"
+                    android:layout_marginRight="@dimen/_20sdp"
+                    android:layout_marginBottom="@dimen/_10sdp"
                     android:fontFamily="@font/inter_bold"
-                    android:layout_marginTop="@dimen/_50sdp"
-                    android:layout_gravity="center_horizontal"
                     android:text="Timesheet for Match"
                     android:textAllCaps="true"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_18sdp" />
+                    android:textSize="@dimen/_20sdp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
                     android:layout_marginLeft="@dimen/_20sdp"
                     android:layout_marginRight="@dimen/_20sdp"
                     android:layout_marginBottom="@dimen/_10sdp"
@@ -79,24 +80,11 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="left"
                     android:layout_marginHorizontal="@dimen/_26sdp"
                     android:layout_marginTop="@dimen/_2sdp"
-                    android:fontFamily="@font/inter"
+                    android:fontFamily="@font/inter_bold"
                     android:text="Team Management"
                     android:textAllCaps="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_16sdp" />
-
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_26sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:fontFamily="@font/inter_bold"
-                    android:text="Home Team"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_16sdp" />
 
@@ -111,37 +99,13 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtHomeTeam"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"                      android:inputType="text"
-                        android:textColor="@color/lightGrey"
-                        android:textSize="@dimen/_14sdp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_26sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:fontFamily="@font/inter_bold"
-                    android:text="Away Team"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_16sdp" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_20sdp"
-                    android:layout_marginVertical="@dimen/_10sdp"
-                    android:padding="@dimen/_5sdp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/txtAwayTeam"
-                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="Home Team"
                         android:inputType="text"
                         android:textColor="@color/lightGrey"
                         android:textSize="@dimen/_14sdp" />
                 </com.google.android.material.textfield.TextInputLayout>
+
 
                 <!-- Input field for Away Team -->
                 <TextView
@@ -180,6 +144,7 @@
                         android:clickable="true"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
+                        android:hint="Meeting Time"
                         android:inputType="none"
                         android:textColor="@color/lightGrey"
                         android:textSize="@dimen/_16sdp" />
@@ -209,6 +174,7 @@
                         android:clickable="true"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
+                        android:hint="Departure Time"
                         android:inputType="none"
                         android:textColor="@color/lightGrey"
                         android:textSize="@dimen/_16sdp" />
@@ -240,6 +206,7 @@
                         android:clickable="true"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
+                        android:hint="Arrival Time"
                         android:inputType="none"
                         android:textColor="@color/lightGrey"
                         android:textSize="@dimen/_16sdp" />
@@ -279,6 +246,7 @@
                         android:id="@+id/txtHomeResult"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="0"
                         android:inputType="number"
                         android:textColor="@color/lightGrey"
                         android:textSize="@dimen/_16sdp" />
@@ -305,6 +273,7 @@
                         android:id="@+id/txtAwayResult"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="0"
                         android:inputType="number"
                         android:textColor="@color/lightGrey"
                         android:textSize="@dimen/_16sdp" />

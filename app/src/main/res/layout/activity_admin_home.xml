@@ -25,8 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="192dp"
         android:layout_gravity="fill_horizontal"
-        android:background="@drawable/banner_frame"
-        android:scaleType="centerCrop"
+        android:background="@drawable/dash_banner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialToolbar" />
@@ -34,8 +33,8 @@
 
     <!--Layout for Logo and Message-->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="362dp"
+        android:layout_height="109dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="@+id/imageView3"
         app:layout_constraintEnd_toEndOf="parent"
@@ -98,8 +97,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView3">
-
-        <LinearLayout
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -458,21 +456,18 @@
                 android:fontFamily="@font/inter_bold"/>
         </LinearLayout>
     </LinearLayout>
-
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@color/backgroundtheme"
-        android:fitsSystemWindows="true"
         app:headerLayout="@layout/admin_nav_header"
-        app:itemIconSize="25sp"
+        app:menu="@menu/admin_nav_menu"
+        android:background="@color/backgroundtheme"
+        app:itemTextColor="@color/white"
         app:itemIconTint="@color/white"
         app:itemTextAppearance="@style/CustomNavigationViewItemText"
-        app:itemTextColor="@color/white"
-        app:menu="@menu/admin_nav_menu"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="-179dp"
-        tools:layout_editor_absoluteY="0dp" />
+        app:itemIconSize="25sp"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>
