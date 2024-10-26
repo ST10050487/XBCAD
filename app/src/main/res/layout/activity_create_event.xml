@@ -8,13 +8,20 @@
 
     <Button
         android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="85dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="333dp"
+        android:layout_marginBottom="693dp"
         android:gravity="left"
         android:text="Back"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="1dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.4"
+        tools:ignore="MissingConstraints" />
 
     <LinearLayout
         android:layout_width="412dp"
@@ -35,16 +42,19 @@
 
         <Button
             android:id="@+id/button3"
-            android:layout_width="230dp"
+            android:layout_width="198dp"
             android:layout_height="wrap_content"
+            android:background="#4B8B9F"
+            android:drawableRight="@drawable/ic_upload"
             android:gravity="center"
-            android:text="Upload Image" />
+            android:text="Upload Image"
+            android:textStyle="bold" />
 
         <ScrollView
-            android:layout_width="385dp"
-            android:gravity="center"
+            android:layout_width="397dp"
             android:layout_height="match_parent"
-            android:background="#FFFFFF">
+            android:background="#FFFFFF"
+            android:gravity="center">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -81,7 +91,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableRight="@drawable/ic_location"/>
+                        android:drawableRight="@drawable/ic_location" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -90,13 +100,16 @@
                     android:layout_height="wrap_content"
                     android:text="Time" />
 
-                <EditText
-                    android:id="@+id/editTextTime"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:drawableRight="@drawable/ic_clock_icon"
-                    android:inputType="time" />
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableRight="@drawable/ic_clock_icon"
+                        android:hint="" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/textView15"
@@ -104,13 +117,16 @@
                     android:layout_height="wrap_content"
                     android:text="Date" />
 
-                <EditText
-                    android:id="@+id/editTextDate"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:drawableRight="@drawable/ic_calendar"
-                    android:inputType="date" />
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableRight="@drawable/ic_calendar"
+                        android:hint="" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/textView16"
@@ -146,8 +162,8 @@
                     android:id="@+id/button5"
                     android:layout_width="156dp"
                     android:layout_height="wrap_content"
-                    android:text="Create Event"
                     android:gravity="center"
+                    android:text="Create Event"
                     android:textAlignment="center" />
             </LinearLayout>
         </ScrollView>
