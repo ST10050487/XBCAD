@@ -1098,5 +1098,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         return db.update("EVENTS", values, "EVENT_ID = ?", new String[]{String.valueOf(event.getEventId())});
     }
+
+
 }
 
