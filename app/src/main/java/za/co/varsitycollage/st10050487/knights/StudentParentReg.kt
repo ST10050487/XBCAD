@@ -15,6 +15,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import org.mindrot.jbcrypt.BCrypt
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -59,6 +60,7 @@ class StudentParentReg : AppCompatActivity() {
             emailField,
             checkBox
         )
+
         // Date picker dialog for dateField
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
             calendar.set(Calendar.YEAR, year)
@@ -75,6 +77,21 @@ class StudentParentReg : AppCompatActivity() {
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
             ).show()
+        }
+
+        // Get references to the toggle visibility ImageViews
+        val togglePasswordVisibility = findViewById<ImageView>(R.id.togglePasswordVisibility)
+        val toggleConfirmPasswordVisibility =
+            findViewById<ImageView>(R.id.toggleConfirmPasswordVisibility)
+
+        // Set click listener for password visibility toggle
+        togglePasswordVisibility.setOnClickListener {
+            togglePasswordVisibility(passwordField, togglePasswordVisibility)
+        }
+
+        // Set click listener for confirm password visibility toggle
+        toggleConfirmPasswordVisibility.setOnClickListener {
+            togglePasswordVisibility(confirmPasswordField, toggleConfirmPasswordVisibility)
         }
     }
 
@@ -95,6 +112,11 @@ class StudentParentReg : AppCompatActivity() {
         }
         // Move the cursor to the end of the text
         passwordField.setSelection(passwordField.text.length)
+    }
+
+    // A method to hash the entered password
+    fun hashPassword(password: String): String {
+        return BCrypt.hashpw(password, BCrypt.gensalt())
     }
 
     private fun Validation(
@@ -160,11 +182,14 @@ class StudentParentReg : AppCompatActivity() {
             }
 
             if (isValid) {
+                // Hash the password before storing it
+                val hashedPassword = hashPassword(password)
+
                 // Determine roleId based on email domain
                 val roleId = if (email.endsWith("@bmdhs.co.za")) 2 else 3
 
-                // Insert data into SQLite database
-                dbHelper.addUsers(firstName, lastName, dateOfBirth, email, password, roleId)
+                // Insert data into SQLite database with hashed password
+                dbHelper.addUsers(firstName, lastName, dateOfBirth, email, hashedPassword, roleId)
                 Toast.makeText(this, "User Registered Successfully", Toast.LENGTH_SHORT).show()
                 clearFields(
                     firstNameField,
@@ -176,7 +201,7 @@ class StudentParentReg : AppCompatActivity() {
                     checkBox
                 )
 
-                //Navigate to SuccessReg Activity
+                // Navigate to SuccessReg Activity
                 val intent = Intent(this, SuccessReg::class.java)
                 startActivity(intent)
             }

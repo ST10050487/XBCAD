@@ -32,7 +32,8 @@
             android:exported="false" />
         <activity
             android:name=".CreateSportFixture"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".UpcomingRecentEvents"
             android:exported="false" />
@@ -47,7 +48,8 @@
             android:exported="false" />
         <activity
             android:name=".CreateTimesheet"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".EditFixture"
             android:exported="false" />
@@ -72,6 +74,7 @@
             android:name=".StudentParentReg"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".SuccessReg" />
+        <activity android:name = ".EventDetailActivity"/>
 
         <meta-data
             android:name="preloaded_fonts"
