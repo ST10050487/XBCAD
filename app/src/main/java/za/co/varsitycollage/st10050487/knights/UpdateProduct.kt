@@ -2,6 +2,7 @@ package za.co.varsitycollage.st10050487.knights
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -28,9 +29,9 @@ class UpdateProduct : AppCompatActivity() {
         setContentView(binding.root)
 
         dbHelper = DBHelper(this)
-        // Insert dummy data
-//        val newProductId = dbHelper.insertProduct(userId)
-//        Toast.makeText(this, "New Product ID: $newProductId", Toast.LENGTH_SHORT).show()
+      //   Insert dummy data
+       val newProductId = dbHelper.dummyProduct(userId)
+        Toast.makeText(this, "New Product ID: $newProductId", Toast.LENGTH_SHORT).show()
 
         // productId and userId are passed via Intent
         // productId = intent.getIntExtra("PRODUCT_ID", 0)
@@ -46,6 +47,9 @@ class UpdateProduct : AppCompatActivity() {
             if (validateInputs()) {
                 updateProductData()
             }
+        }
+        binding.btnDelete.setOnClickListener {
+            deleteProduct()
         }
     }
 
@@ -98,7 +102,36 @@ class UpdateProduct : AppCompatActivity() {
             Toast.makeText(this, "Failed to update product", Toast.LENGTH_SHORT).show()
         }
     }
+    private fun deleteProduct() {
 
+        if (productId != -1) {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Delete Product")
+            builder.setMessage("Are you sure you want to delete this Product?")
+
+            builder.setPositiveButton("Yes") { dialog: DialogInterface, which: Int ->
+
+                val dbHelper = DBHelper(this)
+                val successTime = dbHelper.deleteProduct(productId )
+                if (successTime ) {
+                    Toast.makeText(this, "Product deleted successfully", Toast.LENGTH_SHORT)
+                        .show()
+                    //   finish() // Close the activity
+                } else {
+                    Toast.makeText(this, "Failed to delete Product", Toast.LENGTH_SHORT).show()
+                }
+            }
+            builder.setNegativeButton("No") { dialog: DialogInterface, which: Int ->
+                // Dismiss the dialog
+                dialog.dismiss()
+            }
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
+        else {
+            Toast.makeText(this, "Invalid Product ID", Toast.LENGTH_SHORT).show()
+        }
+    }
     private fun validateInputs(): Boolean {
         val name = binding.txtTitle.text.toString()
         val price = binding.txtPrice.text.toString()

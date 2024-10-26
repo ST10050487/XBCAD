@@ -1,6 +1,6 @@
 package za.co.varsitycollage.st10050487.knights
 
-import android.net.Uri
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,8 +8,8 @@ import za.co.varsitycollage.st10050487.knights.databinding.ImageRowBinding
 
 // Adapter class for handling multiple images in a RecyclerView
 class MultipleImageAdapter(
-    private val imageUriList: MutableList<Uri?>,
-    private val filenameList: MutableList<String?>
+    private val imageByteArrayList: MutableList<ByteArray?> = mutableListOf(),
+    private val filenameList: MutableList<String?> = mutableListOf(),
 ) : RecyclerView.Adapter<MultipleImageAdapter.ViewHolder>() {
 
     // ViewHolder class to hold the views for each item in the RecyclerView
@@ -29,20 +29,32 @@ class MultipleImageAdapter(
     // Binds the data to the views for each item in the RecyclerView
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.apply {
-            imageView.setImageURI(imageUriList[position])
+            val byteArray = imageByteArrayList[position]
+            if (byteArray != null) {
+                val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+                imageView.setImageBitmap(bitmap)
+            }
             tvFileName.text = filenameList[position]
         }
     }
 
     // Returns the total number of items in the RecyclerView
-    override fun getItemCount() = imageUriList.size
+    override fun getItemCount() = imageByteArrayList.size
 
     // Adds new items to the adapter and refreshes the RecyclerView
-    fun addItems(imageUris: List<Uri?>, filenames: List<String?>) {
-        imageUriList.clear()
+    fun addItems(imageByteArrays: List<ByteArray?>, filenames: List<String?>) {
+        imageByteArrayList.clear()
         filenameList.clear()
-        imageUriList.addAll(imageUris)
+        imageByteArrayList.addAll(imageByteArrays)
         filenameList.addAll(filenames)
         notifyDataSetChanged()
+    }
+    fun getItems(imageByteArrays: List<ByteArray?>, filenames: List<String?>) {
+        imageByteArrayList.addAll(imageByteArrays)
+        filenameList.addAll(filenames)
+        notifyDataSetChanged()
+    }
+    fun returnItems(): MutableList<ByteArray?> {
+        return imageByteArrayList
     }
 }
