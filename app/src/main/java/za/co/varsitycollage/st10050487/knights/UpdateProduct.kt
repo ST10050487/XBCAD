@@ -70,22 +70,6 @@ class UpdateProduct : AppCompatActivity() {
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                PICK_IMAGE_REQUEST -> {
-                    val imageUri = data?.data
-                    val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUri)
-                    updateProdPicture(bitmap)
-                }
-                CAMERA_REQUEST -> {
-                    val bitmap = data?.extras?.get("data") as Bitmap
-                    updateProdPicture(bitmap)
-                }
-            }
-        }
-    }
     private fun updateProdPicture(bitmap: Bitmap) {
         binding.prodImage.setImageBitmap(bitmap)
         // assign the bitmap to the prodBlob variable using the bitmapToByteArray function to convert it to a byte array
@@ -133,6 +117,22 @@ class UpdateProduct : AppCompatActivity() {
             return false
         }
         return true
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                PICK_IMAGE_REQUEST -> {
+                    val imageUri = data?.data
+                    val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUri)
+                    updateProdPicture(bitmap)
+                }
+                CAMERA_REQUEST -> {
+                    val bitmap = data?.extras?.get("data") as Bitmap
+                    updateProdPicture(bitmap)
+                }
+            }
+        }
     }
     private fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
         val stream = ByteArrayOutputStream()

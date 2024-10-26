@@ -75,22 +75,33 @@ class Login : AppCompatActivity() {
         val userId = dbHelper.validateUser(email,password)
 
         if (userId != null) {
+            // Get the ROLE_ID of the user
+            val roleId = dbHelper.getRoleId(userId)
 
-            val intent = Intent(this, HomeActivity::class.java)
-            // Passing the USER_ID to Home Activity
-            intent.putExtra("USER_ID", userId)
-            startActivity(intent)
-            //Finishing the login activity once the user is logged in
-            finish()
+            val intent = when (roleId) {
+                1 -> Intent(this, Admin_Home::class.java)
+                2, 3 -> Intent(this, HomeScreen::class.java)
+                else -> null
+            }
+
+            if (intent != null) {
+                // Passing the USER_ID to the respective Activity
+                intent.putExtra("USER_ID", userId)
+                startActivity(intent)
+                // Finishing the login activity once the user is logged in
+                finish()
+            } else {
+                Toast.makeText(this, "Invalid role", Toast.LENGTH_SHORT).show()
+            }
         } else {
             // User does not exist or incorrect password
             emailTxt.error = "Invalid email or password"
             passwordTxt.error = "Invalid email or password"
             Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show()
         }
-
     }
-    //A method to hash the entered password
+
+    // A method to hash the entered password
     fun hashPassword(password: String): String {
         return BCrypt.hashpw(password, BCrypt.gensalt())
     }
