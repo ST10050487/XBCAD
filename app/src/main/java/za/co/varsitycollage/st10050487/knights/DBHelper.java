@@ -86,7 +86,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(INSERT_PLAYER_PROFILE);
 
 
-    String CREATE_TABLE_FIXTURE_PLAYERS =  "CREATE TABLE IF NOT EXISTS FIXTURE_PLAYERS (" +
+        String CREATE_TABLE_FIXTURE_PLAYERS = "CREATE TABLE IF NOT EXISTS FIXTURE_PLAYERS (" +
                 "FIXTURE_PLAYER_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "FIXTURE_ID INTEGER NOT NULL," +
                 "PLAYER_ID INTEGER NOT NULL," +
@@ -109,8 +109,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(INSERT_FIXTURE_PLAYERS);
 
 
-
-      // Create TIMES table
+        // Create TIMES table
         String CREATE_TABLE_TIMES = "CREATE TABLE TIMES (" +
                 "TIME_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "MEETING_TIME TEXT," +
@@ -297,29 +296,29 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public List<EventModel> getAllEvents() {
-    List<EventModel> events = new ArrayList<>();
-    SQLiteDatabase db = this.getReadableDatabase();
-    Cursor cursor = db.rawQuery("SELECT * FROM EVENTS", null);
+        List<EventModel> events = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM EVENTS", null);
 
-    if (cursor.moveToFirst()) {
-        do {
-            EventModel event = new EventModel(
-                cursor.getInt(cursor.getColumnIndexOrThrow("EVENT_ID")),
-                cursor.getString(cursor.getColumnIndexOrThrow("EVENT_NAME")),
-                cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DATE")),
-                cursor.getString(cursor.getColumnIndexOrThrow("EVENT_TIME")),
-                cursor.getString(cursor.getColumnIndexOrThrow("EVENT_LOCATION")),
-                cursor.getDouble(cursor.getColumnIndexOrThrow("EVENT_PRICE")),
-                cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
-                cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DESCRIPTION")), // Add this line
-                false // Default value for 'selected'
-            );
-            events.add(event);
-        } while (cursor.moveToNext());
+        if (cursor.moveToFirst()) {
+            do {
+                EventModel event = new EventModel(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("EVENT_ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_NAME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DATE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_TIME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_LOCATION")),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow("EVENT_PRICE")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DESCRIPTION")),
+                        false // Default value for 'selected'
+                );
+                events.add(event);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return events;
     }
-    cursor.close();
-    return events;
-}
 
     // Method to delete selected events
     public void deleteEvents(List<EventModel> selectedEvents) {
@@ -384,6 +383,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // Update the row and return the number of rows affected
         return db.update("USERS", values, "USER_ID = ?", new String[]{String.valueOf(adminUser.getUserId())});
     }
+
     // User
     public UserModel getUserDetails(int userId) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -427,6 +427,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // Update the row and return the number of rows affected
         return db.update("USERS", values, "USER_ID = ?", new String[]{String.valueOf(user.getUserId())});
     }
+
     //Fixture
     public List<String> getAllSports() {
         List<String> sportsList = new ArrayList<>();
@@ -441,6 +442,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         return sportsList;
     }
+
     public List<String> getAllAgeGroups() {
         List<String> ageGroupList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -532,6 +534,40 @@ public class DBHelper extends SQLiteOpenHelper {
         return null;
     }
 
+    //Get All Fixtures details by using the Fixture ID and this created by Vicky
+    public List<FixtureModel> getAllFixtures() {
+        List<FixtureModel> fixtures = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Query to get all fixtures sorted by FIXTURE_ID in descending order
+        Cursor cursor = db.rawQuery("SELECT * FROM SPORT_FIXTURES ORDER BY FIXTURE_ID DESC", null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                FixtureModel fixture = new FixtureModel(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SPORT")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("LEAGUE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("MATCH_LOCATION")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DATE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("MATCH_TIME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DESCRIPTION")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID"))
+                );
+                fixtures.add(fixture);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        return fixtures;
+    }
+
     public void addPlayerToFixture(int fixtureId, int playerId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -604,6 +640,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         return players;
     }
+
     public void updateFixturePlayers(int fixtureId, List<Integer> selectedPlayers) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
@@ -624,7 +661,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-// Product
+    // Product
     public long insertProduct(int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -674,20 +711,21 @@ public class DBHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    /*********************************/  /*********************************/  /*********************************/  /*********************************/
+    /*********************************/  /*********************************/  /*********************************/
+    /*********************************/
     // A method to add users to the database
-public void addUsers(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
-    // Add users to the database
-    SQLiteDatabase db = this.getWritableDatabase();
-    ContentValues values = new ContentValues();
-    values.put("NAME", name);
-    values.put("SURNAME", surname);
-    values.put("DATEOFBIRTH", dateOfBirth);
-    values.put("EMAIL", email);
-    values.put("PASSWORD", password);
-    values.put("ROLE_ID", roleId);
-    db.insert("USERS", null, values);
-}
+    public void addUsers(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
+        // Add users to the database
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("NAME", name);
+        values.put("SURNAME", surname);
+        values.put("DATEOFBIRTH", dateOfBirth);
+        values.put("EMAIL", email);
+        values.put("PASSWORD", password);
+        values.put("ROLE_ID", roleId);
+        db.insert("USERS", null, values);
+    }
 
 
     public UserModel getUser(int userId) {
@@ -713,6 +751,7 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
         }
         return null;
     }
+
     //A method to add roles to the database
     public void addRoles(String role) {
         // Add roles to the database
@@ -1022,29 +1061,29 @@ public void addUsers(String name, String surname, String dateOfBirth, String ema
 
     // A method to get event details
     public EventModel getEventDetails(int eventId) {
-    SQLiteDatabase db = this.getReadableDatabase();
-    Cursor cursor = db.query("EVENTS", null, "EVENT_ID = ?", new String[]{String.valueOf(eventId)}, null, null, null);
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query("EVENTS", null, "EVENT_ID = ?", new String[]{String.valueOf(eventId)}, null, null, null);
 
-    if (cursor != null && cursor.moveToFirst()) {
-        EventModel event = new EventModel(
-            cursor.getInt(cursor.getColumnIndexOrThrow("EVENT_ID")),
-            cursor.getString(cursor.getColumnIndexOrThrow("EVENT_NAME")),
-            cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DATE")),
-            cursor.getString(cursor.getColumnIndexOrThrow("EVENT_TIME")),
-            cursor.getString(cursor.getColumnIndexOrThrow("EVENT_LOCATION")),
-            cursor.getDouble(cursor.getColumnIndexOrThrow("EVENT_PRICE")),
-            cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")), // Fetch the image
-            cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DESCRIPTION")), // Add this line
-            false // Default value for 'selected'
-        );
-        cursor.close();
-        return event;
+        if (cursor != null && cursor.moveToFirst()) {
+            EventModel event = new EventModel(
+                    cursor.getInt(cursor.getColumnIndexOrThrow("EVENT_ID")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("EVENT_NAME")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DATE")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("EVENT_TIME")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("EVENT_LOCATION")),
+                    cursor.getDouble(cursor.getColumnIndexOrThrow("EVENT_PRICE")),
+                    cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")), // Fetch the image
+                    cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DESCRIPTION")), // Add this line
+                    false // Default value for 'selected'
+            );
+            cursor.close();
+            return event;
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        return null;
     }
-    if (cursor != null) {
-        cursor.close();
-    }
-    return null;
-}
 
     // A method to update event details
     public int updateEventDetails(EventModel event) {

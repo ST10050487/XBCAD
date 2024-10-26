@@ -9,9 +9,9 @@
         android:id="@+id/event_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/home_image"
         android:contentDescription="This is a image one"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:src="@drawable/home_image" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -21,38 +21,47 @@
         android:padding="8dp">
 
         <TextView
-            android:id="@+id/event_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Knights Golf Day"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="4dp"/>
-
-        <TextView
             android:id="@+id/event_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Date: 12th August"
-            android:textSize="14sp"
-            android:layout_marginBottom="4dp"/>
+            android:layout_marginBottom="4dp"
+            android:text="Fri, Jun 02"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/event_time"
+            android:id="@+id/event_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time: 9:00 AM"
-            android:textSize="14sp"
-            android:layout_marginBottom="4dp"/>
+            android:layout_marginBottom="4dp"
+            android:text="Nineties vs Noughties"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/event_location"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Location: Golf Course"
-            android:textSize="14sp"
-            android:layout_marginBottom="4dp"/>
+            android:layout_marginBottom="4dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="4dp"
+                android:contentDescription="Location Icon"
+                android:src="@drawable/location_icon" />
+
+            <TextView
+                android:id="@+id/event_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="The O2, London"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+
 
     </LinearLayout>
+
 
 </LinearLayout>
