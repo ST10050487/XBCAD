@@ -21,10 +21,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up JDK ${{ matrix.java-version }}
+    - name: Set up JDK 17
       uses: actions/setup-java@v2
       with:
-        java-version: ${{ matrix.java-version }}
+        java-version: '17'
         distribution: 'adopt'  # Specify the distribution, e.g., 'adopt', 'zulu', 'temurin', etc.
 
     - name: Cache Gradle packages
