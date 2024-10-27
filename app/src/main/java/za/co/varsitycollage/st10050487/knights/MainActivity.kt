@@ -1,6 +1,5 @@
 package za.co.varsitycollage.st10050487.knights
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -13,6 +12,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+       // SQLiteDatabase.loadLibs(this)
 
         // Applying edge-to-edge UI behavior
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         // Delay of 3 seconds (3000 milliseconds)
         Handler(Looper.getMainLooper()).postDelayed({
             // Navigate to StudentParentReg Activity after the delay
-           val intent = Intent(this, AdminUpcomingEvents::class.java)
+            val intent = Intent(this, ModifyEvent::class.java)
             startActivity(intent)
             // Finishing MainActivity so that the user cannot go back to it
             finish()
