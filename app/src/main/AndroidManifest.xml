@@ -22,7 +22,12 @@
         android:theme="@style/Theme.Knights"
         tools:targetApi="31">
         <activity
-            android:name=".CreateEvent"
+            android:name=".MatchOverView"
+            android:exported="false"
+            android:label="@string/title_activity_match_over_view"
+            android:theme="@style/Theme.Knights.NoActionBar" />
+        <activity
+            android:name=".DisplayMatch"
             android:exported="false" />
         <activity
             android:name=".ModifyEvent"
@@ -90,5 +95,4 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
-
 </manifest>
