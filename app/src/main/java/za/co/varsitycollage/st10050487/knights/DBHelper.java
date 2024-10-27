@@ -18,6 +18,12 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 12;
 
 
+    private static final int DATABASE_VERSIO9N = 12;
+
+
+    private static final int DATABASE_VERSI9ON = 12;
+
+
     // Constructor
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
