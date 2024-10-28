@@ -15,6 +15,7 @@
     <color name="green">#00C566</color>
     <color name="lightGrey">#525957</color>
     <color name="yellow">#EAD508</color>
+    <color name="purple">#800080</color>
     <color name="blue">#0000FF</color>
 
 </resources>
