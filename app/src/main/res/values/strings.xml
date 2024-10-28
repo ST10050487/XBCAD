@@ -47,5 +47,7 @@
         <item>Netball</item>
         <item>Rugby</item>
     </string-array>
+    <string name="title_activity_match_overview">MatchOverview</string>
+    <string name="title_activity_match_over_view">MatchOverView</string>
 
 </resources>
