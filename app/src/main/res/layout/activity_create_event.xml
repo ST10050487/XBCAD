@@ -2,12 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#192E66">
+    android:background="#192E66"
+    tools:context=".CreateEvent">
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/backBtn"
         android:layout_width="85dp"
         android:layout_height="39dp"
         android:layout_marginTop="1dp"
@@ -35,14 +37,14 @@
         tools:layout_editor_absoluteY="49dp">
 
         <ImageView
-            android:id="@+id/imageView6"
+            android:id="@+id/eventImg"
             android:layout_width="351dp"
             android:layout_height="107dp"
             android:scaleType="fitXY"
             app:srcCompat="@drawable/ic_sample" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/btnUpload"
             android:layout_width="198dp"
             android:layout_height="wrap_content"
             android:background="#1B3067"
@@ -74,8 +76,10 @@
                     android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/eventName"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:hint="Event Name"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -90,8 +94,10 @@
                     android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/eventLocation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="Location"
                         android:drawableRight="@drawable/ic_location" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -106,10 +112,11 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/eventTime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableRight="@drawable/ic_clock_icon"
-                        android:hint="" />
+                        android:hint="Time" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -123,10 +130,11 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/eventDate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableRight="@drawable/ic_calendar"
-                        android:hint="" />
+                        android:hint="Date" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -137,11 +145,15 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    app:prefixText="R">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/eventPrice"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:hint="Enter Price"
+                        android:inputType="numberDecimal"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -155,12 +167,14 @@
                     android:layout_height="196dp">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/eventAbout"
                         android:layout_width="match_parent"
-                        android:layout_height="190dp" />
+                        android:layout_height="190dp"
+                        android:hint="About"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
-                    android:id="@+id/button5"
+                    android:id="@+id/createBtn"
                     android:layout_width="156dp"
                     android:layout_height="wrap_content"
                     android:background="#1B3067"
@@ -171,4 +185,6 @@
         </ScrollView>
 
     </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
