@@ -3,10 +3,19 @@ package za.co.varsitycollage.st10050487.knights;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+//import android.database.sqlite.SQLiteDatabase;
+//import android.database.sqlite.SQLiteOpenHelper;
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteOpenHelper;
+import android.os.Build;
 import android.util.Log;
 
+import androidx.compose.ui.graphics.vector.PathNode;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,19 +25,98 @@ public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
     private static final int DATABASE_VERSION = 12;
+    private static String DB_PATH = "";
+    private SQLiteDatabase db;
+    private Context context;
+    private final static String PASSWORD = "xbcad_P22#";
+    private static DBHelper instance;
 
 
-    private static final int DATABASE_VERSIO9N = 12;
-
-
-    private static final int DATABASE_VERSI9ON = 12;
 
 
     // Constructor
     public DBHelper(Context context) {
+
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
+        else
+            DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
+        this.context = context;
+
     }
 
+    static public synchronized DBHelper getInstance(Context context) {
+        if (instance == null) {
+            instance = new DBHelper(context);
+        }
+        return instance;
+    }
+    private void createDatabase()  throws IOException {
+        boolean dbExist = checkDatabase();
+        if(!dbExist) {
+            this.getReadableDatabase(PASSWORD);
+            this.close();
+            try {
+                copyDatabase();
+            } catch (IOException e) {
+                throw new Error("Error copying database");
+            }
+        }
+
+    }
+    private void copyDatabase() throws IOException {
+        //Open your local db as the input stream
+        InputStream input = null;
+
+        try{
+            //Open your local db as the input stream
+            input = context.getAssets().open(DATABASE_NAME);
+            // Path to the just created empty db
+            String ouputFileName = new StringBuilder(DB_PATH).append(DATABASE_NAME).toString();
+            OutputStream outputStream = new FileOutputStream(ouputFileName);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = input.read(buffer))>0){
+                outputStream.write(buffer, 0, length);
+            }
+            outputStream.flush();
+            outputStream.close();
+            input.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+    private boolean checkDatabase() {
+        SQLiteDatabase checkDB = null;
+        try {
+            String myPath = DB_PATH + DATABASE_NAME;
+            checkDB = SQLiteDatabase.openDatabase(myPath, PASSWORD, null, SQLiteDatabase.OPEN_READONLY);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (checkDB != null) {
+            checkDB.close();
+        }
+        return checkDB != null;
+    }
+    private boolean openDatabase() {
+       // String path = DB_PATH + DATABASE_NAME;
+        String path = new StringBuilder(DB_PATH).append(DATABASE_NAME).toString();
+        db = SQLiteDatabase.openDatabase(path, PASSWORD, null, SQLiteDatabase.OPEN_READWRITE);
+        return db != null;
+    }
+
+
+    public synchronized SQLiteDatabase getWritableDatabase() {
+        return getWritableDatabase(PASSWORD);
+    }
+
+    public synchronized SQLiteDatabase getReadableDatabase() {
+        return getReadableDatabase(PASSWORD);
+    }
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create USERS table
@@ -374,7 +462,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     // User
     public UserModel getUserDetails(int userId) {
-        SQLiteDatabase db = this.getReadableDatabase();
+       // SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = instance.getWritableDatabase();
         Cursor cursor = db.query("USERS", null, "ROLE_ID = ?", new String[]{"1"}, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
             int userIdIndex = cursor.getColumnIndex("USER_ID");

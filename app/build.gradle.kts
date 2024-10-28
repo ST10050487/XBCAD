@@ -67,10 +67,18 @@ dependencies {
 
     // BCrypt dependency for password hashing
     implementation("org.mindrot:jbcrypt:0.4")
+
     //implement the dependency com.intuit.sdp:sdp-android:1.1.1
     implementation("com.intuit.sdp:sdp-android:1.1.1")
     //implement the dependency com.intuit.ssp:ssp-android:1.1.1
     implementation("com.intuit.ssp:ssp-android:1.1.1")
     //Implementing the de.hdodenhof:circleimageview:3.1.0
     implementation(libs.circleimageview)
+
+
+    implementation("net.zetetic:android-database-sqlcipher:4.5.0@aar")
+    implementation("androidx.room:room-runtime:2.4.2") // Replace with the latest version
+    kapt("androidx.room:room-compiler:2.4.2") // Replace with the latest version
+    implementation("androidx.room:room-ktx:2.4.2") // Replace with the latest version
+
 }

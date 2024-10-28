@@ -20,7 +20,7 @@ import java.util.Calendar
 class UpdateUser : AppCompatActivity() {
     private lateinit var binding: ActivityUpdateUserBinding
     private lateinit var dbHelper: DBHelper
-    private var userId: Int = 0
+    private var userId: Int = 1
     private var dummyId: Int = 0
     private var imageHolder: ByteArray? = null
     private lateinit var profilePicture: ImageView
@@ -38,7 +38,7 @@ class UpdateUser : AppCompatActivity() {
         dbHelper = DBHelper(this)
 
         // Getting the userId from the Intent
-        userId= intent.getIntExtra("USER_ID", 0)
+     //   userId= intent.getIntExtra("USER_ID", 0)
 
         profilePicture = findViewById(R.id.profilePicture)
         dateOfBirthEditText = findViewById(R.id.userDateOfBirth)

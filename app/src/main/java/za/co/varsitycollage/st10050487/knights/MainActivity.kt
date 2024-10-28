@@ -8,6 +8,7 @@ import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import net.sqlcipher.database.SQLiteDatabase
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,12 +22,14 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        SQLiteDatabase.loadLibs(this);
+
         // Delay of 3 seconds (3000 milliseconds)
         Handler(Looper.getMainLooper()).postDelayed({
             // Navigate to StudentParentReg Activity after the delay
-            val intent = Intent(this, EditFixture::class.java)
+       //     val intent = Intent(this, EditFixture::class.java)
            //val intent = Intent(this, EventManagement::class.java)
-           //  val intent = Intent(this, UpdateUser::class.java)
+             val intent = Intent(this, UpdateUser::class.java)
            // val intent = Intent(this, UpdateProduct::class.java)
            //  val intent = Intent(this, Admin_Home::class.java)
            // val intent = Intent(this@MainActivity, HomeScreen::class.java)
