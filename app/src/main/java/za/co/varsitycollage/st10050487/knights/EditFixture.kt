@@ -10,7 +10,6 @@ import android.content.DialogInterface
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
@@ -33,7 +32,7 @@ class EditFixture : AppCompatActivity() {
     private val PICK_IMAGE_REQUEST = 1
     private val CAMERA_REQUEST = 2
     private var isHomeLogo: Boolean = true
-    private var fixtureId: Int = 1
+    private var fixtureId: Int = 5
     private var userId: Int = 1
     private var leagueId: Int = 0
 
@@ -49,11 +48,10 @@ class EditFixture : AppCompatActivity() {
         populateSpinner( binding.spinnerSport, sportsList)
         // Fetch age group data from the database
         ageGroupList = dbHelper.getAllAgeGroups()
-        // Set the data to the spinner using ArrayAdapter
-        populateSpinner( binding.spinnerAgeGroup, ageGroupList)
+        populateSpinner(binding.spinnerAgeGroup, ageGroupList)
         // Fetch league data from the database
-        leagueList= dbHelper.getAllLeagues()
-        populateSpinner(  binding.spinnerLeague, leagueList)
+        leagueList = dbHelper.getAllLeagues()
+        populateSpinner(binding.spinnerLeague, leagueList)
 
         binding.btnAwayUpload.setOnClickListener {
             isHomeLogo = false
@@ -79,15 +77,14 @@ class EditFixture : AppCompatActivity() {
         }
         binding.btnDelete.setOnClickListener {
             if (!dbHelper.checkIsAdmin(userId)) {
+                Toast.makeText(this, "You do not have permission to delete this fixture", Toast.LENGTH_SHORT).show()
             } else {
-                binding.btnDelete.setOnClickListener {
-                    showConfirmationDialog(fixtureId)
-                }
+                showConfirmationDialog(fixtureId)
             }
         }
         // take out
-       // val id = dbHelper.addDummyFixtureWithUserId(fixtureId)
-       // Toast.makeText(this, id.toString(), Toast.LENGTH_SHORT).show()
+       // val id = dbHelper.addDummyFixtureWithUserId(userId)
+        //Toast.makeText(this, id.toString(), Toast.LENGTH_SHORT).show()
         loadFixture(fixtureId)
     }
 
@@ -101,14 +98,14 @@ class EditFixture : AppCompatActivity() {
         val sport = binding.spinnerSport.selectedItem.toString()
         val ageGroup = binding.spinnerAgeGroup.selectedItem.toString()
         val league = binding.spinnerLeague.selectedItem.toString()
+        val leagueId = binding.spinnerLeague.selectedItem.toString().toInt()
         val homeLogo = homeHolder
         val awayLogo = awayHolder
         val picture = null
 
-
         val fixture = FixtureModel(
-            fixtureId = fixtureId, // Assuming fixtureId is available
-            userId = userId, // Assuming userId is available
+            fixtureId = fixtureId,
+            userId = userId,
             sport = sport,
             homeTeam = home,
             awayTeam = away,
@@ -136,19 +133,6 @@ class EditFixture : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, data)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
-       // val id = dbHelper.addDummyFixtureWithUserId(dummyId)
-      //  Toast.makeText(this, id.toString(), Toast.LENGTH_SHORT).show()
-        loadFixture(3)
-        val deleteFixture = findViewById<Button>(R.id.btnDelete)
-        deleteFixture.setOnClickListener {
-            if (!dbHelper.checkIsAdmin(userId)) {
-                deleteFixture.visibility = View.GONE
-            } else {
-                deleteFixture.setOnClickListener {
-                    showConfirmationDialog(3)
-                }
-            }
-        }
     }
 
     private fun showConfirmationDialog(fixtureId: Int) {
@@ -157,8 +141,8 @@ class EditFixture : AppCompatActivity() {
         builder.setMessage("Are you sure you want to delete this Fixture?")
 
         builder.setPositiveButton("Yes") { dialog: DialogInterface, which: Int ->
-            // Handle the delete operation here
             dbHelper.deleteFixture(fixtureId)
+            Toast.makeText(this, "Fixture deleted successfully", Toast.LENGTH_SHORT).show()
         }
         builder.setNegativeButton("No") { dialog: DialogInterface, which: Int ->
             // Dismiss the dialog
@@ -179,33 +163,27 @@ class EditFixture : AppCompatActivity() {
             binding.txtDescrip.setText(it.matchDescription)
             binding.txtTime.setText(it.matchTime)
             binding.txtDate.setText(it.matchDate)
-            // Assuming you have methods to set the spinner values
-            setSpinner(binding.spinnerSport,sportsList, it.sport)
-            setSpinner(binding.spinnerAgeGroup,ageGroupList, it.ageGroup)
-            setSpinner(binding.spinnerLeague,leagueList, it.league)
-            // Set images if available
+            setSpinner(binding.spinnerSport, sportsList, it.sport)
+            setSpinner(binding.spinnerAgeGroup, ageGroupList, it.ageGroup)
+            setSpinner(binding.spinnerLeague, leagueList, it.league)
             if (it.homeLogo != null) {
                 homeHolder = it.homeLogo
                 binding.imgHomeLogo.setImageBitmap(
-                    BitmapFactory.decodeByteArray(
-                        it.homeLogo,
-                        0,
-                        it.homeLogo.size
-                    )
+                    BitmapFactory.decodeByteArray(it.homeLogo, 0, it.homeLogo.size)
                 )
             }
             if (it.awayLogo != null) {
                 awayHolder = it.awayLogo
                 binding.imgAwayLogo.setImageBitmap(
-                    BitmapFactory.decodeByteArray(
-                        it.awayLogo,
-                        0,
-                        it.awayLogo.size
-                    )
+                    BitmapFactory.decodeByteArray(it.awayLogo, 0, it.awayLogo.size)
                 )
             }
         }
+       if (fixture == null) {
+            Toast.makeText(this, "Failed to load fixture", Toast.LENGTH_SHORT).show()
+        }
     }
+
     private fun setSpinner(spinner: Spinner, items: List<String>, value: String) {
         val index = items.indexOf(value)
         if (index >= 0) {
@@ -239,6 +217,7 @@ class EditFixture : AppCompatActivity() {
             }
         }
     }
+
     private fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
         val stream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
@@ -257,6 +236,7 @@ class EditFixture : AppCompatActivity() {
         }
         builder.show()
     }
+
     private fun checkCameraPermission() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             if (checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -268,6 +248,7 @@ class EditFixture : AppCompatActivity() {
             openCamera()
         }
     }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CAMERA_REQUEST && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -276,11 +257,13 @@ class EditFixture : AppCompatActivity() {
             Toast.makeText(this, "Camera permission is required to take a picture.", Toast.LENGTH_SHORT).show()
         }
     }
+
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         startActivityForResult(intent, PICK_IMAGE_REQUEST)
     }
+
     private fun openCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(intent, CAMERA_REQUEST)
@@ -344,6 +327,7 @@ class EditFixture : AppCompatActivity() {
 
         return true
     }
+
     private fun isDateValid(date: String): Pair<Boolean, String?> {
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         sdf.isLenient = false
@@ -369,5 +353,4 @@ class EditFixture : AppCompatActivity() {
             Pair(false, "Invalid date, example: 2025-12-31")
         }
     }
-
 }

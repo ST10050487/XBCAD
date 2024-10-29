@@ -185,17 +185,25 @@
 
                 <Button
                     android:id="@+id/btnSave"
-                    android:layout_width="@dimen/_215sdp"
-                    android:layout_height="@dimen/_58sdp"
+                    android:layout_width="@dimen/_190sdp"
+                    android:layout_height="@dimen/_50sdp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_margin="@dimen/_40sdp"
-                    android:layout_marginHorizontal="@dimen/_30sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:textAllCaps="true"
                     android:fontFamily="@font/inter_bold"
                     android:text="Save Changes" />
 
+                <Button
+                    android:id="@+id/btnDelete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/maroon"
+                    android:fontFamily="@font/inter_bold"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:text="DELETE FIXTURE" />
 
             </LinearLayout>
         </ScrollView>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>

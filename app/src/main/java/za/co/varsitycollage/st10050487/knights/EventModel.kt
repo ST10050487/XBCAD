@@ -7,5 +7,10 @@ data class EventModel(
     val eventTime: String,
     val eventLocation: String,
     val eventPrice: Double,
+    val pictures: ByteArray,
+    val eventDescription: String,
     var selected: Boolean = false
-)
+) {
+    val eventPicture: ByteArray
+        get() = pictures
+}

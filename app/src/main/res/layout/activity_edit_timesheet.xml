@@ -7,368 +7,406 @@
     android:layout_height="match_parent"
     tools:context=".EditTimesheet">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/primaryColor"
+        android:minHeight="99dp"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.65999997">
+
+        <LinearLayout
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/primaryColor"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_margin="30dp">
 
-            <LinearLayout
-                android:id="@+id/btnBack"
+            <ImageView
+                android:layout_width="@dimen/_36sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:src="@drawable/back_btn" />
+
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/back_btn"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_16ssp" />
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
 
-                <ImageView
-                    android:layout_width="@dimen/_36sdp"
-                    android:layout_height="@dimen/_30sdp"
-                    android:src="@drawable/back_btn" />
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="790dp"
+        android:maxHeight="790dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/back_btn"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_16ssp" />
-            </LinearLayout>
-        </androidx.appcompat.widget.Toolbar>
-
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <!-- Team 1 -->
+            <!-- Input field for Home Team -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/inter_bold"
+                android:text="Timesheet for Match"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_18sdp" />
 
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <!-- Team 1 -->
-                <!-- Input field for Home Team -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_bold"
-                    android:layout_marginTop="@dimen/_50sdp"
-                    android:layout_gravity="center_horizontal"
-                    android:text="Timesheet for Match"
-                    android:textAllCaps="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_18sdp" />
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:fontFamily="@font/inter"
+                android:gravity="center_horizontal"
+                android:text="Fill in the details for the match."
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
 
-                <TextView
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_26sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:fontFamily="@font/inter"
+                android:gravity="left"
+                android:text="Team Management"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sdp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_26sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="@font/inter_bold"
+                android:text="Message"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sdp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginVertical="@dimen/_10sdp"
+                android:padding="@dimen/_5sdp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtMsg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/_20sdp"
-                    android:layout_marginRight="@dimen/_20sdp"
-                    android:layout_marginBottom="@dimen/_10sdp"
-                    android:fontFamily="@font/inter"
-                    android:text="Fill in the details for the match."
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp" />
+                    android:inputType="textMultiLine"
+                    android:singleLine="false"
+                    android:textColor="@color/lightGrey"
+                    android:textSize="@dimen/_14sdp" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <!-- Input field for Away Team -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_26sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:fontFamily="@font/inter"
+                android:text="Match Logistics"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sdp" />
 
-                <TextView
+            <!-- Input field for Time -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_26sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="@font/inter_bold"
+                android:text="Meet Time"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sdp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="@dimen/_10sdp"
+                android:padding="@dimen/_5sdp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtMeetTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:layout_marginHorizontal="@dimen/_26sdp"
-                    android:layout_marginTop="@dimen/_2sdp"
-                    android:fontFamily="@font/inter"
-                    android:text="Team Management"
-                    android:textAllCaps="true"
-                    android:textColor="@color/black"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="none"
+                    android:textColor="@color/lightGrey"
                     android:textSize="@dimen/_16sdp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_26sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="@font/inter_bold"
+                android:text="Bus Departure Time"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sdp" />
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="@dimen/_10sdp"
+                android:padding="@dimen/_5sdp">
 
-                <TextView
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtDepTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_26sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:fontFamily="@font/inter_bold"
-                    android:text="Home Team"
-                    android:textColor="@color/black"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="none"
+                    android:textColor="@color/lightGrey"
                     android:textSize="@dimen/_16sdp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-                <com.google.android.material.textfield.TextInputLayout
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_26sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="@font/inter_bold"
+                android:text="Bus Return Time"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sdp" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="@dimen/_10sdp"
+                android:padding="@dimen/_5sdp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtReturnTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_20sdp"
-                    android:layout_marginVertical="@dimen/_10sdp"
-                    android:padding="@dimen/_5sdp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/txtHomeTeam"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"                      android:inputType="text"
-                        android:textColor="@color/lightGrey"
-                        android:textSize="@dimen/_14sdp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_26sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:fontFamily="@font/inter_bold"
-                    android:text="Away Team"
-                    android:textColor="@color/black"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="none"
+                    android:textColor="@color/lightGrey"
                     android:textSize="@dimen/_16sdp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
+
+            <!-- Input field for Results -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_26sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:fontFamily="@font/inter"
+                android:text="RESULTS"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sdp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_26sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="@font/inter_bold"
+                android:text="Match Status"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sdp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="10dp"
+                android:padding="5dp">
+
+                <Spinner
+                    android:id="@+id/spinnerMatchStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:drawableEnd="@drawable/ic_drop_down_icon"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Input field for Home Result -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_26sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:fontFamily="@font/inter_bold"
+                android:text="Home Result (Optional)"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sdp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="@dimen/_10sdp"
+                android:padding="@dimen/_5sdp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtHomeResult"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_20sdp"
-                    android:layout_marginVertical="@dimen/_10sdp"
-                    android:padding="@dimen/_5sdp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/txtAwayTeam"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text"
-                        android:textColor="@color/lightGrey"
-                        android:textSize="@dimen/_14sdp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- Input field for Away Team -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_26sdp"
-                    android:layout_marginTop="@dimen/_2sdp"
-                    android:fontFamily="@font/inter"
-                    android:text="Match Logistics"
-                    android:textAllCaps="true"
-                    android:textColor="@color/black"
+                    android:inputType="number"
+                    android:textColor="@color/lightGrey"
                     android:textSize="@dimen/_16sdp" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <!-- Input field for Away Result -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_26sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:fontFamily="@font/inter_bold"
+                android:text="@string/away_result_optional"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sdp" />
 
-                <!-- Input field for Time -->
-                <TextView
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginVertical="@dimen/_10sdp"
+                android:padding="@dimen/_5sdp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtAwayResult"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_26sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:fontFamily="@font/inter_bold"
-                    android:text="Meet Time"
-                    android:textColor="@color/black"
+                    android:inputType="number"
+                    android:textColor="@color/lightGrey"
                     android:textSize="@dimen/_16sdp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_26sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:fontFamily="@font/inter_bold"
+                android:text="Man of the Match"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sdp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginVertical="@dimen/_10sdp"
+                android:padding="@dimen/_5sdp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtManOfTheMatch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_marginVertical="@dimen/_10sdp"
-                    android:padding="@dimen/_5sdp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/txtMeetTime"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:inputType="none"
-                        android:textColor="@color/lightGrey"
-                        android:textSize="@dimen/_16sdp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_26sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:fontFamily="@font/inter_bold"
-                    android:text="Bus Departure Time"
-                    android:textColor="@color/black"
+                    android:inputType="number"
+                    android:textColor="@color/lightGrey"
                     android:textSize="@dimen/_16sdp" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <!-- Highlights -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_26sdp"
+                android:layout_marginVertical="@dimen/_2sdp"
+                android:fontFamily="@font/inter_bold"
+                android:text="@string/highlights"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sdp" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_marginVertical="@dimen/_10sdp"
-                    android:padding="@dimen/_5sdp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/txtDepTime"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:inputType="none"
-                        android:textColor="@color/lightGrey"
-                        android:textSize="@dimen/_16sdp" />
-                </com.google.android.material.textfield.TextInputLayout>
+            <!--Scroll fragment for images -->
 
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_26sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:fontFamily="@font/inter_bold"
-                    android:text="Bus Arrival Time"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_16sdp" />
+            <Button
+                android:id="@+id/uploadBtn"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                android:layout_width="@dimen/_215sdp"
+                android:layout_height="@dimen/_58sdp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginHorizontal="@dimen/_30sdp"
+                android:backgroundTint="@color/lightBlue"
+                android:fontFamily="@font/inter_bold"
+                android:text="@string/upload_image"
+                android:textColor="@color/white"
+                app:icon="@drawable/ic_upload"
+                app:iconGravity="end"
+                app:iconTint="@color/white" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvHighlights"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/uploadBtn" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_marginHorizontal="@dimen/_50sdp"
+                android:layout_marginTop="@dimen/_30sdp"
+                android:background="@color/primaryColor" />
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="@dimen/_190sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:textAllCaps="true"
+                android:fontFamily="@font/inter_bold"
+                android:text="Save Changes" />
+
+            <Button
+                android:id="@+id/btnDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/maroon"
+                android:fontFamily="@font/inter_bold"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/_20sdp"
+                android:text="DELETE FIXTURE" />
 
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_marginVertical="@dimen/_10sdp"
-                    android:padding="@dimen/_5sdp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/txtArrTime"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:inputType="none"
-                        android:textColor="@color/lightGrey"
-                        android:textSize="@dimen/_16sdp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-                <!-- Input field for Results -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_26sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:fontFamily="@font/inter"
-                    android:text="RESULTS"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_16sdp" />
-
-                <!-- Input field for Home Result -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_26sdp"
-                    android:layout_marginTop="@dimen/_2sdp"
-                    android:fontFamily="@font/inter_bold"
-                    android:text="Home Result (Optional)"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_16sdp" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_marginVertical="@dimen/_10sdp"
-                    android:padding="@dimen/_5sdp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/txtHomeResult"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:textColor="@color/lightGrey"
-                        android:textSize="@dimen/_16sdp" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <!-- Input field for Away Result -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_26sdp"
-                    android:layout_marginTop="@dimen/_2sdp"
-                    android:fontFamily="@font/inter_bold"
-                    android:text="@string/away_result_optional"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_16sdp" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_20sdp"
-                    android:layout_marginVertical="@dimen/_10sdp"
-                    android:padding="@dimen/_5sdp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/txtAwayResult"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:textColor="@color/lightGrey"
-                        android:textSize="@dimen/_16sdp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-                <!-- Highlights -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_26sdp"
-                    android:layout_marginVertical="@dimen/_2sdp"
-                    android:fontFamily="@font/inter_bold"
-                    android:text="@string/highlights"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_16sdp" />
-
-                <!--Scroll fragment for images -->
-
-
-                <Button
-                    android:id="@+id/uploadBtn"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-                    android:layout_width="@dimen/_215sdp"
-                    android:layout_height="@dimen/_58sdp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginHorizontal="@dimen/_30sdp"
-                    android:backgroundTint="@color/lightBlue"
-                    android:fontFamily="@font/inter_bold"
-                    android:text="@string/upload_image"
-                    android:textColor="@color/white"
-                    app:icon="@drawable/ic_upload"
-                    app:iconGravity="end"
-                    app:iconTint="@color/white" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvHighlights"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/uploadBtn" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_2sdp"
-                    android:layout_marginHorizontal="@dimen/_50sdp"
-                    android:layout_marginTop="@dimen/_30sdp"
-                    android:background="@color/primaryColor" />
-
-                <Button
-                    android:id="@+id/btnSave"
-                    android:layout_width="@dimen/_215sdp"
-                    android:layout_height="@dimen/_58sdp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="@dimen/_40sdp"
-                    android:layout_marginHorizontal="@dimen/_30sdp"
-                    android:fontFamily="@font/inter_bold"
-                    android:text="Save Changes" />
-
-
-            </LinearLayout>
-        </ScrollView>
+        </LinearLayout>
+    </ScrollView>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

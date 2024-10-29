@@ -20,6 +20,7 @@
             android:background="@color/backgroundtheme">
 
             <TextView
+                android:id="@+id/back_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/back_arrow"
@@ -78,10 +79,11 @@
                         android:id="@+id/display_home_team_logo"
                         android:layout_width="100dp"
                         android:layout_height="90dp"
-                        android:background="#D5F4EEEE"
-                        android:scaleType="centerCrop"/>
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_no_image_icon"/>
 
                     <TextView
+                        android:id="@+id/upload_home_team_btn"
                         android:layout_width="210dp"
                         android:layout_height="55dp"
                         android:layout_marginStart="15dp"
@@ -138,10 +140,11 @@
                         android:id="@+id/display_away_team_logo"
                         android:layout_width="100dp"
                         android:layout_height="90dp"
-                        android:background="#D5F4EEEE"
-                        android:scaleType="centerCrop"/>
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_no_image_icon"/>
 
                     <TextView
+                        android:id="@+id/upload_away_team_btn"
                         android:layout_width="210dp"
                         android:layout_height="55dp"
                         android:layout_marginStart="15dp"
@@ -198,12 +201,12 @@
                     android:padding="5dp">
 
                     <Spinner
-                        android:id="@+id/sport_spinner"
+                        android:id="@+id/sport_dropdown"
                         android:layout_width="match_parent"
-                        android:layout_height="55dp"
+                        android:layout_height="42dp"
+                        android:drawableEnd="@drawable/ic_drop_down_icon"
                         android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
-                        android:drawableEnd="@drawable/ic_drop_down_icon"/>
+                        android:paddingEnd="16dp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -223,7 +226,7 @@
                     android:padding="5dp">
 
                         <Spinner
-                            android:id="@+id/age_group_spinner"
+                            android:id="@+id/age_group_dropdown"
                             android:layout_width="match_parent"
                             android:layout_height="55dp"
                             android:paddingStart="16dp"
@@ -248,7 +251,7 @@
                     android:padding="5dp">
 
                         <Spinner
-                            android:id="@+id/league_spinner"
+                            android:id="@+id/league_dropdown"
                             android:layout_width="match_parent"
                             android:layout_height="55dp"
                             android:paddingStart="16dp"
@@ -273,7 +276,7 @@
                     android:padding="5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/time"
+                        android:id="@+id/Matchtime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Select Time"
@@ -297,7 +300,7 @@
                     android:padding="5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/date"
+                        android:id="@+id/Matchdate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Select Date"
@@ -321,7 +324,7 @@
                     android:padding="5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/description"
+                        android:id="@+id/Matchdescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Description"
@@ -373,14 +376,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:id="@+id/create_fixture"
+                    android:id="@+id/create_fixtureBtn"
                     android:text="CREATE FIXTURE"/>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add"
+        android:id="@+id/Away_teamFab_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"

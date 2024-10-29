@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -36,6 +37,10 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
 }
 
 dependencies {
@@ -50,6 +55,9 @@ dependencies {
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.firebase.crashlytics.buildtools)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.database.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -70,13 +78,28 @@ dependencies {
 
     //implement the dependency com.intuit.sdp:sdp-android:1.1.1
     implementation("com.intuit.sdp:sdp-android:1.1.1")
-    //implement the dependency com.intuit.ssp:ssp-android:1.1.1
-    implementation("com.intuit.ssp:ssp-android:1.1.1")
+
+
+    //implement the dependency net.zetetic:android-database-sqlcipher:4.5.0
+    implementation("net.zetetic:android-database-sqlcipher:4.5.0")
     //Implementing the de.hdodenhof:circleimageview:3.1.0
     implementation(libs.circleimageview)
+    implementation("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
+
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+    // Add Firebase Auth library dependency
+    implementation("com.google.firebase:firebase-auth:23.1.0")
+    implementation("com.google.android.gms:play-services-auth:20.2.0")
+
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+    // Add Firebase Auth library dependency
+    implementation("com.google.firebase:firebase-auth:23.1.0")
+    implementation("com.google.android.gms:play-services-auth:20.2.0")
 
 
 
    implementation("net.zetetic:android-database-sqlcipher:4.5.4")
     implementation("androidx.sqlite:sqlite:2.4.0")
 }
+apply(plugin ="com.google.gms.google-services")
