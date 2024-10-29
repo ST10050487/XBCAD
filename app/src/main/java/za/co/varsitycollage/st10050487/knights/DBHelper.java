@@ -17,7 +17,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 15;
+    private static final int DATABASE_VERSION = 17;
 
 
     // Constructor
@@ -126,6 +126,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "BUS_DEPATURE_TIME TEXT," +
                 "BUS_RETURN_TIME TEXT," +
                 "MESSAGE TEXT," +
+                "MAN_OF_THE_MATCH TEXT," +
                 "HOME_SCORE INTEGER," +
                 "AWAY_SCORE INTEGER," +
                 "TIME_STATUS_ID INTEGER NOT NULL," +
@@ -302,6 +303,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS MATCH_STATUS");
         db.execSQL("DROP TABLE IF EXISTS FIXTURE_PLAYERS");
         db.execSQL("DROP TABLE IF EXISTS TIME_HIGHLIGHTS");
+        db.execSQL("DROP TABLE IF EXISTS TIME_STATUS");
+
         // Recreate tables
         onCreate(db);
     }
@@ -540,31 +543,32 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public TimesheetModel getTimesDetails(int fixtureId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM TIMES WHERE FIXTURE_ID = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(fixtureId)});
+    SQLiteDatabase db = this.getReadableDatabase();
+    String query = "SELECT * FROM TIMES WHERE FIXTURE_ID = ?";
+    Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(fixtureId)});
 
-        if (cursor != null && cursor.moveToFirst()) {
-            TimesheetModel timesheet = new TimesheetModel(
-                    cursor.getInt(cursor.getColumnIndexOrThrow("TIME_ID")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("TIMES_STATUS_ID")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MEETING_TIME")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("BUS_DEPATURE_TIME")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("BUS_RETURN_TIME")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MESSAGE")),
-                    cursor.isNull(cursor.getColumnIndexOrThrow("HOME_SCORE")) ? null : cursor.getInt(cursor.getColumnIndexOrThrow("HOME_SCORE")),
-                    cursor.isNull(cursor.getColumnIndexOrThrow("AWAY_SCORE")) ? null : cursor.getInt(cursor.getColumnIndexOrThrow("AWAY_SCORE"))
-            );
-            cursor.close();
-            return timesheet;
-        }
-
-        if (cursor != null) {
-            cursor.close();
-        }
-        return null;
+    if (cursor != null && cursor.moveToFirst()) {
+        TimesheetModel timesheet = new TimesheetModel(
+                cursor.getInt(cursor.getColumnIndexOrThrow("TIME_ID")),
+                cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
+                cursor.getInt(cursor.getColumnIndexOrThrow("TIMES_STATUS_ID")),
+                cursor.getString(cursor.getColumnIndexOrThrow("MEETING_TIME")),
+                cursor.getString(cursor.getColumnIndexOrThrow("BUS_DEPATURE_TIME")),
+                cursor.getString(cursor.getColumnIndexOrThrow("BUS_RETURN_TIME")),
+                cursor.getString(cursor.getColumnIndexOrThrow("MESSAGE")),
+                cursor.getString(cursor.getColumnIndexOrThrow("ANOTHER_STRING")), // Add this line
+                cursor.isNull(cursor.getColumnIndexOrThrow("HOME_SCORE")) ? null : cursor.getInt(cursor.getColumnIndexOrThrow("HOME_SCORE")),
+                cursor.isNull(cursor.getColumnIndexOrThrow("AWAY_SCORE")) ? null : cursor.getInt(cursor.getColumnIndexOrThrow("AWAY_SCORE"))
+        );
+        cursor.close();
+        return timesheet;
     }
+
+    if (cursor != null) {
+        cursor.close();
+    }
+    return null;
+}
     public int updateTimesheet(TimesheetModel timesheet) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -1310,5 +1314,17 @@ public class DBHelper extends SQLiteOpenHelper {
 
         return db.update("EVENTS", values, "EVENT_ID = ?", new String[]{String.valueOf(event.getEventId())});
     }
+    // A method to create a new Product
+    public long addProduct(String name, String description, double price, byte[] photo, int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("NAME", name);
+        values.put("DESCRIPTION", description);
+        values.put("PRICE", price);
+        values.put("PHOTO", photo);
+        values.put("USER_ID", userId);
+        return db.insert("SCHOOL_MERCH", null, values);
+    }
+
 }
 
