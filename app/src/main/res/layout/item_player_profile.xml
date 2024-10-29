@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#890B50"
+    android:orientation="horizontal"
+    android:padding="12dp">
+
+    <!-- Profile Icon -->
+    <ImageView
+        android:id="@+id/iv_profile"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="Profile Image"
+        android:src="@drawable/school_logo" />
+
+    <!-- Profile Information -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="John Marcus"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email: John@bosmansdam.co.za"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_grade_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Grade: 11"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Age: 17"
+            android:textColor="#FFFFFF" />
+
+    </LinearLayout>
+</LinearLayout>
