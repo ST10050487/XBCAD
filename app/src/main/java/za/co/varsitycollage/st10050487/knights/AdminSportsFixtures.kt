@@ -6,23 +6,22 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class AdminSportsFixtures : AppCompatActivity() {
+    private val selectedSports = mutableListOf<String>() // Store selected sports
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin_sports_fixtures)
 
-
         // Load the SportsFixturesHomeScreenFragment into the fragment_container
         LoadingUpcomingPastFixtures(savedInstanceState)
 
         FilterLogic()
-
-
     }
 
     private fun LoadingUpcomingPastFixtures(savedInstanceState: Bundle?) {
@@ -51,8 +50,28 @@ class AdminSportsFixtures : AppCompatActivity() {
                 showSportDropdown(dialog)
             }
 
+            // Show Results button logic
+            val showResultsButton = dialog.findViewById<ImageButton>(R.id.show_results_button)
+            showResultsButton.setOnClickListener {
+                // Logic to return to the previous screen
+                refreshCurrentFragment()
+                dialog.dismiss() // Optionally dismiss the dialog
+            }
+
             dialog.show()
         }
+    }
+
+    private fun refreshCurrentFragment() {
+        val fragment = upcomingMatchesFragment(isAdmin = true).apply {
+            arguments = Bundle().apply {
+                putStringArrayList("selectedSports", ArrayList(selectedSports))
+            }
+        }
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
     }
 
     private fun showSportDropdown(parentDialog: Dialog) {
@@ -74,8 +93,10 @@ class AdminSportsFixtures : AppCompatActivity() {
         // Handle OK button
         val okButton = sportDialog.findViewById<Button>(R.id.button_ok)
         okButton.setOnClickListener {
+            // Clear previous selections
+            selectedSports.clear()
+
             // Collect selected sports
-            val selectedSports = mutableListOf<String>()
             if (soccerCheckBox.isChecked) selectedSports.add("Soccer")
             if (netballCheckBox.isChecked) selectedSports.add("Netball")
             if (rugbyCheckBox.isChecked) selectedSports.add("Rugby")
@@ -87,7 +108,11 @@ class AdminSportsFixtures : AppCompatActivity() {
             if (swimmingCheckBox.isChecked) selectedSports.add("Swimming")
 
             // Show a toast or update UI with selected items
-            Toast.makeText(this, "Selected: ${selectedSports.joinToString()}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Selected: ${selectedSports.joinToString()}", Toast.LENGTH_SHORT)
+                .show()
+
+            // Now refresh the fragment and pass the selected sports
+            refreshCurrentFragment()
 
             sportDialog.dismiss()  // Close the dropdown dialog
         }

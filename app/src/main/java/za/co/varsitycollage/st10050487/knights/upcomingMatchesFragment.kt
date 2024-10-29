@@ -14,67 +14,68 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment() {
+    private var selectedSports: List<String> = emptyList() // Store selected sports
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            selectedSports = it.getStringArrayList("selectedSports") ?: emptyList()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the appropriate layout based on the isAdmin flag
-        val layoutId = if (isAdmin) {
-            R.layout.card_layout_admin_upcoming // Use the admin layout
-        } else {
-            R.layout.card_layout_upcoming // Use the regular layout
-        }
-
         val view = inflater.inflate(R.layout.fragment_upcoming_matches, container, false)
         val linearLayout = view.findViewById<LinearLayout>(R.id.linear_layout)
 
-        // Create an instance of your database helper
         val dbHelper = DBHelper(requireContext())
-
-        // Retrieve all fixtures sorted from latest to oldest
         val fixtures = dbHelper.getAllFixtures()
 
-        // Check if there are fixtures
         if (fixtures.isNotEmpty()) {
             for (fixture in fixtures) {
-                // Inflate a new fixture card layout
-                val fixtureCard =
-                    LayoutInflater.from(requireContext()).inflate(layoutId, linearLayout, false)
+                // Check if no sports are selected, then show all fixtures
+                if (selectedSports.isEmpty() || selectedSports.contains(fixture.sport)) {
+                    // Inflate a new fixture card layout
+                    val fixtureCard = LayoutInflater.from(requireContext()).inflate(
+                        if (isAdmin) R.layout.card_layout_admin_upcoming else R.layout.card_layout_upcoming,
+                        linearLayout,
+                        false
+                    )
 
-                // Find views by their IDs in the fixture card
-                val fixtureDate = fixtureCard.findViewById<TextView>(R.id.fixture_date)
-                val team1Logo = fixtureCard.findViewById<ImageView>(R.id.team1_logo)
-                val team1Name = fixtureCard.findViewById<TextView>(R.id.team1_name)
-                val fixtureTime = fixtureCard.findViewById<TextView>(R.id.fixture_time)
-                val fixtureDateBox = fixtureCard.findViewById<TextView>(R.id.fixture_date_box)
-                val team2Logo = fixtureCard.findViewById<ImageView>(R.id.team2_logo)
-                val team2Name = fixtureCard.findViewById<TextView>(R.id.team2_name)
-                val matchType = fixtureCard.findViewById<TextView>(R.id.match_type)
-                val ageGroup = fixtureCard.findViewById<TextView>(R.id.age_group)
+                    // Find views by their IDs in the fixture card
+                    val fixtureDate = fixtureCard.findViewById<TextView>(R.id.fixture_date)
+                    val team1Logo = fixtureCard.findViewById<ImageView>(R.id.team1_logo)
+                    val team1Name = fixtureCard.findViewById<TextView>(R.id.team1_name)
+                    val fixtureTime = fixtureCard.findViewById<TextView>(R.id.fixture_time)
+                    val fixtureDateBox = fixtureCard.findViewById<TextView>(R.id.fixture_date_box)
+                    val team2Logo = fixtureCard.findViewById<ImageView>(R.id.team2_logo)
+                    val team2Name = fixtureCard.findViewById<TextView>(R.id.team2_name)
+                    val matchType = fixtureCard.findViewById<TextView>(R.id.match_type)
+                    val ageGroup = fixtureCard.findViewById<TextView>(R.id.age_group)
 
-                FormattingDate(fixture, fixtureDate, fixtureDateBox)
+                    FormattingDate(fixture, fixtureDate, fixtureDateBox)
 
-                fixture.homeLogo?.let {
-                    team1Logo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
+                    fixture.homeLogo?.let {
+                        team1Logo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
+                    }
+                    team1Name.text = fixture.homeTeam
+                    fixtureTime.text = fixture.matchTime
+                    fixture.awayLogo?.let {
+                        team2Logo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
+                    }
+                    team2Name.text = fixture.awayTeam
+                    matchType.text = fixture.sport
+                    ageGroup.text = fixture.ageGroup
+
+                    // Add the inflated fixture card to the LinearLayout
+                    linearLayout.addView(fixtureCard)
                 }
-                team1Name.text = fixture.homeTeam
-                fixtureTime.text = fixture.matchTime
-                fixture.awayLogo?.let {
-                    team2Logo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
-                }
-                team2Name.text = fixture.awayTeam
-                matchType.text = fixture.sport
-                ageGroup.text = fixture.ageGroup
-
-                // Add the inflated fixture card to the LinearLayout
-                linearLayout.addView(fixtureCard)
             }
         } else {
-            // Optionally, you can show a message or a placeholder view if no fixtures are found
             Log.e("UpcomingMatchesFragment", "No fixtures found in the database.")
-            // You could also add a TextView here to inform the user that no fixtures are available
         }
 
         return view
