@@ -61,9 +61,7 @@
         <activity
             android:name=".UpdateAdminUser"
             android:exported="false" />
-        <activity
-            android:name=".Admin_Home"
-            android:exported="false" />
+
         <activity
             android:name=".CreateTimesheet"
             android:exported="false"
