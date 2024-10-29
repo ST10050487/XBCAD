@@ -15,7 +15,7 @@ class Admin_Home : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_admin_home2)
+//        setContentView(R.layout.activity_admin_home2)
 // Banner frame size: width = 1440, height = 672
        /* val bannerFrame: ImageView = findViewById(R.id.imageView3)
         bannerFrame.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {

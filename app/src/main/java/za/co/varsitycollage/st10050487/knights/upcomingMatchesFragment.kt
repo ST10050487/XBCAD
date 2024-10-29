@@ -13,16 +13,21 @@ import android.widget.TextView
 import java.text.SimpleDateFormat
 import java.util.*
 
-class upcomingMatchesFragment : Fragment() {
+class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment() {
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_upcoming_matches, container, false)
+        // Inflate the appropriate layout based on the isAdmin flag
+        val layoutId = if (isAdmin) {
+            R.layout.card_layout_admin_upcoming // Use the admin layout
+        } else {
+            R.layout.card_layout_upcoming // Use the regular layout
+        }
 
-        // Find the LinearLayout that will hold all fixture cards
+        val view = inflater.inflate(R.layout.fragment_upcoming_matches, container, false)
         val linearLayout = view.findViewById<LinearLayout>(R.id.linear_layout)
 
         // Create an instance of your database helper
@@ -35,7 +40,8 @@ class upcomingMatchesFragment : Fragment() {
         if (fixtures.isNotEmpty()) {
             for (fixture in fixtures) {
                 // Inflate a new fixture card layout
-                val fixtureCard = LayoutInflater.from(requireContext()).inflate(R.layout.card_layout_upcoming, linearLayout, false)
+                val fixtureCard =
+                    LayoutInflater.from(requireContext()).inflate(layoutId, linearLayout, false)
 
                 // Find views by their IDs in the fixture card
                 val fixtureDate = fixtureCard.findViewById<TextView>(R.id.fixture_date)

@@ -12,7 +12,7 @@ class AdminSportsFixtures : AppCompatActivity() {
 
         // Load the SportsFixturesHomeScreenFragment into the fragment_container
         if (savedInstanceState == null) {
-            val fragment = SportsFixturesHomeScreenFragment()
+            val fragment = SportsFixturesHomeScreenFragment(isAdmin = true) // Pass true for admin
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit()
