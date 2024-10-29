@@ -17,7 +17,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 15;
+    private static final int DATABASE_VERSION = 17;
 
 
     // Constructor
@@ -126,6 +126,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "BUS_DEPATURE_TIME TEXT," +
                 "BUS_RETURN_TIME TEXT," +
                 "MESSAGE TEXT," +
+                "MAN_OF_THE_MATCH TEXT," +
                 "HOME_SCORE INTEGER," +
                 "AWAY_SCORE INTEGER," +
                 "TIME_STATUS_ID INTEGER NOT NULL," +
@@ -302,6 +303,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS MATCH_STATUS");
         db.execSQL("DROP TABLE IF EXISTS FIXTURE_PLAYERS");
         db.execSQL("DROP TABLE IF EXISTS TIME_HIGHLIGHTS");
+        db.execSQL("DROP TABLE IF EXISTS TIME_STATUS");
+
         // Recreate tables
         onCreate(db);
     }
@@ -540,31 +543,32 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public TimesheetModel getTimesDetails(int fixtureId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM TIMES WHERE FIXTURE_ID = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(fixtureId)});
+    SQLiteDatabase db = this.getReadableDatabase();
+    String query = "SELECT * FROM TIMES WHERE FIXTURE_ID = ?";
+    Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(fixtureId)});
 
-        if (cursor != null && cursor.moveToFirst()) {
-            TimesheetModel timesheet = new TimesheetModel(
-                    cursor.getInt(cursor.getColumnIndexOrThrow("TIME_ID")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("TIMES_STATUS_ID")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MEETING_TIME")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("BUS_DEPATURE_TIME")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("BUS_RETURN_TIME")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MESSAGE")),
-                    cursor.isNull(cursor.getColumnIndexOrThrow("HOME_SCORE")) ? null : cursor.getInt(cursor.getColumnIndexOrThrow("HOME_SCORE")),
-                    cursor.isNull(cursor.getColumnIndexOrThrow("AWAY_SCORE")) ? null : cursor.getInt(cursor.getColumnIndexOrThrow("AWAY_SCORE"))
-            );
-            cursor.close();
-            return timesheet;
-        }
-
-        if (cursor != null) {
-            cursor.close();
-        }
-        return null;
+    if (cursor != null && cursor.moveToFirst()) {
+        TimesheetModel timesheet = new TimesheetModel(
+                cursor.getInt(cursor.getColumnIndexOrThrow("TIME_ID")),
+                cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
+                cursor.getInt(cursor.getColumnIndexOrThrow("TIMES_STATUS_ID")),
+                cursor.getString(cursor.getColumnIndexOrThrow("MEETING_TIME")),
+                cursor.getString(cursor.getColumnIndexOrThrow("BUS_DEPATURE_TIME")),
+                cursor.getString(cursor.getColumnIndexOrThrow("BUS_RETURN_TIME")),
+                cursor.getString(cursor.getColumnIndexOrThrow("MESSAGE")),
+                cursor.getString(cursor.getColumnIndexOrThrow("ANOTHER_STRING")), // Add this line
+                cursor.isNull(cursor.getColumnIndexOrThrow("HOME_SCORE")) ? null : cursor.getInt(cursor.getColumnIndexOrThrow("HOME_SCORE")),
+                cursor.isNull(cursor.getColumnIndexOrThrow("AWAY_SCORE")) ? null : cursor.getInt(cursor.getColumnIndexOrThrow("AWAY_SCORE"))
+        );
+        cursor.close();
+        return timesheet;
     }
+
+    if (cursor != null) {
+        cursor.close();
+    }
+    return null;
+}
     public int updateTimesheet(TimesheetModel timesheet) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -1310,91 +1314,17 @@ public class DBHelper extends SQLiteOpenHelper {
 
         return db.update("EVENTS", values, "EVENT_ID = ?", new String[]{String.valueOf(event.getEventId())});
     }
-
-    // Method to move fixture to past
-    public void moveFixtureToPast(MatchDis fixture) {
+    // A method to create a new Product
+    public long addProduct(String name, String description, double price, byte[] photo, int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("STATUS", "FINISHED");
-        db.update("SPORT_FIXTURES", values, "FIXTURE_ID = ?", new String[]{fixture.getFixtureId()});
+        values.put("NAME", name);
+        values.put("DESCRIPTION", description);
+        values.put("PRICE", price);
+        values.put("PHOTO", photo);
+        values.put("USER_ID", userId);
+        return db.insert("SCHOOL_MERCH", null, values);
     }
-
-    // Method to get all fixtures
-    public List<MatchDis> getUpcomingFixtures() {
-        List<MatchDis> fixtures = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT FIXTURE_ID, HOME_TEAM, AWAY_TEAM, SET_TIME, SET_DATE, HOME_LOGO, AWAY_LOGO FROM SPORT_FIXTURES WHERE SET_DATE >= date('now')", null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                MatchDis fixture = new MatchDis(
-                        cursor.getString(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("SET_TIME")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("SET_DATE")),
-                        cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
-                        cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
-                        MatchStatus.UPCOMING
-                );
-                fixtures.add(fixture);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return fixtures;
-    }
-
-
-    // Method to get all past fixtures
-    public List<MatchDis> getPastFixtures() {
-        List<MatchDis> fixtures = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT FIXTURE_ID, HOME_TEAM, AWAY_TEAM, SET_TIME, SET_DATE, HOME_LOGO, AWAY_LOGO FROM SPORT_FIXTURES WHERE SET_DATE < date('now')", null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                MatchDis fixture = new MatchDis(
-                        cursor.getString(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("SET_TIME")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("SET_DATE")),
-                        cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
-                        cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
-                        MatchStatus.FINISHED
-                );
-                fixtures.add(fixture);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return fixtures;
-    }
-
-    public List<PlayerProfileView> getAllPlayerProfiles() {
-        List<PlayerProfileView> playerProfiles = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT pp.NAME, pp.SURNAME, pp.AGE, pp.GRADE, pp.AGE_GROUP, u.EMAIL " +
-                "FROM PLAYER_PROFILE pp " +
-                "JOIN USERS u ON pp.USER_ID = u.USER_ID " +
-                "WHERE u.ROLE_ID = (SELECT ROLE_ID FROM ROLES WHERE ROLE = 'User')";
-        Cursor cursor = db.rawQuery(query, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                PlayerProfileView profile = new PlayerProfileView(
-                        cursor.getString(cursor.getColumnIndexOrThrow("NAME")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("SURNAME")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("EMAIL")), // Corrected to getString
-                        cursor.getInt(cursor.getColumnIndexOrThrow("AGE")),      // Corrected to getInt
-                        cursor.getString(cursor.getColumnIndexOrThrow("GRADE"))
-                );
-                playerProfiles.add(profile);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return playerProfiles;
-    }
-
 
 }
 

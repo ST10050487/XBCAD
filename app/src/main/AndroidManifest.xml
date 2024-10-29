@@ -22,10 +22,16 @@
         android:theme="@style/Theme.Knights"
         tools:targetApi="31">
         <activity
+            android:name=".CreateProduct"
+            android:exported="false" />
+        <activity
             android:name=".ViewProduct"
             android:exported="false" />
         <activity
             android:name=".CreateEvent"
+            android:exported="false" />
+        <activity
+            android:name=".AdminHome"
             android:exported="false" />
         <activity
             android:name=".ModifyEvent"
@@ -45,7 +51,7 @@
         <activity
             android:name=".CreateSportFixture"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".UpcomingRecentEvents"
             android:exported="false" />
@@ -55,9 +61,7 @@
         <activity
             android:name=".UpdateAdminUser"
             android:exported="false" />
-        <activity
-            android:name=".Admin_Home"
-            android:exported="false" />
+
         <activity
             android:name=".CreateTimesheet"
             android:exported="false"
@@ -87,7 +91,7 @@
             android:name=".StudentParentReg"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".SuccessReg" />
-        <activity android:name=".EventDetailActivity" />
+        <activity android:name = ".EventDetailActivity"/>
 
         <meta-data
             android:name="preloaded_fonts"

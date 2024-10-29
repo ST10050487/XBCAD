@@ -9,6 +9,7 @@ data class TimesheetModel(
     val busDepartureTime: String,
     val busReturnTime: String,
     val message: String,
+    val manOfTheMatch: String,
     val homeScore: Int?,
     val awayScore: Int?
 )
