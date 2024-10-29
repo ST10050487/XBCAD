@@ -40,15 +40,15 @@ class UpdateUser : AppCompatActivity() {
         SQLiteDatabase.loadLibs(this)
         // Initializing your database helper
        dbHelper = DBHelper(this)
-        try{
-            dbHelper.createDatabase();
-            dbHelper.openDatabase();
-            dbHelper.close();
-            database = dbHelper.getReadableDatabase(DBHelper.PASSWORD)
-
-        }catch (e: Exception){
-            e.printStackTrace()
-        }
+//        try{
+//            dbHelper.createDatabase();
+//            dbHelper.openDatabase();
+//            dbHelper.close();
+//            database = dbHelper.getReadableDatabase(DBHelper.PASSWORD)
+//
+//        }catch (e: Exception){
+//            e.printStackTrace()
+//        }
 
         // Getting the userId from the Intent
      //   userId= intent.getIntExtra("USER_ID", 0)
@@ -82,24 +82,24 @@ class UpdateUser : AppCompatActivity() {
 
 
     private fun loadUserDetails() {
-         dbHelper = DBHelper.getInstance(this) // Use getInstance to get the singleton instance
-        val user = dbHelper.getUserDetails(userId)
-    //    val user = dbHelper.getUserDetails(userId);
-        user?.let {
-            binding.userName.setText(it.name)
-            binding.userSurname.setText(it.surname)
-            binding.userEmail.setText(it.email)
-            binding.userDateOfBirth.setText(it.dateOfBirth)
-            imageHolder = user?.profilePicture
-            // Load profile picture if available
-            // if product picture is not null
-            if (imageHolder != null)
-            { // set UI image to product picture
-                binding.profilePicture.setImageBitmap(imageHolder?.size?.let { BitmapFactory.decodeByteArray(imageHolder, 0, it) })
-            }
-        }
-        //REMOVE AND CHANAGE TO REAL ID
-        dummyId = user?.userId ?: 0
+//         dbHelper = DBHelper.getInstance(this) // Use getInstance to get the singleton instance
+//        val user = dbHelper.getUserDetails(userId)
+//    //    val user = dbHelper.getUserDetails(userId);
+//        user?.let {
+//            binding.userName.setText(it.name)
+//            binding.userSurname.setText(it.surname)
+//            binding.userEmail.setText(it.email)
+//            binding.userDateOfBirth.setText(it.dateOfBirth)
+//            imageHolder = user?.profilePicture
+//            // Load profile picture if available
+//            // if product picture is not null
+//            if (imageHolder != null)
+//            { // set UI image to product picture
+//                binding.profilePicture.setImageBitmap(imageHolder?.size?.let { BitmapFactory.decodeByteArray(imageHolder, 0, it) })
+//            }
+//        }
+//        //REMOVE AND CHANAGE TO REAL ID
+//        dummyId = user?.userId ?: 0
     }
     private fun updateUserData() {
         val name = binding.userName.text.toString()

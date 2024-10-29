@@ -11,8 +11,7 @@ import net.sqlcipher.database.SQLiteOpenHelper;
 import android.os.Build;
 import android.util.Log;
 
-import androidx.compose.ui.graphics.vector.PathNode;
-
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,11 +19,10 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.Arrays;
-
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
+    private static final String ENCRYPTED_DATABASE_NAME = "knights_encrypted.db";
     private static final int DATABASE_VERSION = 15;
     private static String DB_PATH = "";
     private SQLiteDatabase db;
@@ -37,88 +35,122 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // Constructor
     public DBHelper(Context context) {
-
+    //app context, name of database, factory (null for default), version,
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-           DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
-        else
-            DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+//           DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
+//        else
+//            DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
 
         this.context = context;
         //getInstance(context);
+        SQLiteDatabase.loadLibs(context);
+        encryptDatabase();
 
     }
 
-    public static synchronized DBHelper getInstance(Context context) {
-        if (instance == null) {
-            instance = new DBHelper(context.getApplicationContext());
-            try {
-                instance.createDatabase();
-            } catch (IOException e) {
-                throw new RuntimeException("Error creating database", e);
-            }
+    // Method to encrypt the existing database
+    public void encryptDatabase() {
+        File originalFile = context.getDatabasePath(DATABASE_NAME);
+        File encryptedFile = context.getDatabasePath(ENCRYPTED_DATABASE_NAME);
+
+        if (originalFile.exists()) {
+            Log.d("DBHelper", "Original database found. Starting encryption process.");
+
+            SQLiteDatabase originalDB = SQLiteDatabase.openDatabase(originalFile.getPath(), (char[]) null, null, SQLiteDatabase.OPEN_READWRITE);
+            SQLiteDatabase encryptedDB = SQLiteDatabase.openOrCreateDatabase(encryptedFile, PASSWORD, null);
+
+            originalDB.rawExecSQL("ATTACH DATABASE '" + encryptedFile.getPath() + "' AS encrypted KEY '" + PASSWORD + "';");
+            originalDB.rawExecSQL("SELECT sqlcipher_export('encrypted');");
+            originalDB.rawExecSQL("DETACH DATABASE encrypted;");
+
+            originalDB.close();
+            encryptedDB.close();
+
+            Log.d("DBHelper", "Database encryption completed successfully.");
+
+            // Optionally, delete the original unencrypted database
+            // originalFile.delete();
+        } else {
+            Log.d("DBHelper", "Original database not found. Encryption process aborted.");
         }
-        return instance;
     }
-    public void createDatabase()  throws IOException {
-        boolean dbExist = checkDatabase();
-        if(!dbExist) {
-            this.getReadableDatabase(PASSWORD);
-          //  copyDatabase();
-            this.close();
-            try {
-                copyDatabase();
-            } catch (IOException e) {
-                throw new Error("Error copying database");
-            }
-        }
-
-    }
-
-    private void copyDatabase() throws IOException {
-        InputStream input = context.getAssets().open(DATABASE_NAME);
-        String outputFileName = DB_PATH + DATABASE_NAME;
-        OutputStream output = new FileOutputStream(outputFileName);
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = input.read(buffer)) > 0) {
-            output.write(buffer, 0, length);
-        }
-        output.flush();
-        output.close();
-        input.close();
-    }
-    private void closeDatabase() {
-        if(db != null)
-            db.close();
-    }
-    private boolean checkDatabase() {
-        SQLiteDatabase checkDB = null;
-        try {
-           // String myPath = DB_PATH + DATABASE_NAME;
-           String myPath = "/data/data/" + context.getPackageName() + "/databases/" + DATABASE_NAME;
-            Log.v("db", myPath);
-            checkDB = SQLiteDatabase.openDatabase(myPath, PASSWORD, null, SQLiteDatabase.OPEN_READONLY);
-        } catch (Exception e) {
-            Log.e("DBHelper", "Database doesn't exist yet.");
-        }
-        if (checkDB != null) {
-            checkDB.close();
-        }
-        return checkDB != null;
-    }
-    public boolean openDatabase() {
-       // String path = DB_PATH + DATABASE_NAME;
-        String path = new StringBuilder(DB_PATH).append(DATABASE_NAME).toString();
-        db = SQLiteDatabase.openDatabase(path, PASSWORD, null, SQLiteDatabase.OPEN_READWRITE);
-        return db != null;
-    }
-
-
+//    // Singleton pattern to get a single instance of DBHelper
+//    public static synchronized DBHelper getInstance(Context context) {
+//        if (instance == null) {
+//            instance = new DBHelper(context.getApplicationContext());
+//            try {
+//                instance.createDatabase();
+//            } catch (IOException e) {
+//                throw new RuntimeException("Error creating database", e);
+//            }
+//        }
+//        return instance;
+//    }
+//
+//    // Method to create the database if it doesn't exist
+//    public void createDatabase()  throws IOException {
+//        boolean dbExist = checkDatabase();
+//        if(!dbExist) {
+//            this.getReadableDatabase(PASSWORD);
+//          //  copyDatabase();
+//            this.close();
+//            try {
+//                copyDatabase();
+//            } catch (IOException e) {
+//                throw new Error("Error copying database");
+//            }
+//        }
+//
+//    }
+//    // Method to copy the database from assets to the device
+//    private void copyDatabase() throws IOException {
+//        InputStream input = context.getAssets().open(DATABASE_NAME);
+//        String outputFileName = DB_PATH + DATABASE_NAME;
+//        OutputStream output = new FileOutputStream(outputFileName);
+//        byte[] buffer = new byte[1024];
+//        int length;
+//        while ((length = input.read(buffer)) > 0) {
+//            output.write(buffer, 0, length);
+//        }
+//        output.flush();
+//        output.close();
+//        input.close();
+//    }
+//    // Method to open the databas
+//    public boolean openDatabase() {
+//        // String path = DB_PATH + DATABASE_NAME;
+//        String path = new StringBuilder(DB_PATH).append(DATABASE_NAME).toString();
+//        db = SQLiteDatabase.openDatabase(path, PASSWORD, null, SQLiteDatabase.OPEN_READWRITE);
+//        return db != null;
+//    }
+//    // Method to close the database
+//    private void closeDatabase() {
+//        if(db != null)
+//            db.close();
+//    }
+//    // Method to check if the database already exists
+//    private boolean checkDatabase() {
+//        SQLiteDatabase checkDB = null;
+//        try {
+//           // String myPath = DB_PATH + DATABASE_NAME;
+//           String myPath = "/data/data/" + context.getPackageName() + "/databases/" + DATABASE_NAME;
+//            Log.v("db", myPath);
+//            checkDB = SQLiteDatabase.openDatabase(myPath, PASSWORD, null, SQLiteDatabase.OPEN_READONLY);
+//        } catch (Exception e) {
+//            Log.e("DBHelper", "Database doesn't exist yet.");
+//        }
+//        if (checkDB != null) {
+//            checkDB.close();
+//        }
+//        return checkDB != null;
+//    }
+    // Override method to get writable database with password
     public synchronized SQLiteDatabase getWritableDatabase() {
         return getWritableDatabase(PASSWORD);
     }
 
+    // Override method to get readable database with password
     public synchronized SQLiteDatabase getReadableDatabase() {
         return getReadableDatabase(PASSWORD);
     }

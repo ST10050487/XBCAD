@@ -77,6 +77,6 @@ dependencies {
 
 
 
-    implementation("net.zetetic:android-database-sqlcipher:4.5.4")
+   implementation("net.zetetic:android-database-sqlcipher:4.5.4")
     implementation("androidx.sqlite:sqlite:2.4.0")
 }
