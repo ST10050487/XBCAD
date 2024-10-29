@@ -76,9 +76,7 @@ dependencies {
     implementation(libs.circleimageview)
 
 
-    implementation("net.zetetic:android-database-sqlcipher:4.5.0@aar")
-    implementation("androidx.room:room-runtime:2.4.2") // Replace with the latest version
-    kapt("androidx.room:room-compiler:2.4.2") // Replace with the latest version
-    implementation("androidx.room:room-ktx:2.4.2") // Replace with the latest version
 
+    implementation("net.zetetic:android-database-sqlcipher:4.5.4")
+    implementation("androidx.sqlite:sqlite:2.4.0")
 }

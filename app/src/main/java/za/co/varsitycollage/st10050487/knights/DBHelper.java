@@ -7,6 +7,7 @@ import android.database.Cursor;
 //import android.database.sqlite.SQLiteOpenHelper;
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteOpenHelper;
+
 import android.os.Build;
 import android.util.Log;
 
@@ -24,11 +25,11 @@ import java.util.Arrays;
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 15;
     private static String DB_PATH = "";
     private SQLiteDatabase db;
     private Context context;
-    private final static String PASSWORD = "xbcad_P22#";
+    public final static String PASSWORD = "xbcad_P22#";
     private static DBHelper instance;
 
 
@@ -39,23 +40,31 @@ public class DBHelper extends SQLiteOpenHelper {
 
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-            DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
+           DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
         else
             DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
+
         this.context = context;
+        //getInstance(context);
 
     }
 
-    static public synchronized DBHelper getInstance(Context context) {
+    public static synchronized DBHelper getInstance(Context context) {
         if (instance == null) {
-            instance = new DBHelper(context);
+            instance = new DBHelper(context.getApplicationContext());
+            try {
+                instance.createDatabase();
+            } catch (IOException e) {
+                throw new RuntimeException("Error creating database", e);
+            }
         }
         return instance;
     }
-    private void createDatabase()  throws IOException {
+    public void createDatabase()  throws IOException {
         boolean dbExist = checkDatabase();
         if(!dbExist) {
             this.getReadableDatabase(PASSWORD);
+          //  copyDatabase();
             this.close();
             try {
                 copyDatabase();
@@ -65,44 +74,40 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
     }
+
     private void copyDatabase() throws IOException {
-        //Open your local db as the input stream
-        InputStream input = null;
-
-        try{
-            //Open your local db as the input stream
-            input = context.getAssets().open(DATABASE_NAME);
-            // Path to the just created empty db
-            String ouputFileName = new StringBuilder(DB_PATH).append(DATABASE_NAME).toString();
-            OutputStream outputStream = new FileOutputStream(ouputFileName);
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = input.read(buffer))>0){
-                outputStream.write(buffer, 0, length);
-            }
-            outputStream.flush();
-            outputStream.close();
-            input.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        InputStream input = context.getAssets().open(DATABASE_NAME);
+        String outputFileName = DB_PATH + DATABASE_NAME;
+        OutputStream output = new FileOutputStream(outputFileName);
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = input.read(buffer)) > 0) {
+            output.write(buffer, 0, length);
         }
-
-
+        output.flush();
+        output.close();
+        input.close();
+    }
+    private void closeDatabase() {
+        if(db != null)
+            db.close();
     }
     private boolean checkDatabase() {
         SQLiteDatabase checkDB = null;
         try {
-            String myPath = DB_PATH + DATABASE_NAME;
+           // String myPath = DB_PATH + DATABASE_NAME;
+           String myPath = "/data/data/" + context.getPackageName() + "/databases/" + DATABASE_NAME;
+            Log.v("db", myPath);
             checkDB = SQLiteDatabase.openDatabase(myPath, PASSWORD, null, SQLiteDatabase.OPEN_READONLY);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("DBHelper", "Database doesn't exist yet.");
         }
         if (checkDB != null) {
             checkDB.close();
         }
         return checkDB != null;
     }
-    private boolean openDatabase() {
+    public boolean openDatabase() {
        // String path = DB_PATH + DATABASE_NAME;
         String path = new StringBuilder(DB_PATH).append(DATABASE_NAME).toString();
         db = SQLiteDatabase.openDatabase(path, PASSWORD, null, SQLiteDatabase.OPEN_READWRITE);

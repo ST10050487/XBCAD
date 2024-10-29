@@ -8,7 +8,6 @@ import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import net.sqlcipher.database.SQLiteDatabase
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +21,6 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        SQLiteDatabase.loadLibs(this);
 
         // Delay of 3 seconds (3000 milliseconds)
         Handler(Looper.getMainLooper()).postDelayed({

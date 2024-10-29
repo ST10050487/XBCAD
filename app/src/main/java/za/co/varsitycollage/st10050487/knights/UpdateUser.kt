@@ -3,6 +3,7 @@ package za.co.varsitycollage.st10050487.knights
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -13,6 +14,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
+import net.sqlcipher.database.SQLiteDatabase
 import za.co.varsitycollage.st10050487.knights.databinding.ActivityUpdateUserBinding
 import java.io.ByteArrayOutputStream
 import java.util.Calendar
@@ -20,6 +22,7 @@ import java.util.Calendar
 class UpdateUser : AppCompatActivity() {
     private lateinit var binding: ActivityUpdateUserBinding
     private lateinit var dbHelper: DBHelper
+    private lateinit var  database:SQLiteDatabase
     private var userId: Int = 1
     private var dummyId: Int = 0
     private var imageHolder: ByteArray? = null
@@ -34,8 +37,18 @@ class UpdateUser : AppCompatActivity() {
         binding = ActivityUpdateUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        SQLiteDatabase.loadLibs(this)
         // Initializing your database helper
-        dbHelper = DBHelper(this)
+       dbHelper = DBHelper(this)
+        try{
+            dbHelper.createDatabase();
+            dbHelper.openDatabase();
+            dbHelper.close();
+            database = dbHelper.getReadableDatabase(DBHelper.PASSWORD)
+
+        }catch (e: Exception){
+            e.printStackTrace()
+        }
 
         // Getting the userId from the Intent
      //   userId= intent.getIntExtra("USER_ID", 0)
@@ -64,10 +77,14 @@ class UpdateUser : AppCompatActivity() {
 
         // Loading and displaying the player data based on userId
         loadUserDetails()
+
     }
 
+
     private fun loadUserDetails() {
-        val user = dbHelper.getUserDetails(userId);
+         dbHelper = DBHelper.getInstance(this) // Use getInstance to get the singleton instance
+        val user = dbHelper.getUserDetails(userId)
+    //    val user = dbHelper.getUserDetails(userId);
         user?.let {
             binding.userName.setText(it.name)
             binding.userSurname.setText(it.surname)
