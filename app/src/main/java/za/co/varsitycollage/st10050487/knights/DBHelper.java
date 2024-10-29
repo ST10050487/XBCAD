@@ -1275,6 +1275,14 @@ public class DBHelper extends SQLiteOpenHelper {
         return -1;
     }
 
+    // Method to move fixture to past
+    public void moveFixtureToPast(MatchDis fixture) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("STATUS", "FINISHED");
+        db.update("SPORT_FIXTURES", values, "FIXTURE_ID = ?", new String[]{fixture.getFixtureId()});
+    }
+
     // A method to get event details
     public EventModel getEventDetails(int eventId) {
         SQLiteDatabase db = this.getReadableDatabase();
