@@ -2,7 +2,7 @@ package za.co.varsitycollage.st10050487.knights
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
+import androidx.fragment.app.FragmentTransaction
 
 class AdminSportsFixtures : AppCompatActivity() {
 
@@ -10,5 +10,12 @@ class AdminSportsFixtures : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin_sports_fixtures)
 
+        // Load the SportsFixturesHomeScreenFragment into the fragment_container
+        if (savedInstanceState == null) {
+            val fragment = SportsFixturesHomeScreenFragment()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit()
+        }
     }
 }

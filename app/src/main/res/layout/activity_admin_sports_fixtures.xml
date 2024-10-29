@@ -126,48 +126,14 @@
             android:src="@drawable/ic_filter" />
     </LinearLayout>
 
-    <!-- Tab Layout for Upcoming and Past Matches -->
-    <LinearLayout
+    <!-- Add this FrameLayout inside your ConstraintLayout, below the existing LinearLayout for tabs -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        android:layout_marginTop="16dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/search_fixtures_layout"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/search_fixtures_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <!-- Upcoming Tab -->
-        <TextView
-            android:id="@+id/upcoming_tab"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="Upcoming"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:fontFamily="@font/inter_bold"
-            android:paddingBottom="8dp"
-            android:background="?attr/selectableItemBackground"
-            android:drawableBottom="@drawable/tab_selected_indicator" />
-
-        <!-- Past Matches Tab -->
-        <TextView
-            android:id="@+id/past_matches_tab"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="Past Matches"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:fontFamily="@font/inter_bold"
-            android:paddingBottom="8dp"
-            android:background="?attr/selectableItemBackground"
-            android:drawableBottom="@drawable/tab_unselected_indicator" />
-    </LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
