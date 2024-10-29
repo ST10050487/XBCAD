@@ -78,7 +78,8 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:paddingTop="20dp"
-                        android:paddingBottom="15dp">
+                        android:paddingBottom="15dp"
+                        android:layout_gravity="center">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -165,11 +166,12 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="383dp"
                         android:layout_height="wrap_content"
                         android:background="@drawable/student_home_screen_rounded_infor_tag"
                         android:orientation="horizontal"
-                        android:padding="16dp">
+                        android:padding="16dp"
+                        android:layout_gravity="center">
 
                         <!-- Gold Bar -->
                         <View
@@ -193,7 +195,7 @@
                                 android:autoSizeMaxTextSize="20sp"
                                 android:autoSizeMinTextSize="12sp"
                                 android:autoSizeTextType="uniform"
-                                android:text="Date: Failed To Fetch Date"
+                                android:text="Date: Failed To Load Date"
                                 android:textColor="@color/white"
                                 android:textStyle="bold" />
 
@@ -204,7 +206,7 @@
                                 android:autoSizeMaxTextSize="50sp"
                                 android:autoSizeMinTextSize="12sp"
                                 android:autoSizeTextType="uniform"
-                                android:text="Time: Failed To Fetch Time"
+                                android:text="Time: Failed To Load Time"
                                 android:textColor="@color/white"
                                 android:textStyle="bold" />
 
@@ -215,18 +217,24 @@
                                 android:autoSizeMaxTextSize="20sp"
                                 android:autoSizeMinTextSize="12sp"
                                 android:autoSizeTextType="uniform"
-                                android:text="Venue: Failed To Calculate Term"
+                                android:text="Venue: Failed To Load Venue"
                                 android:textColor="@color/white"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>
-
-                    <FrameLayout
-                        android:id="@+id/match_fragment_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="342dp"
-                        android:layout_marginTop="16dp" />
                 </LinearLayout>
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:tabMode="fixed"
+                    app:tabGravity="fill" />
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="311dp" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

@@ -100,6 +100,7 @@ class EditTimesheet : AppCompatActivity()  {
         val statusId = binding.spinnerMatchStatus.selectedItem.toString().toInt()
         val homeScore =binding.txtHomeResult.text.toString().toIntOrNull()
         val awayScore = binding.txtAwayResult.text.toString().toIntOrNull()
+        val manOfTheMatch = binding.txtManOfTheMatch.text.toString()
 
         val timesheet = TimesheetModel(
             timeId = timesheetID, // Assuming you have this variable
@@ -110,7 +111,8 @@ class EditTimesheet : AppCompatActivity()  {
             busReturnTime = busReturnTime,
             message = message,
             homeScore = homeScore,
-            awayScore = awayScore
+            awayScore = awayScore,
+            manOfTheMatch = manOfTheMatch
         )
 
         val dbHelper = DBHelper(this)
