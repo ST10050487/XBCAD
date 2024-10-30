@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "814054848260",
+    "project_id": "xbcad-ab0f9",
+    "storage_bucket": "xbcad-ab0f9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:814054848260:android:bba3c2fcc68db4091dc251",
+        "android_client_info": {
+          "package_name": "za.co.varsitycollage.st10050487.knights"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "814054848260-ga4buf1ps9ba9qaestnms4m5l23n4ln8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "za.co.varsitycollage.st10050487.knights",
+            "certificate_hash": "63334ee41376477e8c1db4757ec26690dad60451"
+          }
+        },
+        {
+          "client_id": "814054848260-sb61707fg2pkvn9hp0qsjnmbvordae58.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpRHWGLz96epeaOo3o0xVMEd_T5o-e5cI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "814054848260-sb61707fg2pkvn9hp0qsjnmbvordae58.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
