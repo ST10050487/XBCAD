@@ -206,10 +206,11 @@ class CreateSportFixture : AppCompatActivity() {
         // Find the back button TextView
         val backButton = findViewById<TextView>(R.id.back_btn)
 
-        // Set an OnClickListener to navigate to HomeScreen
+        // Set an OnClickListener to navigate to AdminSportsFixtures
         backButton.setOnClickListener {
-            val intent = Intent(this, HomeScreen::class.java)
+            val intent = Intent(this, AdminSportsFixtures::class.java) // Change to your AdminSportsFixtures class
             startActivity(intent)
+            finish() // Optionally call finish() if you want to remove this activity from the back stack
         }
     }
 
