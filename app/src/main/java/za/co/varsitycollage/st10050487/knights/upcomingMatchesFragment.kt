@@ -110,15 +110,15 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
         fixtureDate: TextView,
         fixtureDateBox: TextView
     ) {
-        // Assuming fixture.matchDate is in a format like "dd-MM-yyyy"
-        val inputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        // Change input format to match the stored format
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         // Output format for fixtureDate
         val outputFormat = SimpleDateFormat("EEEE -- MMMM dd", Locale.getDefault())
         // Output format for fixtureDateBox
         val outputFormatBox = SimpleDateFormat("dd MMMM", Locale.getDefault())
 
         try {
-            val date = inputFormat.parse(fixture.matchDate)
+            val date = inputFormat.parse(fixture.matchDate) // Parse the stored date
             fixtureDate.text = outputFormat.format(date) // For fixtureDate
             fixtureDateBox.text = outputFormatBox.format(date) // For fixtureDateBox
         } catch (e: Exception) {

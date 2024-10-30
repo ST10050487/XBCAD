@@ -137,7 +137,7 @@ class EditFixture : AppCompatActivity() {
         val description = binding.txtDescrip.text.toString()
         val venue = binding.txtVenue.text.toString()
         val time = binding.txtTime.text.toString()
-        val date = binding.txtDate.text.toString()
+        val date = binding.txtDate.text.toString() // Ensure this is in 'yyyy-MM-dd' format
         val sport = binding.spinnerSport.selectedItem.toString()
         val ageGroup = binding.spinnerAgeGroup.selectedItem.toString()
         val league = binding.spinnerLeague.selectedItem.toString()
@@ -150,6 +150,7 @@ class EditFixture : AppCompatActivity() {
         val awayLogo = awayHolder
         val picture = null
 
+        // Prepare the fixture model
         val fixture = FixtureModel(
             fixtureId = fixtureId,
             userId = userId,
@@ -159,7 +160,7 @@ class EditFixture : AppCompatActivity() {
             ageGroup = ageGroup,
             league = league,
             matchLocation = venue,
-            matchDate = date,
+            matchDate = date, // Use the date as it is
             matchTime = time,
             matchDescription = description,
             homeLogo = homeLogo,
@@ -168,6 +169,7 @@ class EditFixture : AppCompatActivity() {
             leagueId = leagueId // Use the mapped league ID here
         )
 
+        // Update the fixture in the database
         val result = dbHelper.updateFixture(fixture)
 
         if (result > 0) {
