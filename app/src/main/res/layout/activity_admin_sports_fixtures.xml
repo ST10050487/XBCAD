@@ -1,15 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@color/white">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primaryColor"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/back_btn" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/back_btn"
+                    android:textColor="@color/white"
+                    android:textSize="16dp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="272dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:fontFamily="@font/inter_bold"
+                android:gravity="center"
+                android:paddingVertical="4dp"
+                android:text="@string/sports_fixtures"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="20dp" />
+
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:background="@color/yellow"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Search Fixtures Title -->
     <TextView
+        android:id="@+id/search_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="Admin Sports Fixtures"
+        android:layout_marginTop="16dp"
+        android:text="Search Fixtures"
+        android:textColor="@color/black"
         android:textSize="18sp"
-        android:textStyle="bold" />
-</LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <!-- Search Bar Layout -->
+    <LinearLayout
+        android:id="@+id/search_fixtures_layout"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/rounded_search_background"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_title">
+
+        <!-- Search Icon -->
+        <ImageView
+            android:id="@+id/search_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:contentDescription="Search Icon"
+            android:src="@drawable/ic_search" />
+
+        <!-- Search EditText -->
+        <EditText
+            android:id="@+id/search_fixtures"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:hint="Search name, email, team ..."
+            android:paddingStart="8dp"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <!-- Filter Icon -->
+        <ImageView
+            android:id="@+id/filter_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:backgroundTint="@color/lightGrey"
+            android:contentDescription="Filter Icon"
+            android:padding="8dp"
+            android:src="@drawable/ic_filter" />
+    </LinearLayout>
+
+    <!-- Add this FrameLayout inside your ConstraintLayout, below the existing LinearLayout for tabs -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/search_fixtures_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
