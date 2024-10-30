@@ -117,6 +117,18 @@ class EditFixture : AppCompatActivity() {
         binding.txtDate.setOnClickListener {
             showDatePickerDialog()
         }
+
+        // Set OnClickListener for the back button
+        NavigationBacktoClass()
+    }
+
+    private fun NavigationBacktoClass() {
+        binding.backBtn.setOnClickListener {
+            // Create an intent to navigate back to AdminSportsFixture
+            val intent = Intent(this, AdminSportsFixtures::class.java)
+            startActivity(intent)
+            finish() // Optional: Close this activity
+        }
     }
 
     private fun updateFixtureData() {

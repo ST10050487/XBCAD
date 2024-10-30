@@ -37,6 +37,8 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
         val dbHelper = DBHelper(requireContext())
         val fixtures = dbHelper.getAllFixtures()
 
+        // Inside your upcomingMatchesFragment class
+
         if (fixtures.isNotEmpty()) {
             for (fixture in fixtures) {
                 // Check if no sports are selected, then show all fixtures
@@ -63,7 +65,13 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                     val team2Name = fixtureCard.findViewById<TextView>(R.id.team2_name)
                     val matchType = fixtureCard.findViewById<TextView>(R.id.match_type)
                     val ageGroup = fixtureCard.findViewById<TextView>(R.id.age_group)
-                    val eventEdit = fixtureCard.findViewById<ImageView>(R.id.event_edit)
+
+                    // Only find eventEdit if isAdmin is true
+                    val eventEdit: ImageView? = if (isAdmin) {
+                        fixtureCard.findViewById<ImageView>(R.id.event_edit)
+                    } else {
+                        null // No edit button for non-admins
+                    }
 
                     FormattingDate(fixture, fixtureDate, fixtureDateBox)
 
@@ -79,8 +87,8 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                     matchType.text = fixture.sport
                     ageGroup.text = fixture.ageGroup
 
-                    // Set an OnClickListener to navigate to EditFixture
-                    eventEdit.setOnClickListener {
+                    // Set an OnClickListener to navigate to EditFixture only if eventEdit is not null
+                    eventEdit?.setOnClickListener {
                         val intent = Intent(requireContext(), EditFixture::class.java)
                         intent.putExtra("fixture_id", fixture.fixtureId) // Pass the fixture ID
                         startActivity(intent)
