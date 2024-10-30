@@ -107,7 +107,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="@dimen/_10sdp"
                 android:padding="@dimen/_5sdp">
 
@@ -144,11 +144,17 @@
                 android:textSize="@dimen/_16sdp" />
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtMeetTimeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="@dimen/_10sdp"
-                android:padding="@dimen/_5sdp">
+                android:padding="@dimen/_5sdp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_clock_icon"
+                app:endIconCheckable="false">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtMeetTime"
@@ -173,11 +179,17 @@
                 android:textSize="@dimen/_16sdp" />
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtDepTimeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="@dimen/_10sdp"
-                android:padding="@dimen/_5sdp">
+                android:padding="@dimen/_5sdp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_clock_icon"
+                app:endIconCheckable="false">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtDepTime"
@@ -204,11 +216,17 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtReturnTimeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="@dimen/_10sdp"
-                android:padding="@dimen/_5sdp">
+                android:padding="@dimen/_5sdp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_clock_icon"
+                app:endIconCheckable="false">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtReturnTime"
@@ -334,7 +352,7 @@
                     android:id="@+id/txtManOfTheMatch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
+                    android:inputType="textPersonName"
                     android:textColor="@color/lightGrey"
                     android:textSize="@dimen/_16sdp" />
             </com.google.android.material.textfield.TextInputLayout>

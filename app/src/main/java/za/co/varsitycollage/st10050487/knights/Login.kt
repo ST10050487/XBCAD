@@ -58,8 +58,6 @@ class Login : AppCompatActivity() {
         setContentView(binding.root)
 
 
-
-
         auth = FirebaseAuth.getInstance()
         emailEditText = binding.emailTxt
         passwordEditText = binding.passwordTxt

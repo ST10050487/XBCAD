@@ -23,31 +23,28 @@ public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
     private static final String ENCRYPTED_DATABASE_NAME = "knights_encrypted.db";
-    private static final int DATABASE_VERSION = 15;
-    private static String DB_PATH = "";
+    private static final int DATABASE_VERSION = 17;
+ //   private static String DB_PATH = "";
     private SQLiteDatabase db;
     private Context context;
     public final static String PASSWORD = "xbcad_P22#";
     private static DBHelper instance;
 
 
-    private static final int DATABASE_VERSION = 17;
-
-
     // Constructor
     public DBHelper(Context context) {
-    //app context, name of database, factory (null for default), version,
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        //app context, name of database, factory (null for default), version,
+        super(context, ENCRYPTED_DATABASE_NAME, null, DATABASE_VERSION);
 //        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
 //           DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
 //        else
 //            DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
 
+
         this.context = context;
         //getInstance(context);
         SQLiteDatabase.loadLibs(context);
-        encryptDatabase();
-
+        // encryptDatabase();
     }
 
     // Method to encrypt the existing database
@@ -76,34 +73,34 @@ public class DBHelper extends SQLiteOpenHelper {
             Log.d("DBHelper", "Original database not found. Encryption process aborted.");
         }
     }
-//    // Singleton pattern to get a single instance of DBHelper
-//    public static synchronized DBHelper getInstance(Context context) {
-//        if (instance == null) {
-//            instance = new DBHelper(context.getApplicationContext());
-//            try {
-//                instance.createDatabase();
-//            } catch (IOException e) {
-//                throw new RuntimeException("Error creating database", e);
-//            }
-//        }
-//        return instance;
-//    }
+    // Singleton pattern to get a single instance of DBHelper
+    public static synchronized DBHelper getInstance(Context context) {
+        if (instance == null) {
+            instance = new DBHelper(context.getApplicationContext());
+            try {
+                instance.createDatabase();
+            } catch (IOException e) {
+                throw new RuntimeException("Error creating database", e);
+            }
+        }
+        return instance;
+    }
 //
-//    // Method to create the database if it doesn't exist
-//    public void createDatabase()  throws IOException {
-//        boolean dbExist = checkDatabase();
-//        if(!dbExist) {
-//            this.getReadableDatabase(PASSWORD);
-//          //  copyDatabase();
-//            this.close();
-//            try {
-//                copyDatabase();
-//            } catch (IOException e) {
-//                throw new Error("Error copying database");
-//            }
-//        }
-//
-//    }
+    // Method to create the database if it doesn't exist
+    public void createDatabase()  throws IOException {
+        boolean dbExist = checkDatabase();
+        if(!dbExist) {
+            this.getReadableDatabase(PASSWORD.toCharArray());
+          //  copyDatabase();
+            this.close();
+            try {
+                openDatabase();
+            } catch (IOException e) {
+                throw new Error("Error copying database");
+            }
+        }
+
+    }
 //    // Method to copy the database from assets to the device
 //    private void copyDatabase() throws IOException {
 //        InputStream input = context.getAssets().open(DATABASE_NAME);
@@ -118,47 +115,48 @@ public class DBHelper extends SQLiteOpenHelper {
 //        output.close();
 //        input.close();
 //    }
-//    // Method to open the databas
-//    public boolean openDatabase() {
-//        // String path = DB_PATH + DATABASE_NAME;
-//        String path = new StringBuilder(DB_PATH).append(DATABASE_NAME).toString();
-//        db = SQLiteDatabase.openDatabase(path, PASSWORD, null, SQLiteDatabase.OPEN_READWRITE);
-//        return db != null;
-//    }
-//    // Method to close the database
-//    private void closeDatabase() {
-//        if(db != null)
-//            db.close();
-//    }
-//    // Method to check if the database already exists
-//    private boolean checkDatabase() {
-//        SQLiteDatabase checkDB = null;
-//        try {
-//           // String myPath = DB_PATH + DATABASE_NAME;
-//           String myPath = "/data/data/" + context.getPackageName() + "/databases/" + DATABASE_NAME;
-//            Log.v("db", myPath);
-//            checkDB = SQLiteDatabase.openDatabase(myPath, PASSWORD, null, SQLiteDatabase.OPEN_READONLY);
-//        } catch (Exception e) {
-//            Log.e("DBHelper", "Database doesn't exist yet.");
-//        }
-//        if (checkDB != null) {
-//            checkDB.close();
-//        }
-//        return checkDB != null;
-//    }
+    // Method to open the databas
+    public boolean openDatabase() throws IOException {
+
+        File encryptedFile = context.getDatabasePath(ENCRYPTED_DATABASE_NAME);
+
+        db = SQLiteDatabase.openDatabase(encryptedFile.getPath(), PASSWORD.toCharArray(), null, SQLiteDatabase.OPEN_READWRITE);
+        return db != null;
+    }
+    // Method to close the database
+    private void closeDatabase() {
+        if(db != null)
+            db.close();
+    }
+    // Method to check if the database already exists
+    private boolean checkDatabase() {
+        SQLiteDatabase checkDB = null;
+        try {
+           // String myPath = DB_PATH + DATABASE_NAME;
+           File myPath =  context.getDatabasePath(ENCRYPTED_DATABASE_NAME);
+            Log.v("db", myPath.toString());
+            checkDB = SQLiteDatabase.openDatabase(myPath.getPath(), PASSWORD.toCharArray(), null, SQLiteDatabase.OPEN_READONLY);
+        } catch (Exception e) {
+            Log.e("DBHelper", "Database doesn't exist yet.");
+        }
+        if (checkDB != null) {
+            checkDB.close();
+        }
+        return checkDB != null;
+    }
     // Override method to get writable database with password
     public synchronized SQLiteDatabase getWritableDatabase() {
-        return getWritableDatabase(PASSWORD);
+        return getWritableDatabase(PASSWORD.toCharArray());
     }
 
     // Override method to get readable database with password
     public synchronized SQLiteDatabase getReadableDatabase() {
-        return getReadableDatabase(PASSWORD);
+        return getReadableDatabase(PASSWORD.toCharArray());
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create USERS table
-        String CREATE_TABLE_USERS = "CREATE TABLE USERS (" +
+        String CREATE_TABLE_USERS = "CREATE TABLE IF NOT EXISTS  USERS (" +
                 "USER_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "NAME TEXT NOT NULL," +
                 "SURNAME TEXT NOT NULL," +
@@ -171,7 +169,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_USERS);
 
         // Create ROLES table
-        String CREATE_TABLE_ROLES = "CREATE TABLE ROLES (" +
+        String CREATE_TABLE_ROLES = "CREATE TABLE IF NOT EXISTS  ROLES (" +
                 "ROLE_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "ROLE TEXT NOT NULL)";
         db.execSQL(CREATE_TABLE_ROLES);
@@ -191,7 +189,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(INSERT_USERS);
 
         // Create PLAYER_PROFILE table
-        String CREATE_TABLE_PLAYER_PROFILE = "CREATE TABLE PLAYER_PROFILE (" +
+        String CREATE_TABLE_PLAYER_PROFILE = "CREATE TABLE IF NOT EXISTS PLAYER_PROFILE (" +
                 "PLAYER_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "NAME TEXT NOT NULL," +
                 "SURNAME TEXT NOT NULL," +
@@ -250,7 +248,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_TIME_HIGHLIGHTS);
 
       // Create TIMES table
-        String CREATE_TABLE_TIMES = "CREATE TABLE TIMES (" +
+        String CREATE_TABLE_TIMES = "CREATE TABLE IF NOT EXISTS  TIMES (" +
                 "TIME_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "MEETING_TIME TEXT," +
                 "BUS_DEPATURE_TIME TEXT," +
@@ -266,7 +264,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_TIMES);
 
         // Create SCHOOL_MERCH table
-        String CREATE_TABLE_SCHOOL_MERCH = "CREATE TABLE SCHOOL_MERCH (" +
+        String CREATE_TABLE_SCHOOL_MERCH = "CREATE TABLE IF NOT EXISTS SCHOOL_MERCH (" +
                 "PRODUCT_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "NAME TEXT NOT NULL," +
                 "PRICE REAL NOT NULL," +
@@ -277,7 +275,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_SCHOOL_MERCH);
 
         // Create BANNED_WORDS table
-        String CREATE_TABLE_BANNED_WORDS = "CREATE TABLE BANNED_WORDS (" +
+        String CREATE_TABLE_BANNED_WORDS = "CREATE TABLE IF NOT EXISTS BANNED_WORDS (" +
                 "WORD_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "WORD TEXT NOT NULL," +
                 "USER_ID INTEGER NOT NULL," +
@@ -285,7 +283,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_BANNED_WORDS);
 
         // Create PREVIOUS_REPORTS table
-        String CREATE_TABLE_PREVIOUS_REPORTS = "CREATE TABLE PREVIOUS_REPORTS (" +
+        String CREATE_TABLE_PREVIOUS_REPORTS = "CREATE TABLE IF NOT EXISTS  PREVIOUS_REPORTS (" +
                 "REPORT_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "REPORT_NAME TEXT NOT NULL," +
                 "REPORT_DATE TEXT NOT NULL," +
@@ -296,7 +294,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_PREVIOUS_REPORTS);
 
         // Create EVENTS table
-        String CREATE_TABLE_EVENTS = "CREATE TABLE EVENTS (" +
+        String CREATE_TABLE_EVENTS = "CREATE TABLE IF NOT EXISTS EVENTS (" +
                 "EVENT_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "EVENT_NAME TEXT NOT NULL," +
                 "EVENT_DATE TEXT NOT NULL," +
@@ -310,7 +308,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_EVENTS);
 
         // Create SPORT_FIXTURES table
-        String CREATE_TABLE_SPORT_FIXTURES = "CREATE TABLE SPORT_FIXTURES (" +
+        String CREATE_TABLE_SPORT_FIXTURES = "CREATE TABLE IF NOT EXISTS  SPORT_FIXTURES (" +
                 "FIXTURE_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "SPORT TEXT NOT NULL," +
                 "HOME_TEAM TEXT NOT NULL," +
@@ -333,7 +331,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_SPORT_FIXTURES);
 
         // Create AGE_GROUP table
-        String CREATE_TABLE_AGE_GROUP = "CREATE TABLE AGE_GROUP (" +
+        String CREATE_TABLE_AGE_GROUP = "CREATE TABLE IF NOT EXISTS  AGE_GROUP (" +
                 "AGE_GROUP_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "AGE_GROUP TEXT NOT NULL)";
         db.execSQL(CREATE_TABLE_AGE_GROUP);
@@ -352,7 +350,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(INSERT_AGE_GROUP);
 
         // Create SPORT table
-        String CREATE_TABLE_SPORT = "CREATE TABLE SPORT (" +
+        String CREATE_TABLE_SPORT = "CREATE TABLE IF NOT EXISTS  SPORT (" +
                 "SPORT_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "SPORT TEXT NOT NULL)";
         db.execSQL(CREATE_TABLE_SPORT);
@@ -369,7 +367,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "('Athletics')," +
                 "('Swimming')";
         db.execSQL(INSERT_SPORT);
-        // Corrected table creation and insert statements
+        // Table creation and insert statements
         String CREATE_TABLE_TIME_STATUS = "CREATE TABLE TIME_STATUS (" +
                 "TIME_STATUS_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "STATUS TEXT NOT NULL)";
@@ -382,7 +380,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(INSERT_TIME_STATUS);
 
         // Create HIGH_SCHOOL_LEAGUE table
-        String CREATE_TABLE_HIGH_SCHOOL_LEAGUE = "CREATE TABLE HIGH_SCHOOL_LEAGUE (" +
+        String CREATE_TABLE_HIGH_SCHOOL_LEAGUE = "CREATE TABLE IF NOT EXISTS  HIGH_SCHOOL_LEAGUE (" +
                 "LEAGUE_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "LEAGUE TEXT NOT NULL)";
         db.execSQL(CREATE_TABLE_HIGH_SCHOOL_LEAGUE);
@@ -522,22 +520,23 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         return events;
     }
-    public List<String> getAllStatus() {
-        List<String> status = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT TIME_STATUS FROM TIME_STATUS", null);
+ public List<String> getAllStatus() {
+    List<String> status = new ArrayList<>();
+    SQLiteDatabase db = this.getReadableDatabase();
+    Cursor cursor = db.rawQuery("SELECT STATUS FROM TIME_STATUS", null);
 
-        if (cursor.moveToFirst()) {
-            do {
-                status.add(cursor.getString(cursor.getColumnIndexOrThrow("LEAGUE")));
-            } while (cursor.moveToNext());
-        } else {
-            Log.d("DBHelper", "No status found in the database.");
-        }
-        cursor.close();
-        Log.d("DBHelper", "status: " + status);
-        return status;
+    if (cursor.moveToFirst()) {
+        do {
+            status.add(cursor.getString(cursor.getColumnIndexOrThrow("STATUS")));
+        } while (cursor.moveToNext());
+    } else {
+        Log.d("DBHelper", "No status found in the database.");
     }
+    cursor.close();
+    Log.d("DBHelper", "status: " + status);
+    return status;
+}
+
     // Method to delete selected events
     public void deleteEvents(List<EventModel> selectedEvents) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -647,59 +646,57 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.update("USERS", values, "USER_ID = ?", new String[]{String.valueOf(user.getUserId())});
     }
     // TIMES
-    public void addTimes(String meetingTime, String busDepatureTime, String busReturnTime, String message) {
-        // Add times to the database
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("MEETING_TIME", meetingTime);
-        values.put("BUS_DEPATURE_TIME", busDepatureTime);
-        values.put("BUS_RETURN_TIME", busReturnTime);
-        values.put("MESSAGE", message);
-        db.insert("TIMES", null, values);
-    }
-    public void addDummyTimesEntry(int fixtureId) {
+
+    public long addDummyTimesEntry(int fixtureId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("FIXTURE_ID", fixtureId);
-        values.put("LEAGUE_ID", 1);
-        values.put("TIMES_STATUS_ID", 1);
-        values.put("FIXTURE_ID", fixtureId);
-        values.put("MEETING_TIME", "2023-10-01 14:00");
-        values.put("BUS_DEPATURE_TIME", "2023-10-01 13:00");
-        values.put("BUS_RETURN_TIME", "2023-10-01 18:00");
+        values.put("TIME_STATUS_ID", 1);
+        values.put("MEETING_TIME", "14:00");
+        values.put("BUS_DEPATURE_TIME", "13:00");
+        values.put("BUS_RETURN_TIME", "18:00");
         values.put("MESSAGE", "This is a dummy message for the times entry.");
+        values.put("MAN_OF_THE_MATCH", "Player 1"); // Assuming a dummy player
         values.put("HOME_SCORE", 2); // Assuming a dummy home score
         values.put("AWAY_SCORE", 1); // Assuming a dummy away score
-        db.insert("TIMES", null, values);
-    }
 
+        long result = db.insert("TIMES", null, values);
+        if (result == -1) {
+            Log.e("DBHelper", "Failed to insert dummy times entry");
+        } else {
+            Log.d("DBHelper", "Dummy times entry inserted successfully with ID: " + result);
+        }
+        return result;
+    }
     public TimesheetModel getTimesDetails(int fixtureId) {
-    SQLiteDatabase db = this.getReadableDatabase();
-    String query = "SELECT * FROM TIMES WHERE FIXTURE_ID = ?";
-    Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(fixtureId)});
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM TIMES WHERE FIXTURE_ID = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(fixtureId)});
 
-    if (cursor != null && cursor.moveToFirst()) {
-        TimesheetModel timesheet = new TimesheetModel(
-                cursor.getInt(cursor.getColumnIndexOrThrow("TIME_ID")),
-                cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
-                cursor.getInt(cursor.getColumnIndexOrThrow("TIMES_STATUS_ID")),
-                cursor.getString(cursor.getColumnIndexOrThrow("MEETING_TIME")),
-                cursor.getString(cursor.getColumnIndexOrThrow("BUS_DEPATURE_TIME")),
-                cursor.getString(cursor.getColumnIndexOrThrow("BUS_RETURN_TIME")),
-                cursor.getString(cursor.getColumnIndexOrThrow("MESSAGE")),
-                cursor.getString(cursor.getColumnIndexOrThrow("ANOTHER_STRING")), // Add this line
-                cursor.isNull(cursor.getColumnIndexOrThrow("HOME_SCORE")) ? null : cursor.getInt(cursor.getColumnIndexOrThrow("HOME_SCORE")),
-                cursor.isNull(cursor.getColumnIndexOrThrow("AWAY_SCORE")) ? null : cursor.getInt(cursor.getColumnIndexOrThrow("AWAY_SCORE"))
-        );
-        cursor.close();
-        return timesheet;
-    }
+        if (cursor != null && cursor.moveToFirst()) {
+            TimesheetModel timesheet = new TimesheetModel(
+                    cursor.getInt(cursor.getColumnIndexOrThrow("TIME_ID")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("TIME_STATUS_ID")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("MEETING_TIME")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("BUS_DEPATURE_TIME")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("BUS_RETURN_TIME")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("MESSAGE")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("MAN_OF_THE_MATCH")),
+                    cursor.isNull(cursor.getColumnIndexOrThrow("HOME_SCORE")) ? null : cursor.getInt(cursor.getColumnIndexOrThrow("HOME_SCORE")),
+                    cursor.isNull(cursor.getColumnIndexOrThrow("AWAY_SCORE")) ? null : cursor.getInt(cursor.getColumnIndexOrThrow("AWAY_SCORE"))
+            );
+            cursor.close();
+            Log.d("DBHelper", "Timesheet found for fixture ID: " + fixtureId);
+            return timesheet;
+        }
 
-    if (cursor != null) {
-        cursor.close();
+        if (cursor != null) {
+            cursor.close();
+        }
+        Log.d("DBHelper", "No timesheet found for fixture ID: " + fixtureId);
+        return null;
     }
-    return null;
-}
     public int updateTimesheet(TimesheetModel timesheet) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -707,9 +704,10 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("BUS_DEPATURE_TIME", timesheet.getBusDepartureTime());
         values.put("BUS_RETURN_TIME", timesheet.getBusReturnTime());
         values.put("MESSAGE", timesheet.getMessage());
-        values.put("TIMES_STATUS_ID", timesheet.getStatusId());
+        values.put("TIME_STATUS_ID", timesheet.getStatusId());
         values.put("HOME_SCORE", timesheet.getHomeScore());
         values.put("AWAY_SCORE", timesheet.getAwayScore());
+        values.put("MAN_OF_THE_MATCH", timesheet.getManOfTheMatch());
 
         return db.update("TIMES", values, "TIME_ID = ?", new String[]{String.valueOf(timesheet.getTimeId())});
     }
@@ -810,7 +808,16 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         return ageGroupList;
     }
-
+    public int getLeagueIdByName(String leagueName) {
+    SQLiteDatabase db = this.getReadableDatabase();
+    Cursor cursor = db.rawQuery("SELECT LEAGUE_ID FROM HIGH_SCHOOL_LEAGUE WHERE LEAGUE = ?", new String[]{leagueName});
+    int leagueId = 0;
+    if (cursor.moveToFirst()) {
+        leagueId = cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID"));
+    }
+    cursor.close();
+    return leagueId;
+}
     public int updateFixture(FixtureModel fixture) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();

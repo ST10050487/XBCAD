@@ -5,19 +5,24 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import za.co.varsitycollage.st10050487.knights.databinding.ActivityCreateTimesheetBinding
 import za.co.varsitycollage.st10050487.knights.databinding.ActivityEditTimesheetBinding
 import java.util.Calendar
 
@@ -46,9 +51,9 @@ class EditTimesheet : AppCompatActivity()  {
         binding = ActivityEditTimesheetBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         dbHelper = DBHelper(this)
         // val bool = dbHelper.isDatabaseValid()
+        dbHelper = DBHelper.getInstance(this)
 
         // Initialize the RecyclerView and its adapter
         adapter = MultipleImageAdapter()
@@ -56,7 +61,7 @@ class EditTimesheet : AppCompatActivity()  {
         binding.rvHighlights.adapter = adapter
         // Set up the image upload button and time pickers
 
-        statusList = dbHelper.getAllSports()
+        statusList = dbHelper.getAllStatus()
         populateSpinner(binding.spinnerMatchStatus, statusList)
         ImageUpload()
         setupTimePickers()
@@ -73,8 +78,8 @@ class EditTimesheet : AppCompatActivity()  {
             }
         }
 
-        // Call the saveDummyData method
-       // saveDummyData()
+        //Call the saveDummyData method
+      //saveDummyData()
         loadTimesheet(fixtureId)
 
     }
@@ -90,14 +95,18 @@ class EditTimesheet : AppCompatActivity()  {
 
     private fun saveDummyData() {
         val dbHelper = DBHelper(this)
-        dbHelper.addDummyTimesEntry(1)
+        val id =dbHelper.addDummyTimesEntry(1)
+        val h = dbHelper.addHighlight(fixtureId,  byteArrayOf(0))
+        Toast.makeText(this, id.toString(), Toast.LENGTH_SHORT).show()
+       // val highlights = dbHelper.getHighlights(id, 1)
+
     }
     private fun updateTimesheetData() {
         val meetTime = binding.txtMeetTime.text.toString()
         val busDepartureTime = binding.txtDepTime.text.toString()
         val busReturnTime = binding.txtReturnTime.text.toString()
         val message =binding.txtMsg.text.toString()
-        val statusId = binding.spinnerMatchStatus.selectedItem.toString().toInt()
+      val  statusId = getTimeStatusId(binding.spinnerMatchStatus.selectedItem.toString())
         val homeScore =binding.txtHomeResult.text.toString().toIntOrNull()
         val awayScore = binding.txtAwayResult.text.toString().toIntOrNull()
         val manOfTheMatch = binding.txtManOfTheMatch.text.toString()
@@ -164,11 +173,12 @@ class EditTimesheet : AppCompatActivity()  {
             binding.txtMsg.setText(it.message)
             binding.txtMeetTime.setText(it.meetTime)
             binding.txtReturnTime.setText(it.busReturnTime)
+            binding.spinnerMatchStatus.setSelection(it.statusId)
             binding.txtDepTime.setText(it.busDepartureTime)
             binding.txtHomeResult.setText(it.homeScore.toString())
             binding.txtAwayResult.setText(it.awayScore.toString())
+            binding.txtManOfTheMatch.setText(it.manOfTheMatch)
         }
-
         if (timesheet != null) {
             val highlights = dbHelper.getHighlights(timesheet.timeId)
             for (highlight in highlights) {
@@ -186,8 +196,18 @@ class EditTimesheet : AppCompatActivity()  {
         }
     }
 
+
+    private fun getTimeStatusId(status: String): Int {
+        return when (status) {
+            "Not Started" -> 0
+            "Full-time" -> 1
+            "Half-time" -> 2
+            else -> throw IllegalArgumentException("Unknown status: $status")
+        }
+    }
     // Function to handle image upload
     private fun ImageUpload() {
+    // btnUpload = binding.uploadBtn
 
         binding.uploadBtn.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT).also {
@@ -245,9 +265,9 @@ class EditTimesheet : AppCompatActivity()  {
 
     // Function to set up time pickers for the time fields
     private fun setupTimePickers() {
-        binding.txtMeetTime.setOnClickListener { showTimePickerDialog(binding.txtMeetTime) }
-        binding.txtDepTime.setOnClickListener { showTimePickerDialog(binding.txtDepTime) }
-        binding.txtReturnTime.setOnClickListener { showTimePickerDialog(binding.txtReturnTime) }
+        binding.txtMeetTimeLayout.setEndIconOnClickListener { showTimePickerDialog(binding.txtMeetTime) }
+        binding.txtDepTimeLayout.setEndIconOnClickListener {showTimePickerDialog(binding.txtDepTime) }
+        binding.txtReturnTimeLayout.setEndIconOnClickListener {showTimePickerDialog(binding.txtReturnTime) }
     }
 
     // Function to show a time picker dialog

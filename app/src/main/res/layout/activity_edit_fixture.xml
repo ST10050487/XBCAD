@@ -244,6 +244,7 @@
                     android:paddingStart="24dp"
                     android:layout_marginTop="20dp"/>
 
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -269,19 +270,27 @@
                     android:paddingStart="24dp"
                     android:layout_marginTop="20dp"/>
 
+
+
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/txtTimeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginVertical="10dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@drawable/ic_clock_icon"
+                    app:endIconCheckable="false"
                     android:padding="5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtTime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Select Time"
-                        android:drawableEnd="@drawable/ic_clock_icon"/>
+                         android:focusable="false"
+                        android:hint="Select Time"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView

@@ -79,9 +79,6 @@ dependencies {
     //implement the dependency com.intuit.sdp:sdp-android:1.1.1
     implementation("com.intuit.sdp:sdp-android:1.1.1")
 
-
-    //implement the dependency net.zetetic:android-database-sqlcipher:4.5.0
-    implementation("net.zetetic:android-database-sqlcipher:4.5.0")
     //Implementing the de.hdodenhof:circleimageview:3.1.0
     implementation(libs.circleimageview)
     implementation("com.github.bumptech.glide:glide:4.12.0")
