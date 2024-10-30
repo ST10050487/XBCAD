@@ -8,11 +8,13 @@ import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import net.sqlcipher.database.SQLiteDatabase
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+       // SQLiteDatabase.loadLibs(this)
 
         // Applying edge-to-edge UI behavior
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -25,12 +27,12 @@ class MainActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             // Navigate to StudentParentReg Activity after the delay
         //    val intent = Intent(this, EditFixture::class.java)
-            val intent = Intent(this, EditTimesheet::class.java)
-           //val intent = Intent(this, EventManagement::class.java)
-           //  val intent = Intent(this, UpdateUser::class.java)
-           // val intent = Intent(this, UpdateProduct::class.java)
+     //       val intent = Intent(this, EditTimesheet::class.java)
+        //  val intent = Intent(this, EventManagement::class.java)
+            // val intent = Intent(this, UpdateUser::class.java)
+         //  val intent = Intent(this, UpdateProduct::class.java)
            //  val intent = Intent(this, Admin_Home::class.java)
-           // val intent = Intent(this, Login::class.java)
+            val intent = Intent(this, Login::class.java)
            // val intent = Intent(this@MainActivity, HomeScreen::class.java)
             startActivity(intent)
             // Finishing MainActivity so that the user cannot go back to it

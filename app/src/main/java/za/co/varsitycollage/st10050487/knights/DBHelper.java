@@ -496,30 +496,35 @@ public class DBHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    public List<EventModel> getAllEvents() {
-        List<EventModel> events = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM EVENTS", null);
+ public List<EventModel> getAllEvents() {
+    List<EventModel> events = new ArrayList<>();
+    SQLiteDatabase db = this.getReadableDatabase();
+    Cursor cursor = db.rawQuery("SELECT * FROM EVENTS", null);
 
-        if (cursor.moveToFirst()) {
-            do {
-                EventModel event = new EventModel(
-                        cursor.getInt(cursor.getColumnIndexOrThrow("EVENT_ID")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_NAME")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DATE")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_TIME")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_LOCATION")),
-                        cursor.getDouble(cursor.getColumnIndexOrThrow("EVENT_PRICE")),
-                        cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DESCRIPTION")),
-                        false // Default value for 'selected'
-                );
-                events.add(event);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return events;
+    if (cursor.moveToFirst()) {
+        do {
+            byte[] pictures = cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE"));
+            if (pictures == null) {
+                pictures = new byte[0];
+            }
+
+            EventModel event = new EventModel(
+                    cursor.getInt(cursor.getColumnIndexOrThrow("EVENT_ID")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("EVENT_NAME")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DATE")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("EVENT_TIME")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("EVENT_LOCATION")),
+                    cursor.getDouble(cursor.getColumnIndexOrThrow("EVENT_PRICE")),
+                    pictures,
+                    cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DESCRIPTION")),
+                    false
+            );
+            events.add(event);
+        } while (cursor.moveToNext());
     }
+    cursor.close();
+    return events;
+}
  public List<String> getAllStatus() {
     List<String> status = new ArrayList<>();
     SQLiteDatabase db = this.getReadableDatabase();
@@ -536,6 +541,7 @@ public class DBHelper extends SQLiteOpenHelper {
     Log.d("DBHelper", "status: " + status);
     return status;
 }
+
 
     // Method to delete selected events
     public void deleteEvents(List<EventModel> selectedEvents) {
@@ -731,26 +737,57 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         return highlights;
     }
-    public void updateHighlights(int timesId, List<byte[]> photos) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.beginTransaction();
-        try {
+//    public void updateHighlights(int timesId, List<byte[]> photos) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        db.beginTransaction();
+//        try {
+//            // Delete existing highlights for the given timesId
+//            db.delete("TIME_HIGHLIGHTS", "TIMES_ID = ?", new String[]{String.valueOf(timesId)});
+//
+//            // Insert new photos
+//            ContentValues values = new ContentValues();
+//            for (byte[] photo : photos) {
+//                values.clear();
+//                values.put("TIMES_ID", timesId);
+//                values.put("PHOTO", photo);
+//                db.insert("TIME_HIGHLIGHTS", null, values);
+//            }
+//            db.setTransactionSuccessful();
+//        } finally {
+//            db.endTransaction();
+//        }
+//    }
+public boolean updateHighlights(int timesId, List<byte[]> photos) {
+    SQLiteDatabase db = this.getWritableDatabase();
+    db.beginTransaction();
+    try {
+        // Check if highlights exist for the given timesId
+        Cursor cursor = db.query("TIME_HIGHLIGHTS", new String[]{"HIGHLIGHT_ID"}, "TIMES_ID = ?", new String[]{String.valueOf(timesId)}, null, null, null);
+        boolean highlightsExist = cursor.moveToFirst();
+        cursor.close();
+
+        if (highlightsExist) {
             // Delete existing highlights for the given timesId
             db.delete("TIME_HIGHLIGHTS", "TIMES_ID = ?", new String[]{String.valueOf(timesId)});
-
-            // Insert new photos
-            ContentValues values = new ContentValues();
-            for (byte[] photo : photos) {
-                values.clear();
-                values.put("TIMES_ID", timesId);
-                values.put("PHOTO", photo);
-                db.insert("TIME_HIGHLIGHTS", null, values);
-            }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
         }
+
+        // Insert new photos
+        ContentValues values = new ContentValues();
+        for (byte[] photo : photos) {
+            values.clear();
+            values.put("TIMES_ID", timesId);
+            values.put("PHOTO", photo);
+            db.insert("TIME_HIGHLIGHTS", null, values);
+        }
+        db.setTransactionSuccessful();
+        return true;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    } finally {
+        db.endTransaction();
     }
+}
     // Method to delete a highlight from the TIME_HIGHLIGHTS table
     public boolean deleteHighlights(int timesId) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1178,20 +1215,25 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("USER_ID", userId);
         db.insert("PREVIOUS_REPORTS", null, values);
     }
-
-    //A method to add events to the database
-    public void addEvents(String eventName, String eventDate, String eventTime, String eventLocation, double eventPrice, int userId) {
-        // Add events to the database
+    public void deleteAllEvents() {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("EVENT_NAME", eventName);
-        values.put("EVENT_DATE", eventDate);
-        values.put("EVENT_TIME", eventTime);
-        values.put("EVENT_LOCATION", eventLocation);
-        values.put("EVENT_PRICE", eventPrice);
-        values.put("USER_ID", userId);
-        db.insert("EVENTS", null, values);
+        db.delete("EVENTS", null, null);
+        db.close();
     }
+    //A method to add events to the database
+   public void addEvents(String eventName, String eventDate, String eventTime, String eventLocation, double eventPrice, byte[] picture, String eventDescription, int userId) {
+    SQLiteDatabase db = this.getWritableDatabase();
+    ContentValues values = new ContentValues();
+    values.put("EVENT_NAME", eventName);
+    values.put("EVENT_DATE", eventDate);
+    values.put("EVENT_TIME", eventTime);
+    values.put("EVENT_LOCATION", eventLocation);
+    values.put("EVENT_PRICE", eventPrice);
+    values.put("PICTURE", picture);
+    values.put("EVENT_DESCRIPTION", eventDescription);
+    values.put("USER_ID", userId);
+    db.insert("EVENTS", null, values);
+}
 
     //A method to add matches to the database
     public void addMatches(String matchLocation, String matchDate, String matchTime, double price, String matchDiscription, byte[] picture, int timeId) {

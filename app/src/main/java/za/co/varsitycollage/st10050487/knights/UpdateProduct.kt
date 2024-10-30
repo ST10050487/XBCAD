@@ -18,7 +18,7 @@ class UpdateProduct : AppCompatActivity() {
     private lateinit var binding: ActivityUpdateProductBinding
     private lateinit var dbHelper: DBHelper
     private var imageHolder: ByteArray? = null
-    private var productId: Int = 1
+    private var productId: Int = 5
     private var userId: Int = 0
     private val PICK_IMAGE_REQUEST = 1
     private val CAMERA_REQUEST = 2
@@ -30,8 +30,8 @@ class UpdateProduct : AppCompatActivity() {
 
         dbHelper = DBHelper(this)
       //   Insert dummy data
-       val newProductId = dbHelper.dummyProduct(userId)
-        Toast.makeText(this, "New Product ID: $newProductId", Toast.LENGTH_SHORT).show()
+      //val newProductId = dbHelper.dummyProduct(userId)
+      //  Toast.makeText(this, "New Product ID: $newProductId", Toast.LENGTH_SHORT).show()
 
         // productId and userId are passed via Intent
         // productId = intent.getIntExtra("PRODUCT_ID", 0)
@@ -71,7 +71,9 @@ class UpdateProduct : AppCompatActivity() {
             }
 
         }
-
+        if (product == null) {
+            Toast.makeText(this, "Product not found", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun updateProdPicture(bitmap: Bitmap) {

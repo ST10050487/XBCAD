@@ -34,7 +34,7 @@ class EditTimesheet : AppCompatActivity()  {
     private lateinit var recycleView: RecyclerView
     private lateinit var statusList: List<String>
     private lateinit var adapter: MultipleImageAdapter
-    private var fixtureId: Int = 1
+    private var fixtureId: Int = 2
     private var userId: Int = 1
     private var timesheetID: Int = 0
     private var isGetItemsCalled = false
@@ -79,24 +79,24 @@ class EditTimesheet : AppCompatActivity()  {
         }
 
         //Call the saveDummyData method
-      //saveDummyData()
+//      saveDummyData()
         loadTimesheet(fixtureId)
 
     }
-    private fun saveHighlights() {
-        val dbHelper = DBHelper(this)
-        if (imageByteArrayList.isNotEmpty()) {
-            dbHelper.updateHighlights(timesheetID, adapter.returnItems())
-            Toast.makeText(this, "Highlights updated successfully", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, "Failed to update highlights", Toast.LENGTH_SHORT).show()
-        }
-    }
+ private fun saveHighlights() {
+    val dbHelper = DBHelper(this)
+    val success = dbHelper.updateHighlights(timesheetID, adapter.returnItems())
 
+    if (success) {
+        Toast.makeText(this, "Highlights updated successfully", Toast.LENGTH_SHORT).show()
+    } else {
+        Toast.makeText(this, "Failed to update highlights", Toast.LENGTH_SHORT).show()
+    }
+}
     private fun saveDummyData() {
         val dbHelper = DBHelper(this)
-        val id =dbHelper.addDummyTimesEntry(1)
-        val h = dbHelper.addHighlight(fixtureId,  byteArrayOf(0))
+        val id =dbHelper.addDummyTimesEntry(2)
+      //  val h = dbHelper.addHighlight(1,  byteArrayOf(0))
         Toast.makeText(this, id.toString(), Toast.LENGTH_SHORT).show()
        // val highlights = dbHelper.getHighlights(id, 1)
 

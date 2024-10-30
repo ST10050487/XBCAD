@@ -29,6 +29,8 @@ class EventCardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dbHelper = DBHelper(requireContext())
+        dbHelper = DBHelper.getInstance(requireContext())
+
         val events = dbHelper.getAllEvents()
         eventAdapter = EventAdapter(events, { show ->
             (activity as? EventManagement)?.showDeleteMenu(show)
