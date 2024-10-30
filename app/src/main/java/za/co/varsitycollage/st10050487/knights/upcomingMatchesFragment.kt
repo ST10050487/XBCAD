@@ -1,5 +1,6 @@
 package za.co.varsitycollage.st10050487.knights
 
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
@@ -62,6 +63,7 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                     val team2Name = fixtureCard.findViewById<TextView>(R.id.team2_name)
                     val matchType = fixtureCard.findViewById<TextView>(R.id.match_type)
                     val ageGroup = fixtureCard.findViewById<TextView>(R.id.age_group)
+                    val eventEdit = fixtureCard.findViewById<ImageView>(R.id.event_edit)
 
                     FormattingDate(fixture, fixtureDate, fixtureDateBox)
 
@@ -76,6 +78,13 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                     team2Name.text = fixture.awayTeam
                     matchType.text = fixture.sport
                     ageGroup.text = fixture.ageGroup
+
+                    // Set an OnClickListener to navigate to EditFixture
+                    eventEdit.setOnClickListener {
+                        val intent = Intent(requireContext(), EditFixture::class.java)
+                        intent.putExtra("fixture_id", fixture.fixtureId) // Pass the fixture ID
+                        startActivity(intent)
+                    }
 
                     // Add the inflated fixture card to the LinearLayout
                     linearLayout.addView(fixtureCard)

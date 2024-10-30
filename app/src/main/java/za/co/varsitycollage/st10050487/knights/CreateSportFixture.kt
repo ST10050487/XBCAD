@@ -1,4 +1,3 @@
-// CreateSportFixture.kt
 package za.co.varsitycollage.st10050487.knights
 
 import android.app.Activity
@@ -10,20 +9,15 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Spinner
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 class CreateSportFixture : AppCompatActivity() {
     companion object {
@@ -113,8 +107,10 @@ class CreateSportFixture : AppCompatActivity() {
 
         // Set onClickListener to the create fixture button
         createFixtureButton.setOnClickListener {
-            storeValues()
-            insertFixtureIntoDatabase()
+            if (validateInputs()) {
+                storeValues()
+                insertFixtureIntoDatabase()
+            }
         }
 
         val sportSpinner: Spinner = findViewById(R.id.sport_dropdown)
@@ -202,13 +198,87 @@ class CreateSportFixture : AppCompatActivity() {
         }
     }
 
+    private fun validateInputs(): Boolean {
+        if (homeTeamNameEditText.text.toString().trim().isEmpty()) {
+            homeTeamNameEditText.error = "Home team name is required"
+            return false
+        }
+
+        if (awayTeamNameEditText.text.toString().trim().isEmpty()) {
+            awayTeamNameEditText.error = "Away team name is required"
+            return false
+        }
+
+        if (venueEditText.text.toString().trim().isEmpty()) {
+            venueEditText.error = "Venue is required"
+            return false
+        }
+
+        if (matchDescriptionEditText.text.toString().trim().isEmpty()) {
+            matchDescriptionEditText.error = "Match description is required"
+            return false
+        }
+
+        if (selectedMatchTime.isNullOrEmpty()) {
+            matchTimeEditText.error = "Match time is required"
+            return false
+        }
+
+        if (selectedMatchDate.isNullOrEmpty()) {
+            matchDateEditText.error = "Match date is required"
+            return false
+        }
+
+        val (isValid, errorMessage) = isDateValid(selectedMatchDate!!)
+        if (!isValid) {
+            matchDateEditText.error = errorMessage
+            return false
+        }
+
+        if (leagueId == null) {
+            Toast.makeText(this, "Please select a league", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        return true
+    }
+
+    private fun isDateValid(date: String): Pair<Boolean, String?> {
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        sdf.isLenient = false
+        return try {
+            val selectedDate = sdf.parse(date)
+            val currentDate = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }.time
+
+            if (selectedDate != null) {
+                if (selectedDate.before(currentDate)) {
+                    Pair(false, "Date has already passed")
+                } else {
+                    Pair(true, null)
+                }
+            } else {
+                Pair(false, "Invalid date, example: 2025-12-31")
+            }
+        } catch (e: Exception) {
+            Pair(false, "Invalid date, example: 2025-12-31")
+        }
+    }
+
     private fun NavigatingBackBtn() {
         // Find the back button TextView
         val backButton = findViewById<TextView>(R.id.back_btn)
 
         // Set an OnClickListener to navigate to AdminSportsFixtures
         backButton.setOnClickListener {
-            val intent = Intent(this, AdminSportsFixtures::class.java) // Change to your AdminSportsFixtures class
+            val intent = Intent(
+                this,
+                AdminSportsFixtures::class.java
+            ) // Change to your AdminSportsFixtures class
             startActivity(intent)
             finish() // Optionally call finish() if you want to remove this activity from the back stack
         }
@@ -263,9 +333,9 @@ class CreateSportFixture : AppCompatActivity() {
 
         val datePickerDialog =
             DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-                // Format the selected date
+                // Format the selected date as yyyy-MM-dd
                 selectedMatchDate =
-                    String.format("%02d-%02d-%04d", selectedDay, selectedMonth + 1, selectedYear)
+                    String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
                 matchDateEditText.setText(selectedMatchDate) // Display the selected date in the EditText
             }, year, month, day)
 
