@@ -58,7 +58,7 @@ class ViewPlayer : AppCompatActivity() {
 
             binding.txtAgeGroup.text = "Age Group: ${playerProfile.ageGroup}"
             binding.txtPosition.text = "Position: ${playerProfile.position}"
-            binding.txtHeight.text =  "Height: ${playerProfile.height}"
+//            binding.txtHeight.text =  "Height: ${playerProfile.height}"
 
 
             // Set the product picture to image holder variable
