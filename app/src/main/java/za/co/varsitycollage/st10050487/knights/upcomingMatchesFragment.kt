@@ -15,11 +15,13 @@ import java.util.*
 
 class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment() {
     private var selectedSports: List<String> = emptyList() // Store selected sports
+    private var searchQuery: String = "" // Store search query
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             selectedSports = it.getStringArrayList("selectedSports") ?: emptyList()
+            searchQuery = it.getString("searchQuery", "")
         }
     }
 
@@ -37,7 +39,12 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
         if (fixtures.isNotEmpty()) {
             for (fixture in fixtures) {
                 // Check if no sports are selected, then show all fixtures
-                if (selectedSports.isEmpty() || selectedSports.contains(fixture.sport)) {
+                if ((selectedSports.isEmpty() || selectedSports.contains(fixture.sport)) &&
+                    (searchQuery.isEmpty() || fixture.homeTeam.contains(
+                        searchQuery,
+                        true
+                    ) || fixture.awayTeam.contains(searchQuery, true))
+                ) {
                     // Inflate a new fixture card layout
                     val fixtureCard = LayoutInflater.from(requireContext()).inflate(
                         if (isAdmin) R.layout.card_layout_admin_upcoming else R.layout.card_layout_upcoming,

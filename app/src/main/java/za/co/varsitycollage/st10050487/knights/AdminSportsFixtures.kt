@@ -4,8 +4,11 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
@@ -14,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity
 class AdminSportsFixtures : AppCompatActivity() {
     private val selectedSports = mutableListOf<String>() // Store selected sports
 
+    private lateinit var searchEditText: EditText // Declare the search EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin_sports_fixtures)
@@ -21,7 +26,26 @@ class AdminSportsFixtures : AppCompatActivity() {
         // Load the SportsFixturesHomeScreenFragment into the fragment_container
         LoadingUpcomingPastFixtures(savedInstanceState)
 
+
+        // Initialize the search EditText
+        searchEditText = findViewById(R.id.search_fixtures)
+
+        // Set up search listener
+        setupSearchListener()
+
         FilterLogic()
+    }
+
+    private fun setupSearchListener() {
+        searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                refreshCurrentFragment(s.toString()) // Pass the search query
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
     }
 
     private fun LoadingUpcomingPastFixtures(savedInstanceState: Bundle?) {
@@ -62,10 +86,11 @@ class AdminSportsFixtures : AppCompatActivity() {
         }
     }
 
-    private fun refreshCurrentFragment() {
+    private fun refreshCurrentFragment(searchQuery: String = "") {
         val fragment = upcomingMatchesFragment(isAdmin = true).apply {
             arguments = Bundle().apply {
                 putStringArrayList("selectedSports", ArrayList(selectedSports))
+                putString("searchQuery", searchQuery) // Pass the search query
             }
         }
 
