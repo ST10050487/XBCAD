@@ -8,6 +8,7 @@
     <string name="title_activity_fragment_sport_fixtures_tab">FragmentSportFixturesTab</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
+    <string name="sports_fixtures">Sports Fixtures</string>
     <string name="terms">I agree to Term of Service and \nPrivacy Policy</string>
     <string name="admin_quick_access">Admin Quick Access</string>
     <string name="WelcomeHomeScreenMessage">Welcome Knight Of The Round Table</string>
@@ -32,6 +33,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="default_web_client_id">814054848260-sb61707fg2pkvn9hp0qsjnmbvordae58.apps.googleusercontent.com</string>
 
     <string-array name="teams_array">
         <item>First Eleven</item>

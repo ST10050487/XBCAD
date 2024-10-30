@@ -8,6 +8,7 @@
     <color name="transparent">#00000000</color>
     <color name="maroon">#8D0E50</color>
     <color name="lightBlue">#637198</color>
+
     <color name="system_button">#FFA500</color>
     <color name="lightgrey">#D3D3D3</color>
     <color name="lightdarkpurple">#94186E</color>
@@ -15,6 +16,7 @@
     <color name="green">#00C566</color>
     <color name="lightGrey">#525957</color>
     <color name="yellow">#EAD508</color>
+    <color name="purple">#800080</color>
     <color name="blue">#0000FF</color>
 
 </resources>

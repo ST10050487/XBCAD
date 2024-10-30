@@ -31,6 +31,9 @@
             android:name=".CreateEvent"
             android:exported="false" />
         <activity
+            android:name=".AdminHome"
+            android:exported="false" />
+        <activity
             android:name=".ModifyEvent"
             android:exported="false" />
         <activity
@@ -48,7 +51,7 @@
         <activity
             android:name=".CreateSportFixture"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".UpcomingRecentEvents"
             android:exported="false" />
@@ -58,9 +61,7 @@
         <activity
             android:name=".UpdateAdminUser"
             android:exported="false" />
-        <activity
-            android:name=".Admin_Home"
-            android:exported="false" />
+
         <activity
             android:name=".CreateTimesheet"
             android:exported="false"
@@ -86,11 +87,12 @@
         <activity android:name=".HomeScreen" />
         <activity android:name=".UpdatePlayerProfile" /> <!-- Activity for Student Parent Registration -->
         <activity android:name=".AdminUpcomingEvents" />
+        <activity android:name=".AdminSportsFixtures" />
         <activity
             android:name=".StudentParentReg"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".SuccessReg" />
-        <activity android:name=".EventDetailActivity" />
+        <activity android:name = ".EventDetailActivity"/>
 
         <meta-data
             android:name="preloaded_fonts"

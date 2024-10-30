@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/rounded_background">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Sports"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:paddingBottom="8dp" />
+
+    <CheckBox
+        android:id="@+id/checkbox_soccer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Soccer" />
+
+    <CheckBox
+        android:id="@+id/checkbox_netball"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Netball" />
+
+    <CheckBox
+        android:id="@+id/checkbox_rugby"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rugby" />
+
+    <CheckBox
+        android:id="@+id/checkbox_hockey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hockey" />
+
+    <CheckBox
+        android:id="@+id/checkbox_cricket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cricket" />
+
+    <CheckBox
+        android:id="@+id/checkbox_tennis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tennis" />
+
+    <CheckBox
+        android:id="@+id/checkbox_basketball"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Basketball" />
+
+    <CheckBox
+        android:id="@+id/checkbox_athletics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Athletics" />
+
+    <CheckBox
+        android:id="@+id/checkbox_swimming"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Swimming" />
+
+    <Button
+        android:id="@+id/button_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OK"
+        android:layout_marginTop="8dp" />
+</LinearLayout>
