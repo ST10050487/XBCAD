@@ -87,6 +87,7 @@
         <activity android:name=".HomeScreen" />
         <activity android:name=".UpdatePlayerProfile" /> <!-- Activity for Student Parent Registration -->
         <activity android:name=".AdminUpcomingEvents" />
+        <activity android:name=".AdminSportsFixtures" />
         <activity
             android:name=".StudentParentReg"
             android:windowSoftInputMode="adjustPan" />

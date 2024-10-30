@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/rounded_background">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Age Group"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:paddingBottom="8dp" />
+
+    <CheckBox
+        android:id="@+id/checkbox_boys_under_15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Boys Under 15" />
+
+    <CheckBox
+        android:id="@+id/checkbox_girls_under_15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Girls Under 15" />
+
+    <CheckBox
+        android:id="@+id/checkbox_boys_under_16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Boys Under 16" />
+
+    <CheckBox
+        android:id="@+id/checkbox_girls_under_16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Girls Under 16" />
+
+    <CheckBox
+        android:id="@+id/checkbox_boys_under_17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Boys Under 17" />
+
+    <CheckBox
+        android:id="@+id/checkbox_girls_under_17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Girls Under 17" />
+
+    <CheckBox
+        android:id="@+id/checkbox_boys_under_18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Boys Under 18" />
+
+    <CheckBox
+        android:id="@+id/checkbox_girls_under_18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Girls Under 18" />
+
+    <Button
+        android:id="@+id/button_age_group_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OK"
+        android:layout_marginTop="8dp" />
+</LinearLayout>

@@ -32,7 +32,7 @@ class GetPlayers : AppCompatActivity() {
         binding.btnSelect.setOnClickListener {
             val fragment = supportFragmentManager.findFragmentById(R.id.players_card_container) as? PlayersListFragment
             if (fragment != null) {
-                fragment.saveSelectedPlayers()
+//                fragment.saveSelectedPlayers()
                 Toast.makeText(this, "Players saved successfully", Toast.LENGTH_SHORT).show()
                 finish()
             } else {
@@ -43,7 +43,7 @@ class GetPlayers : AppCompatActivity() {
         binding.btnCancel.setOnClickListener {
             val fragment = supportFragmentManager.findFragmentById(R.id.players_card_container) as? PlayersListFragment
             if (fragment != null) {
-                fragment.clearSelection()
+//                fragment.clearSelection()
                 Toast.makeText(this, "Selection cleared", Toast.LENGTH_SHORT).show()
             } else {
                 Log.e("GetPlayers", "PlayersListFragment not found")
