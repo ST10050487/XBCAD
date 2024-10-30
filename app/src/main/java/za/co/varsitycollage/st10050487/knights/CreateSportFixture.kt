@@ -269,6 +269,23 @@ class CreateSportFixture : AppCompatActivity() {
         }
     }
 
+    private fun showDatePicker() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog =
+            DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+                // Format the selected date as yyyy-MM-dd
+                selectedMatchDate =
+                    String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
+                matchDateEditText.setText(selectedMatchDate) // Display the selected date in the EditText
+            }, year, month, day)
+
+        datePickerDialog.show()
+    }
+
     private fun NavigatingBackBtn() {
         // Find the back button TextView
         val backButton = findViewById<TextView>(R.id.back_btn)
@@ -323,23 +340,6 @@ class CreateSportFixture : AppCompatActivity() {
         }, hour, minute, true) // true for 24-hour format
 
         timePickerDialog.show()
-    }
-
-    private fun showDatePicker() {
-        val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-        val datePickerDialog =
-            DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-                // Format the selected date as yyyy-MM-dd
-                selectedMatchDate =
-                    String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
-                matchDateEditText.setText(selectedMatchDate) // Display the selected date in the EditText
-            }, year, month, day)
-
-        datePickerDialog.show()
     }
 
     private fun navigateToCreateTimesheet() {
