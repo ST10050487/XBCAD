@@ -41,10 +41,16 @@ class AdminSportsFixtures : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                refreshCurrentFragment(s.toString()) // Pass the search query
+                val searchQuery = s.toString()
+                refreshCurrentFragment(searchQuery) // Pass the search query
             }
 
-            override fun afterTextChanged(s: Editable?) {}
+            override fun afterTextChanged(s: Editable?) {
+                // If the search query is empty, refresh to show all upcoming matches
+                if (s.isNullOrEmpty()) {
+                    refreshCurrentFragment() // Refresh without a search query
+                }
+            }
         })
     }
 
