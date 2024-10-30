@@ -22,6 +22,9 @@
         android:theme="@style/Theme.Knights"
         tools:targetApi="31">
         <activity
+            android:name=".DisplaySchoolPlayers"
+            android:exported="false" />
+        <activity
             android:name=".CreateProduct"
             android:exported="false" />
         <activity
@@ -51,7 +54,7 @@
         <activity
             android:name=".CreateSportFixture"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".UpcomingRecentEvents"
             android:exported="false" />
@@ -61,7 +64,6 @@
         <activity
             android:name=".UpdateAdminUser"
             android:exported="false" />
-
         <activity
             android:name=".CreateTimesheet"
             android:exported="false"
@@ -92,7 +94,7 @@
             android:name=".StudentParentReg"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".SuccessReg" />
-        <activity android:name = ".EventDetailActivity"/>
+        <activity android:name=".EventDetailActivity" />
 
         <meta-data
             android:name="preloaded_fonts"
