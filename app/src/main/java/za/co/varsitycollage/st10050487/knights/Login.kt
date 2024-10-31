@@ -1,5 +1,6 @@
 package za.co.varsitycollage.st10050487.knights
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -168,9 +169,9 @@ class Login : AppCompatActivity() {
                     auth(account.idToken!!)
 
                 } catch (e: ApiException) {
-                    // If an exception occurs, show a toast message indicating sign-in failure
-                    Toast.makeText(this, "Google Sign-In Failed", Toast.LENGTH_SHORT).show()
-                }
+                        Log.w(TAG, "Google sign in failed", e)
+                        Toast.makeText(this, "Google Sign-In Failed: ${e.statusCode}", Toast.LENGTH_SHORT).show()
+                    }
             }
         }
 
