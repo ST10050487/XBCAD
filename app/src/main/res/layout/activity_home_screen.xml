@@ -33,66 +33,63 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <!-- Linear Layout for Info -->
-            <!-- Linear Layout for Info -->
             <LinearLayout
                 android:id="@+id/linearLayout2"
-                android:layout_width="380dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/rounded_corners"
-                android:orientation="horizontal">
+                android:background="@drawable/student_home_screen_rounded_infor_tag"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+                android:paddingStart="10dp">
 
                 <!-- Gold Bar -->
-                <LinearLayout
-                    android:id="@+id/goldBar"
+                <View
+                    android:id="@+id/view"
                     android:layout_width="5dp"
-                android:layout_height="match_parent"
-                android:background="@color/gold"
-                android:orientation="horizontal"
-                android:paddingLeft="10dp" />
+                    android:layout_height="80dp"
+                    android:background="@color/gold"
+                    android:layout_gravity="center_vertical"/>
 
-                <!-- General Info takes up the rest of the space -->
                 <LinearLayout
                     android:id="@+id/generalInfo"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                android:background="@drawable/student_home_screen_rounded_infor_tag"
-                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/welcomeMessage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/WelcomeHomeScreenMessage"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="Failed To Fetch Date"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/welcomeMessage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/WelcomeHomeScreenMessage"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/term"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="Failed To Calculate Term"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="Failed To Fetch Date"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/term"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="Failed To Calculate Term"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
-
-        <!-- RecyclerView for Events -->
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
@@ -104,13 +101,15 @@
                 android:textStyle="bold"
                 android:layout_gravity="center"/>
 
+            <!-- RecyclerView for Events -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/events_recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="163dp"
+                android:layout_height="175dp"
                 android:layout_marginTop="16dp"
-                tools:listitem="@layout/activity_upcoming_event"
-                android:visibility="visible"/>
+                android:orientation="horizontal"
+                android:visibility="visible"
+                tools:listitem="@layout/activity_upcoming_event" />
 
             <!-- Frame Layout for Fixtures -->
             <FrameLayout
