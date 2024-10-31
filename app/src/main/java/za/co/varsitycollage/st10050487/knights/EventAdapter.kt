@@ -1,5 +1,6 @@
 package za.co.varsitycollage.st10050487.knights
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,13 +36,24 @@ class EventAdapter(
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
         val event = events[position]
         holder.eventName.text = event.eventName
-        holder.eventDate.text = formatEventDate(event.eventDate, event.eventTime)
+
+        holder.eventDate.text = formatEventDate(event.eventDate?: "", event.eventTime?:"")
         holder.eventLocation.text = event.eventLocation
 
         holder.itemView.findViewById<Button>(R.id.btnEdit).setOnClickListener {
-            Toast.makeText(holder.itemView.context, "Edit button clicked for ${event.eventName}", Toast.LENGTH_SHORT).show()
+            val intent = Intent(holder.itemView.context, ModifyEvent::class.java)
+            intent.putExtra("EVENT_ID", event.eventId) // Replace `event.id` with the actual ID from your data model
+            holder.itemView.context.startActivity(intent)
         }
-
+        holder.itemView.setOnClickListener {
+            if (isSelectionMode) {
+                selectEvent(holder, event)
+            } else {
+                val intent = Intent(holder.itemView.context, EventDetailActivity::class.java)
+                intent.putExtra("EVENT_ID", event.eventId)
+                holder.itemView.context.startActivity(intent)
+            }
+        }
         holder.itemView.setOnLongClickListener {
             if (!isLongPressHandled) {
                 isLongPressHandled = true
@@ -57,9 +69,9 @@ class EventAdapter(
 
         holder.checkBox.visibility = if (isSelectionMode) View.VISIBLE else View.GONE
 
-        holder.checkBox.setOnCheckedChangeListener(null) // Remove listener temporarily
-        holder.checkBox.isChecked = event.selected // Set the checkbox state
-        holder.checkBox.setOnCheckedChangeListener { _, isChecked -> // Reattach listener
+        holder.checkBox.setOnCheckedChangeListener(null)
+        holder.checkBox.isChecked = event.selected
+        holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             selectEvent(holder, event)
         }
     }

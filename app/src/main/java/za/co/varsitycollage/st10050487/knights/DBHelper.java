@@ -386,7 +386,6 @@ public class DBHelper extends SQLiteOpenHelper {
         long result = db.insert("USERS", null, values);
         return result != -1;
     }
-
     //__Suspicious Activity Table CRUD_________________________________________________________________________________\\
     public void addSuspiciousActivity(int userId, String activityDescription, long timestamp) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -425,16 +424,29 @@ public class DBHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
+                int eventId = cursor.getInt(cursor.getColumnIndexOrThrow("EVENT_ID"));
+                String eventName = cursor.getString(cursor.getColumnIndexOrThrow("EVENT_NAME"));
+                String eventDate = cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DATE"));
+                String eventTime = cursor.getString(cursor.getColumnIndexOrThrow("EVENT_TIME"));
+                String eventLocation = cursor.getString(cursor.getColumnIndexOrThrow("EVENT_LOCATION"));
+                double eventPrice = cursor.getDouble(cursor.getColumnIndexOrThrow("EVENT_PRICE"));
+                byte[] pictures = cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE"));
+                String eventDescription = cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DESCRIPTION"));
+
+                if (pictures == null) {
+                    pictures = new byte[0]; // or any default value
+                }
+
                 EventModel event = new EventModel(
-                        cursor.getInt(cursor.getColumnIndexOrThrow("EVENT_ID")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_NAME")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DATE")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_TIME")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_LOCATION")),
-                        cursor.getDouble(cursor.getColumnIndexOrThrow("EVENT_PRICE")),
-                        cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DESCRIPTION")),
-                        false // Default value for 'selected'
+                        eventId,
+                        eventName,
+                        eventDate,
+                        eventTime,
+                        eventLocation,
+                        eventPrice,
+                        pictures,
+                        eventDescription,
+                        false
                 );
                 events.add(event);
             } while (cursor.moveToNext());
@@ -1378,6 +1390,43 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         return null;
+    }
+    public EventModel getEventById(int eventId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM EVENTS WHERE EVENT_ID = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(eventId)});
+
+        EventModel event = null;
+        if (cursor.moveToFirst()) {
+            String eventName = cursor.getString(cursor.getColumnIndexOrThrow("EVENT_NAME"));
+            String eventDate = cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DATE"));
+            String eventTime = cursor.getString(cursor.getColumnIndexOrThrow("EVENT_TIME"));
+            String eventLocation = cursor.getString(cursor.getColumnIndexOrThrow("EVENT_LOCATION"));
+            double eventPrice = cursor.getDouble(cursor.getColumnIndexOrThrow("EVENT_PRICE"));
+            byte[] pictures = cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE"));
+            String eventDescription = cursor.getString(cursor.getColumnIndexOrThrow("EVENT_DESCRIPTION"));
+
+            if (pictures == null) {
+                pictures = new byte[0];
+            }
+
+//            if (eventDescription == null) {
+//                eventDescription = "";
+//            }
+            event = new EventModel(
+                    eventId,
+                    eventName,
+                    eventDate,
+                    eventTime,
+                    eventLocation,
+                    eventPrice,
+                    pictures,
+                    eventDescription,
+                    false // Default value for 'selected'
+            );
+        }
+        cursor.close();
+        return event;
     }
 
     // A method to update event details
