@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        //test comment
 
         // Delay of 3 seconds (3000 milliseconds)
         Handler(Looper.getMainLooper()).postDelayed({
