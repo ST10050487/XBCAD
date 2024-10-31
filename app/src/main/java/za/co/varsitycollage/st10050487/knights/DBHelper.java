@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 //import net.sqlcipher.database.SQLiteOpenHelper;
 import android.util.Log;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -1090,33 +1092,42 @@ public class DBHelper extends SQLiteOpenHelper {
         db.insert("SPORT_FIXTURES", null, values);
     }
 
-    // Method to check if a user exists and retrieve USER_ID
-    public Integer validateUser(String email, String password) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = null;
-        Integer userId = null; // Initialize userId to null
+  // Method to check if a user exists and retrieve USER_ID
+public Integer validateUser(String email, String password) {
+    SQLiteDatabase db = this.getReadableDatabase();
+    Cursor cursor = null;
+    Integer userId = null; // Initialize userId to null
 
-        try {
-            // Query to check if user exists
-            cursor = db.rawQuery("SELECT USER_ID FROM USERS WHERE EMAIL=? AND PASSWORD=?", new String[]{email, password});
+    try {
+        // Query to check if user exists
+        cursor = db.rawQuery("SELECT USER_ID, PASSWORD FROM USERS WHERE EMAIL=?", new String[]{email});
 
-            // Checking if cursor is not null and move to first
-            if (cursor != null && cursor.moveToFirst()) {
-                int userIdColumnIndex = cursor.getColumnIndex("USER_ID");
-                if (userIdColumnIndex != -1) {
-                    // Getting the USER_ID
-                    userId = cursor.getInt(userIdColumnIndex);
+        // Checking if cursor is not null and move to first
+        if (cursor != null && cursor.moveToFirst()) {
+            int userIdColumnIndex = cursor.getColumnIndex("USER_ID");
+            int passwordColumnIndex = cursor.getColumnIndex("PASSWORD");
+
+            if (userIdColumnIndex != -1 && passwordColumnIndex != -1) {
+                // Getting the USER_ID
+                userId = cursor.getInt(userIdColumnIndex);
+                String storedHashedPassword = cursor.getString(passwordColumnIndex);
+
+                // Verify the password using bcrypt
+                if (BCrypt.checkpw(password, storedHashedPassword)) {
+                    return userId;
+                } else {
+                    return null; // Password does not match
                 }
             }
-        } finally {
-            // Closing cursor
-            if (cursor != null) {
-                cursor.close();
-            }
         }
-        // Returning the USER_ID or null
-        return userId;
+    } finally {
+        if (cursor != null) {
+            cursor.close();
+        }
+        db.close();
     }
+    return null; // User not found
+}
 
     // Method to check if a user exists and retrieve ROLE_ID
     public PlayerProfileModel getPlayerProfile(int userId) {
