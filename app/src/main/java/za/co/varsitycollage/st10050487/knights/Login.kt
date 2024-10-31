@@ -41,7 +41,6 @@ class Login : AppCompatActivity() {
 //            loginBtn = findViewById(R.id.LoginBtn)
 //            registerBtn = findViewById(R.id.RegisterBtn)
 //            dbHelper = DBHelper(this)
-    private lateinit var analytics: FirebaseAnalytics
     private lateinit var regOp: Button
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
@@ -66,9 +65,6 @@ class Login : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        auth = FirebaseAuth.getInstance()
-        FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = true
-        analytics = FirebaseAnalytics.getInstance(this)
 
         emailEditText = binding.emailTxt
         passwordEditText = binding.passwordTxt
