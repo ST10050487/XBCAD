@@ -8,26 +8,32 @@
     android:background="#192E66"
     tools:context=".CreateEvent">
 
-    <Button
-        android:id="@+id/backBtn"
-        android:layout_width="85dp"
-        android:layout_height="39dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="333dp"
-        android:layout_marginBottom="693dp"
-        android:background="#1B356E"
-        android:gravity="left"
-        android:text="Back"
+    <FrameLayout
+        android:layout_width="408dp"
+        android:layout_height="49dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginBottom="682dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.4"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="start|top"
+            android:layout_margin="4dp"
+            android:layout_marginStart="14dp"
+            android:background="@android:color/transparent"
+            android:text="Back"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            tools:ignore="RtlCompat" />
+    </FrameLayout>
 
     <LinearLayout
-        android:layout_width="412dp"
+        android:layout_width="match_parent"
         android:layout_height="682dp"
         android:layout_marginTop="50dp"
         android:background="#FDFDFD"
