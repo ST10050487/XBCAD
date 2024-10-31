@@ -1,6 +1,8 @@
 package za.co.varsitycollage.st10050487.knights
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -67,9 +69,6 @@ class StudentParentReg : AppCompatActivity() {
         // Initialize DBHelper
         dbHelper = DBHelper(this)
 
-
-
-
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
         //Create a GoogleSignInOptions object with the default sign-in options
@@ -90,6 +89,7 @@ class StudentParentReg : AppCompatActivity() {
         emailField = findViewById<EditText>(R.id.EmailField)
         checkBox = findViewById<CheckBox>(R.id.checkBox)
         regButton = findViewById<ImageButton>(R.id.Regbtn)
+        loginOp = findViewById<LinearLayout>(R.id.loginOp)
         textView =  findViewById(R.id.textView7)
         googleSignIn= findViewById<ImageButton>(R.id.googlebtn)
 
@@ -103,6 +103,11 @@ class StudentParentReg : AppCompatActivity() {
         regButton.setOnClickListener {
             registerUser()
         }
+        loginOp.setOnClickListener {
+            val intent = Intent(this, Login::class.java)
+            startActivity(intent)
+        }
+
 
         // Date picker dialog for dateField
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
@@ -126,21 +131,21 @@ class StudentParentReg : AppCompatActivity() {
             Toast.makeText(this, "Google Sign-In Clicked", Toast.LENGTH_SHORT).show()
             signIn();
         }
-//
-//        // Get references to the toggle visibility ImageViews
-//        val togglePasswordVisibility = findViewById<ImageView>(R.id.togglePasswordVisibility)
-//        val toggleConfirmPasswordVisibility =
-//            findViewById<ImageView>(R.id.toggleConfirmPasswordVisibility)
-//
-//        // Set click listener for password visibility toggle
-//        togglePasswordVisibility.setOnClickListener {
-//            togglePasswordVisibility(passwordField, togglePasswordVisibility)
-//        }
-//
-//        // Set click listener for confirm password visibility toggle
-//        toggleConfirmPasswordVisibility.setOnClickListener {
-//            togglePasswordVisibility(confirmPasswordField, toggleConfirmPasswordVisibility)
-//        }
+        passwordField.setOnClickListener {
+            PasswordGuidelines()
+        }
+
+    }
+    private fun PasswordGuidelines() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Password Guidelines")
+        builder.setMessage("Password must be at least 8 characters, include one special character, one number, and one capital letter")
+
+        builder.setPositiveButton("Okay") { dialog: DialogInterface, which: Int ->
+            dialog.dismiss()
+        }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
     //Function to handle Google Sign-In
     private fun signIn() {
@@ -212,10 +217,7 @@ class StudentParentReg : AppCompatActivity() {
     }
     //Function to set up the UI
     private fun registerUser() {
-
-
             if (Validation()) {
-
                 val firstName = firstNameField.text.toString()
                 val lastName = lastNameField.text.toString()
                 val dateOfBirth = dateField.text.toString()
@@ -244,36 +246,33 @@ class StudentParentReg : AppCompatActivity() {
                 val intent = Intent(this, SuccessReg::class.java)
                 startActivity(intent)
 
-
-                // Create user account with email and password
-                auth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this) { task ->
-                        //
-                        if (task.isSuccessful) {
-                            // Handle registration logic here
-                            Toast.makeText(
-                                baseContext,
-                                "Registration Successful",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            // Navigate to onboarding activity
-                            val intent = Intent(baseContext, SuccessReg::class.java)
-                            intent.putExtra("FIRST_NAME", firstNameField.text.toString())
-                            intent.putExtra("SURNAME", lastNameField.text.toString())
-                            startActivity(intent)
-                            finish();
-                        } else {
-                            // If sign-in fails, display a message to the user.
-                            Toast.makeText(
-                                baseContext,
-                                "Authentication failed: ${task.exception?.message}",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-
-
-        }
+//                // Create user account with email and password
+//                auth.createUserWithEmailAndPassword(email, password)
+//                    .addOnCompleteListener(this) { task ->
+//                        //
+//                        if (task.isSuccessful) {
+//                            // Handle registration logic here
+//                            Toast.makeText(
+//                                baseContext,
+//                                "Registration Successful",
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                            // Navigate to onboarding activity
+//                            val intent = Intent(baseContext, SuccessReg::class.java)
+//                            intent.putExtra("FIRST_NAME", firstNameField.text.toString())
+//                            intent.putExtra("SURNAME", lastNameField.text.toString())
+//                            startActivity(intent)
+//                            finish();
+//                        } else {
+//                            // If sign-in fails, display a message to the user.
+//                            Toast.makeText(
+//                                baseContext,
+//                                "Authentication failed: ${task.exception?.message}",
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                        }
+//                    }
+            }
         }
 
 
@@ -334,19 +333,6 @@ class StudentParentReg : AppCompatActivity() {
         val dateFormat = "yyyy-MM-dd"
         val sdf = SimpleDateFormat(dateFormat, Locale.US)
         dateField.setText(sdf.format(calendar.time))
-    }
-
-    private fun togglePasswordVisibility(passwordField: EditText, toggleView: ImageView) {
-        if (passwordField.inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
-            passwordField.inputType =
-                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            toggleView.setImageResource(R.drawable.ic_visibility_off)
-        } else {
-            passwordField.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-            toggleView.setImageResource(R.drawable.ic_visibility_on)
-        }
-        // Move the cursor to the end of the text
-        passwordField.setSelection(passwordField.text.length)
     }
 
     // A method to hash the entered password
