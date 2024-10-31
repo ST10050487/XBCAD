@@ -11,6 +11,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -793,7 +794,8 @@ public class DBHelper extends SQLiteOpenHelper {
                     cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
                     cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1 // Add this line
+                    cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1,
+                    cursor.getInt(cursor.getColumnIndexOrThrow("MATCH_STATUS_ID"))
             );
             cursor.close();
             return fixture;
@@ -814,28 +816,27 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM SPORT_FIXTURES ORDER BY FIXTURE_ID DESC", null);
 
         if (cursor != null && cursor.moveToFirst()) {
-            do {
-                FixtureModel fixture = new FixtureModel(
-                        cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
-                        cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("SPORT")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("LEAGUE")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("MATCH_LOCATION")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DATE")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("MATCH_TIME")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DESCRIPTION")),
-                        cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
-                        cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
-                        cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
-                        cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID")),
-                        cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1 // Add this line
-                );
-                fixtures.add(fixture);
-            } while (cursor.moveToNext());
+            FixtureModel fixture = new FixtureModel(
+                    cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("SPORT")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("LEAGUE")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_LOCATION")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DATE")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_TIME")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DESCRIPTION")),
+                    cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
+                    cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
+                    cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1,
+                    cursor.getInt(cursor.getColumnIndexOrThrow("MATCH_STATUS_ID"))
+            );
             cursor.close();
+            return Collections.singletonList(fixture);
         }
         return fixtures;
     }
@@ -1542,6 +1543,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return playerList;
     }
+    // A method to get all events
     public long addEvent(String name, String date, String time, String location, double price, String description, byte[] picture, int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -1554,6 +1556,69 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("PICTURE", picture);
         values.put("USER_ID", userId);
         return db.insert("EVENTS", null, values);
+    }
+    // A method to get the match staus
+    public String getMatchStatus(int matchStatusId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String matchStatus = null;
+        String query = "SELECT MATCH_STATUS FROM MATCH_STATUS WHERE MATCH_STATUS_ID = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(matchStatusId)});
+
+        if (cursor.moveToFirst()) {
+            matchStatus = cursor.getString(cursor.getColumnIndexOrThrow("MATCH_STATUS"));
+        }
+        cursor.close();
+        return matchStatus;
+    }
+    // A method to get match fixture details
+    // Existing method
+public FixtureModel getFixtureDetailsById(int fixtureId) {
+    SQLiteDatabase db = this.getReadableDatabase();
+    String query = "SELECT * FROM SPORT_FIXTURES WHERE FIXTURE_ID = ?";
+    Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(fixtureId)});
+
+    if (cursor != null && cursor.moveToFirst()) {
+        FixtureModel fixture = new FixtureModel(
+                cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
+                cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
+                cursor.getString(cursor.getColumnIndexOrThrow("SPORT")),
+                cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
+                cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
+                cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP")),
+                cursor.getString(cursor.getColumnIndexOrThrow("LEAGUE")),
+                cursor.getString(cursor.getColumnIndexOrThrow("MATCH_LOCATION")),
+                cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DATE")),
+                cursor.getString(cursor.getColumnIndexOrThrow("MATCH_TIME")),
+                cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DESCRIPTION")),
+                cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
+                cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
+                cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
+                cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID")),
+                cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1,
+                cursor.getInt(cursor.getColumnIndexOrThrow("MATCH_STATUS_ID"))
+        );
+        cursor.close();
+        return fixture;
+    }
+
+    if (cursor != null) {
+        cursor.close();
+    }
+    return null;
+}
+    public ScoresModel getScores(int fixtureId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT HOME_SCORE, AWAY_SCORE FROM TIMES WHERE FIXTURE_ID = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(fixtureId)});
+
+        ScoresModel scores = null;
+        if (cursor.moveToFirst()) {
+            int homeScore = cursor.getInt(cursor.getColumnIndexOrThrow("HOME_SCORE"));
+            int awayScore = cursor.getInt(cursor.getColumnIndexOrThrow("AWAY_SCORE"));
+            scores = new ScoresModel(homeScore, awayScore);
+        }
+        cursor.close();
+        return scores;
     }
 }
 

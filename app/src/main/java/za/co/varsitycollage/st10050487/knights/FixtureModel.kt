@@ -11,10 +11,11 @@ data class FixtureModel(
     val matchLocation: String,
     val matchDate: String,
     val matchTime: String,
-    val matchDescription: String,
+    val matchDescription: String?,
     val homeLogo: ByteArray?,
     val awayLogo: ByteArray?,
     val picture: ByteArray?,
     val leagueId: Int,
-    val isHomeGame: Boolean // Add this line
+    val isHomeGame: Boolean,
+    val matchStatusId: Int
 )

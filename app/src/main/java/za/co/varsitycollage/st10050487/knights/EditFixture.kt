@@ -141,7 +141,7 @@ class EditFixture : AppCompatActivity() {
         val sport = binding.spinnerSport.selectedItem.toString()
         val ageGroup = binding.spinnerAgeGroup.selectedItem.toString()
         val league = binding.spinnerLeague.selectedItem.toString()
-
+        val status = 1;
         // Get the league ID using the mapping
         val leagueId = leagueIdMapping[league]
             ?: throw IllegalArgumentException("League ID not found for league: $league")
@@ -171,7 +171,8 @@ class EditFixture : AppCompatActivity() {
             awayLogo = awayLogo,
             picture = picture,
             leagueId = leagueId, // Use the mapped league ID here
-            isHomeGame = isHomeGame // Add the isHomeGame property
+            isHomeGame = isHomeGame, // Add the isHomeGame property
+            matchStatusId = status
         )
 
         // Update the fixture in the database
