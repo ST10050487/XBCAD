@@ -4,11 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundtheme"
-    tools:context=".StudentParentReg">
+    tools:context=".StudentParentReg"
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/textView"
@@ -75,9 +76,9 @@
             android:layout_marginTop="10dp"
             app:layout_constraintBottom_toTopOf="@+id/ConfirmPasswordField"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/EmailField"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/EmailField"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -96,6 +97,8 @@
             android:layout_height="@dimen/_49sdp"
             android:layout_marginHorizontal="15dp"
             android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/PasswordField"
             app:passwordToggleEnabled="true">
 
@@ -129,8 +132,8 @@
             android:id="@+id/linearLayout"
             android:layout_width="326dp"
             android:layout_height="69dp"
-            android:layout_marginBottom="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -140,10 +143,10 @@
                 android:id="@+id/checkBox"
                 android:layout_width="@dimen/_56sdp"
                 android:layout_height="@dimen/_52sdp"
-                android:padding="@dimen/_5sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:background="@drawable/checkbox_custom"
-                android:gravity="center" />
+                android:gravity="center"
+                android:padding="@dimen/_5sdp" />
 
             <TextView
                 android:id="@+id/textView7"
@@ -164,20 +167,60 @@
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_30sdp"
             android:background="@drawable/regbtn"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/googlebtn"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <LinearLayout
+            android:id="@+id/loginOp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/googlebtn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/Regbtn">
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Already have an account?"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.461"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnGoogle" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" Login"
+                android:fontFamily="@font/inter_bold"
+                android:textColor="@color/maroon"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.461"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnGoogle" />
+        </LinearLayout>
 
         <ImageButton
+            android:visibility="gone"
             android:id="@+id/googlebtn"
             android:layout_width="53dp"
             android:layout_height="53dp"
             android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginBottom="56dp"
             android:background="@drawable/google_logo"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.951"
-            app:layout_constraintStart_toStartOf="@+id/Regbtn" />
+            app:layout_constraintStart_toStartOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
