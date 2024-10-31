@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 //import net.sqlcipher.database.SQLiteOpenHelper;
 import android.util.Log;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +20,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 18;
+    private static final int DATABASE_VERSION = 19;
 
 
     // Constructor
@@ -284,6 +286,16 @@ public class DBHelper extends SQLiteOpenHelper {
                 "('Second Half')," +
                 "('Match Over')," +
                 "('Cancelled')";
+        db.execSQL(CREATE_TABLE_USERS);
+
+  // Create SUSPICIOUS_ACTIVITY table
+        String CREATE_TABLE_SUSPICIOUS_ACTIVITY = "CREATE TABLE IF NOT EXISTS  SUSPICIOUS_ACTIVITY (" +
+                "ACTIVITY_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "USER_ID INTEGER," +
+                "ACTIVITY_DESCRIPTION TEXT," +
+                "TIMESTAMP INTEGER," +
+                "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
+        db.execSQL(CREATE_TABLE_SUSPICIOUS_ACTIVITY);
     }
 
     @Override
@@ -309,6 +321,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS FIXTURE_PLAYERS");
         db.execSQL("DROP TABLE IF EXISTS TIME_HIGHLIGHTS");
         db.execSQL("DROP TABLE IF EXISTS TIME_STATUS");
+        db.execSQL("DROP TABLE IF EXISTS SUSPICIOUS_ACTIVITY");
 
         // Recreate tables
         onCreate(db);
@@ -1151,26 +1164,31 @@ public class DBHelper extends SQLiteOpenHelper {
 
         try {
             // Query to check if user exists
-            cursor = db.rawQuery("SELECT USER_ID FROM USERS WHERE EMAIL=? AND PASSWORD=?", new String[]{email, password});
-
+            cursor = db.rawQuery("SELECT USER_ID, PASSWORD FROM USERS WHERE EMAIL=?", new String[]{email});
             // Checking if cursor is not null and move to first
             if (cursor != null && cursor.moveToFirst()) {
                 int userIdColumnIndex = cursor.getColumnIndex("USER_ID");
-                if (userIdColumnIndex != -1) {
+                int passwordColumnIndex = cursor.getColumnIndex("PASSWORD");
+                if (userIdColumnIndex != -1 && passwordColumnIndex != -1) {
                     // Getting the USER_ID
                     userId = cursor.getInt(userIdColumnIndex);
+                    String storedHashedPassword = cursor.getString(passwordColumnIndex);
+                    // Verify the password using bcrypt
+                    if (BCrypt.checkpw(password, storedHashedPassword)) {
+                        return userId;
+                    } else {
+                        return null; // Password does not match
+                    }
                 }
             }
         } finally {
-            // Closing cursor
             if (cursor != null) {
                 cursor.close();
             }
+            db.close();
         }
-        // Returning the USER_ID or null
-        return userId;
+        return null; // User not found
     }
-
     // Method to check if a user exists and retrieve ROLE_ID
     public PlayerProfileModel getPlayerProfile(int userId) {
         SQLiteDatabase db = this.getReadableDatabase();
