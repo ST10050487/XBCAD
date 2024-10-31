@@ -85,13 +85,11 @@ dependencies {
     implementation(libs.circleimageview)
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
-
     implementation("de.hdodenhof:circleimageview:3.1.0")
-    // Add Firebase Auth library dependency
-    implementation("com.google.firebase:firebase-auth:23.1.0")
-    implementation("com.google.android.gms:play-services-auth:20.2.0")
-
     implementation("de.hdodenhof:circleimageview:3.1.0")
+
+    // Add the Security Crypto library dependency
+    implementation("androidx.security:security-crypto:1.1.0-alpha03")
     // Add Firebase Auth library dependency
     implementation("com.google.firebase:firebase-auth:23.1.0")
     implementation("com.google.android.gms:play-services-auth:20.2.0")
