@@ -197,17 +197,17 @@ class Login : AppCompatActivity() {
         return currentTime < lockoutEndTime
     }
 
-    override fun onPause() {
-        super.onPause()
-        lockout.saveInt("loginAttempts", loginAttempts)
-        lockout.saveLong("lockoutEndTime", lockoutEndTime)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        loginAttempts = lockout.getInt("loginAttempts", 0)
-        lockoutEndTime = lockout.getLong("lockoutEndTime", 0)
-    }
+//    override fun onPause() {
+//        super.onPause()
+//        lockout.saveInt("loginAttempts", loginAttempts)
+//        lockout.saveLong("lockoutEndTime", lockoutEndTime)
+//    }
+//
+//    override fun onResume() {
+//        super.onResume()
+//        loginAttempts = lockout.getInt("loginAttempts", 0)
+//        lockoutEndTime = lockout.getLong("lockoutEndTime", 0)
+//    }
 
 //    private fun loginUser() {
 //        // if the user inputs are valid
