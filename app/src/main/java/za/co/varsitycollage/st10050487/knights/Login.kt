@@ -1,5 +1,6 @@
 package za.co.varsitycollage.st10050487.knights
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -18,29 +19,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.database.database
 import org.mindrot.jbcrypt.BCrypt
 import za.co.varsitycollage.st10050487.knights.databinding.ActivityLoginBinding
 import kotlin.math.log10
 
 class Login : AppCompatActivity() {
-    private lateinit var binding: ActivityLoginBinding
-//    private lateinit var emailTxt: EditText
-//    private lateinit var passwordTxt: EditText
-//    private lateinit var loginBtn: Button
-//    private lateinit var registerBtn: Button
-//    private lateinit var dbHelper: DBHelper
-    //          Initializing views
-//            emailTxt = findViewById(R.id.emailTxt)
-//            passwordTxt = findViewById(R.id.passwordTxt)
-//            loginBtn = findViewById(R.id.LoginBtn)
-//            registerBtn = findViewById(R.id.RegisterBtn)
-//            dbHelper = DBHelper(this)
+    private lateinit var binding: ActivityLoginBinding // private lateinit var emailTxt: EditText // private lateinit var passwordTxt: EditText // private lateinit var loginBtn: Button // private lateinit var registerBtn: Button // private lateinit var dbHelper: DBHelper
     private lateinit var regOp: Button
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
@@ -65,7 +53,7 @@ class Login : AppCompatActivity() {
         setContentView(binding.root)
 
 
-
+        auth = FirebaseAuth.getInstance()
         emailEditText = binding.emailTxt
         passwordEditText = binding.passwordTxt
         loginButton = binding.LoginBtn
@@ -76,7 +64,7 @@ class Login : AppCompatActivity() {
 
         // Create a GoogleSignInOptions object with the default sign-in options
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id2))
+            .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
 
@@ -92,6 +80,9 @@ class Login : AppCompatActivity() {
         }
 
 
+        // Initializing views
+// emailTxt = findViewById(R.id.emailTxt) // passwordTxt = findViewById(R.id.passwordTxt) // loginBtn = findViewById(R.id.LoginBtn) // registerBtn = findViewById(R.id.RegisterBtn) // dbHelper = DBHelper(this)
+
         // Initializing the validation class
         valid = Validations()
 
@@ -104,7 +95,6 @@ class Login : AppCompatActivity() {
 
         // Set click listener for the Login button
         loginButton.setOnClickListener {
-           // throw RuntimeException("Test Crash")
             //getUserInput()
             loginUser()
         }
@@ -122,7 +112,6 @@ class Login : AppCompatActivity() {
                     val user = auth.currentUser
                     user?.let {
                         val uid = user.uid
-                        FirebaseCrashlytics.getInstance().setUserId(uid)
                         database.reference.child("users").child(uid).get()
                             .addOnSuccessListener { dataSnapshot ->
                                 val intent = Intent(
@@ -146,8 +135,6 @@ class Login : AppCompatActivity() {
                 }
                 // If the user is not authenticated, show a toast message
                 else {
-              //      Logger.logSuspiciousActivity("Invalid login attempt for email: $email")
-                    Logger.logFailedLoginEvent(email)
                     Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -160,7 +147,7 @@ class Login : AppCompatActivity() {
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
-    //Method to Handle the Result of the Sign-In Attempt
+    //Method to handle the result of the sign-in attempt
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -173,17 +160,19 @@ class Login : AppCompatActivity() {
             try {
                 // Attempt to get the GoogleSignInAccount from the task
                 val account: GoogleSignInAccount = task.getResult(ApiException::class.java)
+
                 // If successful, authenticate with the obtained ID token
                 auth(account.idToken!!)
+
             } catch (e: ApiException) {
-                Logger.logSuspiciousActivity("Google Sign-In failed: ${e.message}")
-                // If an exception occurs, show a toast message indicating sign-in failure
-                Toast.makeText(this, "Google Sign-In Failed", Toast.LENGTH_SHORT).show()
+                Log.w(TAG, "Google sign in failed", e)
+                Toast.makeText(this, "Google Sign-In Failed: ${e.statusCode}", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
 
-    //Method to Authenticate the User with Email and Password
+    //Method to authenticate the user for normal login
     private fun authenticateUser(email: String, password: String, callback: (Boolean) -> Unit) {
         // Authenticate the user with the provided email and password
         auth.signInWithEmailAndPassword(email, password)
@@ -196,7 +185,6 @@ class Login : AppCompatActivity() {
                 }
                 // If the task is not successful, show a toast message indicating authentication failure
                 else {
-                    Logger.logSuspiciousActivity("Authentication failed for email: $email - ${task.exception?.message}")
                     callback(false)
                     Toast.makeText(
                         this,
@@ -207,7 +195,7 @@ class Login : AppCompatActivity() {
             }
     }
 
-    //Method to Authenticate the User for SSO Login/Registration
+    //Method to authenticate the user for SSO login / registration
     private fun auth(idToken: String) {
         // Create a credential using the ID token
         val credential: AuthCredential = GoogleAuthProvider.getCredential(idToken, null)
@@ -218,7 +206,6 @@ class Login : AppCompatActivity() {
                     // If sign-in is successful, get the current user
                     val user = auth.currentUser
                     if (user != null) {
-                        FirebaseCrashlytics.getInstance().setUserId(user.uid)
                         // Check if the user is registered in the database
                         database.reference.child("users").child(user.uid).get()
                             .addOnSuccessListener {
@@ -238,11 +225,55 @@ class Login : AppCompatActivity() {
                             }
                     }
                 } else {
-                    Logger.logSuspiciousActivity("SSO Authentication failed: ${task.exception?.message}")
                     // If sign-in fails, display a message to the user
-                    Logger.logSuspiciousActivity("SSO Authentication failed: ${task.exception?.message}")
+                    Toast.makeText(
+                        this,
+                        "Authentication failed: ${task.exception?.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
+    }
+
+    // A method to get user input
+    private fun getUserInput() {
+        val email = emailEditText.text.toString()
+        val password = passwordEditText.text.toString()
+        val encryptedPassword: String
+
+        if (Validation()) {
+            // Hashing the inputted password
+            //encryptedPassword = hashPassword(password)
+            // Check if user exists in the database
+            val dbHelper = DBHelper(this)
+            val userId = dbHelper.validateUser(email, password)
+
+            if (userId != null) {
+                // Get the ROLE_ID of the user
+                val roleId = dbHelper.getRoleId(userId)
+
+                val intent = when (roleId) {
+                    1 -> Intent(this, AdminHome::class.java)
+                    2, 3 -> Intent(this, HomeScreen::class.java)
+                    else -> null
+                }
+
+                if (intent != null) {
+                    // Passing the USER_ID to the respective Activity
+                    intent.putExtra("USER_ID", userId)
+                    startActivity(intent)
+                    // Finishing the login activity once the user is logged in
+                    finish()
+                } else {
+                    Toast.makeText(this, "Invalid role", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                // User does not exist or incorrect password
+                emailEditText.error = "Invalid email or password"
+                passwordEditText.error = "Invalid email or password"
+                Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun Validation(): Boolean {
@@ -264,56 +295,12 @@ class Login : AppCompatActivity() {
             Toast.makeText(this, "Invalid password", Toast.LENGTH_SHORT).show()
             isValid = false
         }
+
+//        //  A method to hash the entered password
+//        fun hashPassword(password: String): String {
+//            return BCrypt.hashpw(password, BCrypt.gensalt())
+//        }
         return isValid
     }
-
-    //////******************************************///////////
-    // A method to get user input
-//    private fun getUserInput() {
-//        val email = emailEditText.text.toString()
-//        val password = passwordEditText.text.toString()
-//        val encryptedPassword: String
-//
-//        if (Validation()) {
-//            // Hashing the inputted password
-//            //encryptedPassword = hashPassword(password)
-//            // Check if user exists in the database
-//            val dbHelper = DBHelper(this)
-//            val userId = dbHelper.validateUser(email, password)
-//
-//            if (userId != null) {
-//                // Get the ROLE_ID of the user
-//                val roleId = dbHelper.getRoleId(userId)
-//
-//                val intent = when (roleId) {
-//                    1 -> Intent(this, AdminHome::class.java)
-//                    2, 3 -> Intent(this, HomeScreen::class.java)
-//                    else -> null
-//                }
-//
-//                if (intent != null) {
-//                    // Passing the USER_ID to the respective Activity
-//                    intent.putExtra("USER_ID", userId)
-//                    startActivity(intent)
-//                    // Finishing the login activity once the user is logged in
-//                    finish()
-//                } else {
-//                    Toast.makeText(this, "Invalid role", Toast.LENGTH_SHORT).show()
-//                }
-//            } else {
-//                // User does not exist or incorrect password
-//                emailEditText.error = "Invalid email or password"
-//                passwordEditText.error = "Invalid email or password"
-//                Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//    }
-
-
-//    // A method to hash the entered password
-//    fun hashPassword(password: String): String {
-//        return BCrypt.hashpw(password, BCrypt.gensalt())
-//    }
 }
-
 
