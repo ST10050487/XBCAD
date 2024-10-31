@@ -5,7 +5,7 @@ on:
     branches: [ "Hannah-Dev2" ]
   pull_request:
     branches: [ "Hannah-Dev2" ]
-  # Uncomment the line below to enable manual triggering
+  # Uncomment the line lbelow to enable manual triggering
   # workflow_dispatch:
 
 jobs:
