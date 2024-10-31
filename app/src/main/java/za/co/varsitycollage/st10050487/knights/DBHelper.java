@@ -373,6 +373,37 @@ public class DBHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
+    //__Suspicious Activity Table CRUD_________________________________________________________________________________\\
+    public void addSuspiciousActivity(int userId, String activityDescription, long timestamp) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("USER_ID", userId);
+        values.put("ACTIVITY_DESCRIPTION", activityDescription);
+        values.put("TIMESTAMP", timestamp);
+        db.insert("SUSPICIOUS_ACTIVITY", null, values);
+    }
+    public void addSuspiciousActivity(String userId, String activityDescription, long timestamp) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("UNKNOWN", userId);
+        values.put("ACTIVITY_DESCRIPTION", activityDescription);
+        values.put("TIMESTAMP", timestamp);
+        db.insert("SUSPICIOUS_ACTIVITY", null, values);
+    }
+    public Integer getUserIdByEmail(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Integer userId = null;
+        String query = "SELECT USER_ID FROM USERS WHERE EMAIL = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+
+        if (cursor.moveToFirst()) {
+            userId = cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID"));
+        }
+        cursor.close();
+        db.close();
+        return userId;
+    }
+
     public List<EventModel> getAllEvents() {
         List<EventModel> events = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
