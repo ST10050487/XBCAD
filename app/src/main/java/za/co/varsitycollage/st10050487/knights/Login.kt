@@ -138,7 +138,7 @@ class Login : AppCompatActivity() {
                 loginAttempts = 0 // Reset attempts on successful login
                 val intent = when (roleId) {
                     1 -> Intent(this, AdminHome::class.java)
-                    2, 3 -> Intent(this, EventManagement::class.java)
+                    2, 3 -> Intent(this, HomeActivity::class.java)
                     else -> null
                 }
 
