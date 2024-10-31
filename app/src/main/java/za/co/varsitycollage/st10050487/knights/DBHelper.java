@@ -133,8 +133,11 @@ public class DBHelper extends SQLiteOpenHelper {
                 "AWAY_SCORE INTEGER," +
                 "FIXTURE_ID INTEGER NOT NULL," +
                 "MATCH_STATUS TEXT NOT NULL," +
-                "FOREIGN KEY (TIME_STATUS_ID) REFERENCES TIME_STATUS(TIME_STATUS_ID)," +
-                "FOREIGN KEY (FIXTURE_ID) REFERENCES SPORT_FIXTURES(FIXTURE_ID))";
+                "MATCH_STATUS_ID INTEGER," +  // Ensure this is the correct column name
+                "FOREIGN KEY (FIXTURE_ID) REFERENCES SPORT_FIXTURES(FIXTURE_ID)," + // Comma here
+                "FOREIGN KEY (MATCH_STATUS_ID) REFERENCES MATCH_STATUS(MATCH_STATUS_ID)" + // Comma removed
+                ");"; // Add a closing parenthesis and semicolon at the end
+
         db.execSQL(CREATE_TABLE_TIMES);
 
         // Create SCHOOL_MERCH table
@@ -570,7 +573,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // TIMES
-    public void addTimes(String meetingTime, String busDepatureTime, String busReturnTime, String message, String matchStatus) {
+    public void addTimes(String meetingTime, String busDepatureTime, String busReturnTime, String message, int matchStatus) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("MEETING_TIME", meetingTime);
@@ -606,7 +609,7 @@ public class DBHelper extends SQLiteOpenHelper {
             TimesheetModel timesheet = new TimesheetModel(
                     cursor.getInt(cursor.getColumnIndexOrThrow("TIME_ID")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_STATUS")), // Use MATCH_STATUS
+                    cursor.getInt(cursor.getColumnIndexOrThrow("MATCH_STATUS")), // Use MATCH_STATUS as an integer
                     cursor.getString(cursor.getColumnIndexOrThrow("MEETING_TIME")),
                     cursor.getString(cursor.getColumnIndexOrThrow("BUS_DEPATURE_TIME")),
                     cursor.getString(cursor.getColumnIndexOrThrow("BUS_RETURN_TIME")),
@@ -785,6 +788,35 @@ public class DBHelper extends SQLiteOpenHelper {
         return fixid;
     }
 
+    // A method to get the match staus
+    public String getMatchStatus(int matchStatusId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String matchStatus = null;
+        String query = "SELECT MATCH_STATUS FROM MATCH_STATUS WHERE MATCH_STATUS_ID = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(matchStatusId)});
+
+        if (cursor.moveToFirst()) {
+            matchStatus = cursor.getString(cursor.getColumnIndexOrThrow("MATCH_STATUS"));
+        }
+        cursor.close();
+        return matchStatus;
+    }
+
+    public ScoresModel getScores(int fixtureId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT HOME_SCORE, AWAY_SCORE FROM TIMES WHERE FIXTURE_ID = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(fixtureId)});
+
+        ScoresModel scores = null;
+        if (cursor.moveToFirst()) {
+            int homeScore = cursor.getInt(cursor.getColumnIndexOrThrow("HOME_SCORE"));
+            int awayScore = cursor.getInt(cursor.getColumnIndexOrThrow("AWAY_SCORE"));
+            scores = new ScoresModel(homeScore, awayScore);
+        }
+        cursor.close();
+        return scores;
+    }
+
     public FixtureModel getFixtureDetails(int fixtureId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM SPORT_FIXTURES WHERE FIXTURE_ID = ?";
@@ -807,7 +839,9 @@ public class DBHelper extends SQLiteOpenHelper {
                     cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
                     cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1 // Add this line
+                    cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1,
+                    cursor.getInt(cursor.getColumnIndexOrThrow("MATCH_STATUS_ID"))
+
             );
             cursor.close();
             return fixture;
@@ -845,7 +879,8 @@ public class DBHelper extends SQLiteOpenHelper {
                         cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
                         cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
                         cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID")),
-                        cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1 // Add this line
+                        cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1,
+                        cursor.getInt(cursor.getColumnIndexOrThrow("MATCH_STATUS_ID"))
                 );
                 fixtures.add(fixture);
             } while (cursor.moveToNext());
@@ -1033,9 +1068,9 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    /*********************************/  /*********************************/  /*********************************/
+/*********************************/  /*********************************/  /*********************************/
     /*********************************/
-    // A method to add users to the database
+// A method to add users to the database
     public void addUsers(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
         // Add users to the database
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1261,7 +1296,7 @@ public class DBHelper extends SQLiteOpenHelper {
             return false;
         }
     }
-    ////////////// DBHelper.java
+////////////// DBHelper.java
 
     public List<String> getAllLeagues() {
         List<String> leagues = new ArrayList<>();
@@ -1406,7 +1441,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.insert("SCHOOL_MERCH", null, values);
     }
 
-    //Umar Implementation
+//Umar Implementation
 
     // Method to get all fixtures
     public List<MatchDis> getUpcomingFixtures() {
