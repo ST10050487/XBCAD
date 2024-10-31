@@ -379,6 +379,10 @@ class CreateSportFixture : AppCompatActivity() {
             }
         }
 
+        // Determine if the game is a home game based on venue name
+        val isHomeGame = venue?.contains("Bosemansdam high school", ignoreCase = true) == true ||
+                venue?.contains("Boseman'sdam", ignoreCase = true) == true
+
         val values = ContentValues().apply {
             put("SPORT", selectedSport)
             put("HOME_TEAM", homeTeamName)
@@ -393,6 +397,7 @@ class CreateSportFixture : AppCompatActivity() {
             put("MATCH_DESCRIPTION", matchDescription)
             put("USER_ID", userId) // Use the retrieved user ID
             put("LEAGUE_ID", leagueId)
+            put("IS_HOME_GAME", isHomeGame) // Store whether it's a home game
         }
 
         val fixtureId = dbHelper.writableDatabase.insert("SPORT_FIXTURES", null, values)

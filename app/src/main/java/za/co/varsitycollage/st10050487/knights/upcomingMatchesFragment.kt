@@ -37,25 +37,21 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
         val dbHelper = DBHelper(requireContext())
         val fixtures = dbHelper.getAllFixtures()
 
-        // Inside your upcomingMatchesFragment class
-
+        // Inside the for loop in onCreateView
         if (fixtures.isNotEmpty()) {
             for (fixture in fixtures) {
-                // Check if no sports are selected, then show all fixtures
                 if ((selectedSports.isEmpty() || selectedSports.contains(fixture.sport)) &&
                     (searchQuery.isEmpty() || fixture.homeTeam.contains(
                         searchQuery,
                         true
                     ) || fixture.awayTeam.contains(searchQuery, true))
                 ) {
-                    // Inflate a new fixture card layout
                     val fixtureCard = LayoutInflater.from(requireContext()).inflate(
                         if (isAdmin) R.layout.card_layout_admin_upcoming else R.layout.card_layout_upcoming,
                         linearLayout,
                         false
                     )
 
-                    // Find views by their IDs in the fixture card
                     val fixtureDate = fixtureCard.findViewById<TextView>(R.id.fixture_date)
                     val team1Logo = fixtureCard.findViewById<ImageView>(R.id.team1_logo)
                     val team1Name = fixtureCard.findViewById<TextView>(R.id.team1_name)
@@ -65,12 +61,10 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                     val team2Name = fixtureCard.findViewById<TextView>(R.id.team2_name)
                     val matchType = fixtureCard.findViewById<TextView>(R.id.match_type)
                     val ageGroup = fixtureCard.findViewById<TextView>(R.id.age_group)
-
-                    // Only find eventEdit if isAdmin is true
                     val eventEdit: ImageView? = if (isAdmin) {
                         fixtureCard.findViewById<ImageView>(R.id.event_edit)
                     } else {
-                        null // No edit button for non-admins
+                        null
                     }
 
                     FormattingDate(fixture, fixtureDate, fixtureDateBox)
@@ -79,7 +73,14 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                         team1Logo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
                     }
                     team1Name.text = fixture.homeTeam
-                    fixtureTime.text = fixture.matchTime
+
+                    // Set the fixture time text with home/away game indication
+                    fixtureTime.text = if (fixture.isHomeGame) {
+                        "${fixture.matchTime} (Home Game)"
+                    } else {
+                        "${fixture.matchTime} (Away Game)"
+                    }
+
                     fixture.awayLogo?.let {
                         team2Logo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
                     }
@@ -87,21 +88,18 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                     matchType.text = fixture.sport
                     ageGroup.text = fixture.ageGroup
 
-                    // Set an OnClickListener to navigate to EditFixture only if eventEdit is not null
                     eventEdit?.setOnClickListener {
                         val intent = Intent(requireContext(), EditFixture::class.java)
-                        intent.putExtra("fixture_id", fixture.fixtureId) // Pass the fixture ID
+                        intent.putExtra("fixture_id", fixture.fixtureId)
                         startActivity(intent)
                     }
 
-                    // Add the inflated fixture card to the LinearLayout
                     linearLayout.addView(fixtureCard)
                 }
             }
         } else {
             Log.e("UpcomingMatchesFragment", "No fixtures found in the database.")
         }
-
         return view
     }
 

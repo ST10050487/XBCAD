@@ -150,6 +150,10 @@ class EditFixture : AppCompatActivity() {
         val awayLogo = awayHolder
         val picture = null
 
+        // Determine if the game is a home game based on venue name
+        val isHomeGame = venue.contains("Bosemansdam high school", ignoreCase = true) ||
+                venue.contains("Boseman'sdam", ignoreCase = true)
+
         // Prepare the fixture model
         val fixture = FixtureModel(
             fixtureId = fixtureId,
@@ -166,7 +170,8 @@ class EditFixture : AppCompatActivity() {
             homeLogo = homeLogo,
             awayLogo = awayLogo,
             picture = picture,
-            leagueId = leagueId // Use the mapped league ID here
+            leagueId = leagueId, // Use the mapped league ID here
+            isHomeGame = isHomeGame // Add the isHomeGame property
         )
 
         // Update the fixture in the database

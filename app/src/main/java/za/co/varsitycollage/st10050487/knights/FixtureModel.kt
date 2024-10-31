@@ -15,5 +15,6 @@ data class FixtureModel(
     val homeLogo: ByteArray?,
     val awayLogo: ByteArray?,
     val picture: ByteArray?,
-    val leagueId: Int
+    val leagueId: Int,
+    val isHomeGame: Boolean // Add this line
 )
