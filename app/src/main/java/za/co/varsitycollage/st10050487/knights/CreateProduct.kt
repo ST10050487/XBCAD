@@ -22,7 +22,7 @@ class CreateProduct : AppCompatActivity() {
     private lateinit var imageView: ImageView
     private val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_IMAGE_PICK = 2
-
+//comm
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
