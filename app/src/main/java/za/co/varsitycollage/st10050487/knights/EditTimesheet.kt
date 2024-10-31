@@ -121,6 +121,18 @@ class EditTimesheet : AppCompatActivity() {
         }
     }
 
+    private fun loadHighlights(timesheetId: Int) {
+        val highlights = dbHelper.getHighlights(timesheetId)
+        highlights.forEach { highlight ->
+            imageByteArrayList.add(highlight)
+            fileNameList.add("Highlight ${imageByteArrayList.size}") // Change as needed
+        }
+        adapter.getItems(
+            imageByteArrayList,
+            fileNameList
+        ) // Assuming you have a method to set the adapter items
+    }
+
     private fun updateTimesheetData() {
         val meetTime = binding.txtMeetTime.text.toString()
         val busDepartureTime = binding.txtDepTime.text.toString()
