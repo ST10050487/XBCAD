@@ -13,7 +13,6 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -132,10 +131,13 @@ public class DBHelper extends SQLiteOpenHelper {
                 "MAN_OF_THE_MATCH TEXT," +
                 "HOME_SCORE INTEGER," +
                 "AWAY_SCORE INTEGER," +
-                "TIME_STATUS_ID INTEGER NOT NULL," +
                 "FIXTURE_ID INTEGER NOT NULL," +
-                "FOREIGN KEY (TIME_STATUS_ID) REFERENCES TIME_STATUS(TIME_STATUS_ID)," +
-                "FOREIGN KEY (FIXTURE_ID) REFERENCES SPORT_FIXTURES(FIXTURE_ID))";
+                "MATCH_STATUS TEXT NOT NULL," +
+                "MATCH_STATUS_ID INTEGER," +  // Ensure this is the correct column name
+                "FOREIGN KEY (FIXTURE_ID) REFERENCES SPORT_FIXTURES(FIXTURE_ID)," + // Comma here
+                "FOREIGN KEY (MATCH_STATUS_ID) REFERENCES MATCH_STATUS(MATCH_STATUS_ID)" + // Comma removed
+                ");"; // Add a closing parenthesis and semicolon at the end
+
         db.execSQL(CREATE_TABLE_TIMES);
 
         // Create SCHOOL_MERCH table
@@ -395,6 +397,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("TIMESTAMP", timestamp);
         db.insert("SUSPICIOUS_ACTIVITY", null, values);
     }
+
     public void addSuspiciousActivity(String userId, String activityDescription, long timestamp) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -403,6 +406,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("TIMESTAMP", timestamp);
         db.insert("SUSPICIOUS_ACTIVITY", null, values);
     }
+
     public Integer getUserIdByEmail(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
         Integer userId = null;
@@ -581,14 +585,14 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // TIMES
-    public void addTimes(String meetingTime, String busDepatureTime, String busReturnTime, String message) {
-        // Add times to the database
+    public void addTimes(String meetingTime, String busDepatureTime, String busReturnTime, String message, int matchStatus) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("MEETING_TIME", meetingTime);
         values.put("BUS_DEPATURE_TIME", busDepatureTime);
         values.put("BUS_RETURN_TIME", busReturnTime);
         values.put("MESSAGE", message);
+        values.put("MATCH_STATUS", matchStatus); // Keep this line
         db.insert("TIMES", null, values);
     }
 
@@ -617,12 +621,12 @@ public class DBHelper extends SQLiteOpenHelper {
             TimesheetModel timesheet = new TimesheetModel(
                     cursor.getInt(cursor.getColumnIndexOrThrow("TIME_ID")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("TIMES_STATUS_ID")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("MATCH_STATUS")), // Use MATCH_STATUS as an integer
                     cursor.getString(cursor.getColumnIndexOrThrow("MEETING_TIME")),
                     cursor.getString(cursor.getColumnIndexOrThrow("BUS_DEPATURE_TIME")),
                     cursor.getString(cursor.getColumnIndexOrThrow("BUS_RETURN_TIME")),
                     cursor.getString(cursor.getColumnIndexOrThrow("MESSAGE")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("ANOTHER_STRING")), // Add this line
+                    cursor.getString(cursor.getColumnIndexOrThrow("MAN_OF_THE_MATCH")), // Adjusted to match your data class
                     cursor.isNull(cursor.getColumnIndexOrThrow("HOME_SCORE")) ? null : cursor.getInt(cursor.getColumnIndexOrThrow("HOME_SCORE")),
                     cursor.isNull(cursor.getColumnIndexOrThrow("AWAY_SCORE")) ? null : cursor.getInt(cursor.getColumnIndexOrThrow("AWAY_SCORE"))
             );
@@ -643,7 +647,6 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("BUS_DEPATURE_TIME", timesheet.getBusDepartureTime());
         values.put("BUS_RETURN_TIME", timesheet.getBusReturnTime());
         values.put("MESSAGE", timesheet.getMessage());
-        values.put("TIMES_STATUS_ID", timesheet.getStatusId());
         values.put("HOME_SCORE", timesheet.getHomeScore());
         values.put("AWAY_SCORE", timesheet.getAwayScore());
 
@@ -797,6 +800,35 @@ public class DBHelper extends SQLiteOpenHelper {
         return fixid;
     }
 
+    // A method to get the match staus
+    public String getMatchStatus(int matchStatusId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String matchStatus = null;
+        String query = "SELECT MATCH_STATUS FROM MATCH_STATUS WHERE MATCH_STATUS_ID = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(matchStatusId)});
+
+        if (cursor.moveToFirst()) {
+            matchStatus = cursor.getString(cursor.getColumnIndexOrThrow("MATCH_STATUS"));
+        }
+        cursor.close();
+        return matchStatus;
+    }
+
+    public ScoresModel getScores(int fixtureId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT HOME_SCORE, AWAY_SCORE FROM TIMES WHERE FIXTURE_ID = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(fixtureId)});
+
+        ScoresModel scores = null;
+        if (cursor.moveToFirst()) {
+            int homeScore = cursor.getInt(cursor.getColumnIndexOrThrow("HOME_SCORE"));
+            int awayScore = cursor.getInt(cursor.getColumnIndexOrThrow("AWAY_SCORE"));
+            scores = new ScoresModel(homeScore, awayScore);
+        }
+        cursor.close();
+        return scores;
+    }
+
     public FixtureModel getFixtureDetails(int fixtureId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM SPORT_FIXTURES WHERE FIXTURE_ID = ?";
@@ -821,6 +853,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1,
                     cursor.getInt(cursor.getColumnIndexOrThrow("MATCH_STATUS_ID"))
+
             );
             cursor.close();
             return fixture;
@@ -841,27 +874,29 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM SPORT_FIXTURES ORDER BY FIXTURE_ID DESC", null);
 
         if (cursor != null && cursor.moveToFirst()) {
-            FixtureModel fixture = new FixtureModel(
-                    cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("SPORT")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("LEAGUE")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_LOCATION")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DATE")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_TIME")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DESCRIPTION")),
-                    cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
-                    cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
-                    cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1,
-                    cursor.getInt(cursor.getColumnIndexOrThrow("MATCH_STATUS_ID"))
-            );
+            do {
+                FixtureModel fixture = new FixtureModel(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SPORT")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("LEAGUE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("MATCH_LOCATION")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DATE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("MATCH_TIME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DESCRIPTION")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1,
+                        cursor.getInt(cursor.getColumnIndexOrThrow("MATCH_STATUS_ID"))
+                );
+                fixtures.add(fixture);
+            } while (cursor.moveToNext());
             cursor.close();
-            return Collections.singletonList(fixture);
         }
         return fixtures;
     }
@@ -1045,9 +1080,9 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    /*********************************/  /*********************************/  /*********************************/
+/*********************************/  /*********************************/  /*********************************/
     /*********************************/
-    // A method to add users to the database
+// A method to add users to the database
     public void addUsers(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
         // Add users to the database
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1273,7 +1308,7 @@ public class DBHelper extends SQLiteOpenHelper {
             return false;
         }
     }
-    ////////////// DBHelper.java
+////////////// DBHelper.java
 
     public List<String> getAllLeagues() {
         List<String> leagues = new ArrayList<>();
@@ -1455,7 +1490,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.insert("SCHOOL_MERCH", null, values);
     }
 
-    //Umar Implementation
+//Umar Implementation
 
     // Method to get all fixtures
     public List<MatchDis> getUpcomingFixtures() {
@@ -1610,7 +1645,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return playerList;
     }
-    // A method to get all events
+
     public long addEvent(String name, String date, String time, String location, double price, String description, byte[] picture, int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -1624,68 +1659,6 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("USER_ID", userId);
         return db.insert("EVENTS", null, values);
     }
-    // A method to get the match staus
-    public String getMatchStatus(int matchStatusId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String matchStatus = null;
-        String query = "SELECT MATCH_STATUS FROM MATCH_STATUS WHERE MATCH_STATUS_ID = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(matchStatusId)});
 
-        if (cursor.moveToFirst()) {
-            matchStatus = cursor.getString(cursor.getColumnIndexOrThrow("MATCH_STATUS"));
-        }
-        cursor.close();
-        return matchStatus;
-    }
-    // A method to get match fixture details
-    // Existing method
-public FixtureModel getFixtureDetailsById(int fixtureId) {
-    SQLiteDatabase db = this.getReadableDatabase();
-    String query = "SELECT * FROM SPORT_FIXTURES WHERE FIXTURE_ID = ?";
-    Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(fixtureId)});
 
-    if (cursor != null && cursor.moveToFirst()) {
-        FixtureModel fixture = new FixtureModel(
-                cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
-                cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
-                cursor.getString(cursor.getColumnIndexOrThrow("SPORT")),
-                cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
-                cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
-                cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP")),
-                cursor.getString(cursor.getColumnIndexOrThrow("LEAGUE")),
-                cursor.getString(cursor.getColumnIndexOrThrow("MATCH_LOCATION")),
-                cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DATE")),
-                cursor.getString(cursor.getColumnIndexOrThrow("MATCH_TIME")),
-                cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DESCRIPTION")),
-                cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
-                cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
-                cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
-                cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID")),
-                cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1,
-                cursor.getInt(cursor.getColumnIndexOrThrow("MATCH_STATUS_ID"))
-        );
-        cursor.close();
-        return fixture;
-    }
-
-    if (cursor != null) {
-        cursor.close();
-    }
-    return null;
 }
-    public ScoresModel getScores(int fixtureId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT HOME_SCORE, AWAY_SCORE FROM TIMES WHERE FIXTURE_ID = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(fixtureId)});
-
-        ScoresModel scores = null;
-        if (cursor.moveToFirst()) {
-            int homeScore = cursor.getInt(cursor.getColumnIndexOrThrow("HOME_SCORE"));
-            int awayScore = cursor.getInt(cursor.getColumnIndexOrThrow("AWAY_SCORE"));
-            scores = new ScoresModel(homeScore, awayScore);
-        }
-        cursor.close();
-        return scores;
-    }
-}
-
