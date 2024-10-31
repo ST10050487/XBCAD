@@ -1542,5 +1542,18 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return playerList;
     }
+    public long addEvent(String name, String date, String time, String location, double price, String description, byte[] picture, int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("EVENT_NAME", name);
+        values.put("EVENT_DATE", date);
+        values.put("EVENT_TIME", time);
+        values.put("EVENT_LOCATION", location);
+        values.put("EVENT_PRICE", price);
+        values.put("EVENT_DESCRIPTION", description);
+        values.put("PICTURE", picture);
+        values.put("USER_ID", userId);
+        return db.insert("EVENTS", null, values);
+    }
 }
 
