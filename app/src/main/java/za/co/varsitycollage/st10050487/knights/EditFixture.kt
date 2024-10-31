@@ -3,7 +3,6 @@ package za.co.varsitycollage.st10050487.knights
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -14,7 +13,6 @@ import android.provider.MediaStore
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import za.co.varsitycollage.st10050487.knights.databinding.ActivityEditFixtureBinding
@@ -34,7 +32,7 @@ class EditFixture : AppCompatActivity() {
     private val PICK_IMAGE_REQUEST = 1
     private val CAMERA_REQUEST = 2
     private var isHomeLogo: Boolean = true
-    private var fixtureId: Int = 1
+    private var fixtureId: Int = 5
     private var userId: Int = 1
     private var leagueId: Int = 0
 
@@ -44,7 +42,6 @@ class EditFixture : AppCompatActivity() {
         setContentView(binding.root)
 
         dbHelper = DBHelper(this)
-        dbHelper = DBHelper.getInstance(this)
 
         // Fetch sports data from the database
         sportsList = dbHelper.getAllSports()
@@ -68,10 +65,6 @@ class EditFixture : AppCompatActivity() {
             showDatePickerDialog()
         }
 
-        binding.txtTimeLayout.setEndIconOnClickListener {
-            showTimePickerDialog(binding.txtTime)
-        }
-
         binding.btnUpdate.setOnClickListener {
             if (validateInputs()) {
                 updateFixtureData()
@@ -90,8 +83,8 @@ class EditFixture : AppCompatActivity() {
             }
         }
         // take out
-     // val id = dbHelper.addDummyFixtureWithUserId(userId)
-     //   Toast.makeText(this, id.toString(), Toast.LENGTH_SHORT).show()
+       // val id = dbHelper.addDummyFixtureWithUserId(userId)
+        //Toast.makeText(this, id.toString(), Toast.LENGTH_SHORT).show()
         loadFixture(fixtureId)
     }
 
@@ -105,10 +98,10 @@ class EditFixture : AppCompatActivity() {
         val sport = binding.spinnerSport.selectedItem.toString()
         val ageGroup = binding.spinnerAgeGroup.selectedItem.toString()
         val league = binding.spinnerLeague.selectedItem.toString()
+        val leagueId = binding.spinnerLeague.selectedItem.toString().toInt()
         val homeLogo = homeHolder
         val awayLogo = awayHolder
         val picture = null
-        val leagueId = dbHelper.getLeagueIdByName(league)
 
         val fixture = FixtureModel(
             fixtureId = fixtureId,
@@ -136,25 +129,6 @@ class EditFixture : AppCompatActivity() {
             Toast.makeText(this, "Failed to update fixture", Toast.LENGTH_SHORT).show()
         }
     }
-    // Function to set up time pickers for the time fields
-
-
-    // Function to show a time picker dialog
-    private fun showTimePickerDialog(textView: TextView) {
-    val currentText = textView.text.toString()
-    val calendar = Calendar.getInstance()
-    val (hour, minute) = if (currentText.isNotEmpty()) {
-        val parts = currentText.split(":")
-        parts[0].toInt() to parts[1].toInt()
-    } else {
-        calendar.get(Calendar.HOUR_OF_DAY) to calendar.get(Calendar.MINUTE)
-    }
-
-    val timePickerDialog = TimePickerDialog(this, { _, selectedHour, selectedMinute ->
-        textView.text = String.format("%02d:%02d", selectedHour, selectedMinute)
-    }, hour, minute, true)
-    timePickerDialog.show()
-}
     private fun populateSpinner(spinner: Spinner, data: List<String>) {
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, data)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -341,11 +315,11 @@ class EditFixture : AppCompatActivity() {
             return false
         }
 
-//        val (isValid, errorMessage) = isDateValid(date)
-//        if (!isValid) {
-//            binding.txtDate.error = errorMessage
-//            return false
-//        }
+        val (isValid, errorMessage) = isDateValid(date)
+        if (!isValid) {
+            binding.txtDate.error = errorMessage
+            return false
+        }
         if (description.isEmpty()) {
             binding.txtDescrip.error = "Description is required"
             return false

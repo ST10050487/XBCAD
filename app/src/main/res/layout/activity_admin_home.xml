@@ -22,7 +22,7 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="match_parent"
+        android:layout_width="292dp"
         android:layout_height="175dp"
         android:layout_gravity="fill_horizontal"
         android:adjustViewBounds="true"
@@ -84,7 +84,7 @@
             android:id="@+id/Logo"
             android:layout_width="89dp"
             android:layout_height="88dp"
-            android:background="@drawable/trans_logo_figma"
+            android:background="@drawable/trans_logo"
             android:gravity="right" />
     </LinearLayout>
 
@@ -201,7 +201,7 @@
                         android:layout_marginHorizontal="10dp"
                         android:layout_marginTop="10dp"
                         android:background="@drawable/btn_back"
-                        android:foreground="@drawable/ic_player_review" />
+                        android:foreground="@drawable/ic_review_profile" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -271,13 +271,14 @@
                 android:layout_height="75dp"
                 android:backgroundTint="@color/primaryColor"
                 app:cardCornerRadius="14dp">
-            <ImageView
-                android:layout_width="52dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginHorizontal="10dp"
-                android:foreground="@drawable/ic_shop_icon" />
-        </androidx.cardview.widget.CardView>
+
+                <ImageView
+                    android:layout_width="52dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="10dp"
+                    android:foreground="@drawable/ic_shop" />
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -308,7 +309,7 @@
                     android:layout_height="48dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginHorizontal="10dp"
-                    android:foreground="@drawable/ic_sport_management_icon" />
+                    android:foreground="@drawable/ic_sports" />
             </androidx.cardview.widget.CardView>
 
             <TextView
@@ -340,7 +341,7 @@
                     android:layout_height="48dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginHorizontal="10dp"
-                    android:foreground="@drawable/ic_event_management_icon" />
+                    android:foreground="@drawable/ic_events" />
             </androidx.cardview.widget.CardView>
 
             <TextView
@@ -384,10 +385,10 @@
 
                 <ImageView
                     android:layout_width="52dp"
-                    android:layout_height="47dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginHorizontal="10dp"
-                    android:foreground="@drawable/ic_players_profile_icon" />
+                    android:foreground="@drawable/ic_players" />
             </androidx.cardview.widget.CardView>
             <TextView
                 android:layout_width="wrap_content"
@@ -417,7 +418,7 @@
                     android:layout_height="48dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginHorizontal="10dp"
-                    android:foreground="@drawable/ic_new_event" />
+                    android:foreground="@drawable/ic_new_fixture" />
             </androidx.cardview.widget.CardView>
             <TextView
                 android:layout_width="wrap_content"
@@ -447,7 +448,7 @@
                     android:layout_height="48dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginHorizontal="10dp"
-                    android:foreground="@drawable/ic_new_fixture" />
+                    android:foreground="@drawable/ic_new_event" />
             </androidx.cardview.widget.CardView>
             <TextView android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

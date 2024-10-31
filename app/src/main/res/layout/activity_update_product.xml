@@ -202,7 +202,7 @@
                     android:fontFamily="@font/inter_bold"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="@dimen/_20sdp"
-                    android:text="DELETE PRODUCT" />
+                    android:text="DELETE FIXTURE" />
 
             </LinearLayout>
         </ScrollView>

@@ -54,6 +54,8 @@ class GetPlayers : AppCompatActivity() {
         }
 
     }
+
+
     fun updateSelectButton(count: Int) {
         binding.btnSelect.text = "Select ($count) Items"
     }

@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
-    alias(libs.plugins.google.firebase.crashlytics)
 }
 
 android {
@@ -59,8 +58,6 @@ dependencies {
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database.ktx)
-    implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.analytics)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -78,10 +75,12 @@ dependencies {
 
     // BCrypt dependency for password hashing
     implementation("org.mindrot:jbcrypt:0.4")
-
     //implement the dependency com.intuit.sdp:sdp-android:1.1.1
     implementation("com.intuit.sdp:sdp-android:1.1.1")
 
+
+    //implement the dependency net.zetetic:android-database-sqlcipher:4.5.0
+    implementation("net.zetetic:android-database-sqlcipher:4.5.0")
     //Implementing the de.hdodenhof:circleimageview:3.1.0
     implementation(libs.circleimageview)
     implementation("com.github.bumptech.glide:glide:4.12.0")
@@ -96,14 +95,5 @@ dependencies {
     // Add Firebase Auth library dependency
     implementation("com.google.firebase:firebase-auth:23.1.0")
     implementation("com.google.android.gms:play-services-auth:20.2.0")
-
-    implementation("com.google.firebase:firebase-crashlytics:19.2.1")
-
-
-
-    implementation("com.google.firebase:firebase-analytics:22.1.2")
-   implementation("net.zetetic:android-database-sqlcipher:4.5.4")
-    implementation("androidx.sqlite:sqlite:2.4.0")
 }
 apply(plugin ="com.google.gms.google-services")
-apply(plugin = "com.google.firebase.crashlytics")
