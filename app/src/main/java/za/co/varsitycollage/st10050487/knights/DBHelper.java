@@ -1275,6 +1275,14 @@ public class DBHelper extends SQLiteOpenHelper {
         return -1;
     }
 
+    // Method to move fixture to past
+    public void moveFixtureToPast(MatchDis fixture) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("STATUS", "FINISHED");
+        db.update("SPORT_FIXTURES", values, "FIXTURE_ID = ?", new String[]{fixture.getFixtureId()});
+    }
+
     // A method to get event details
     public EventModel getEventDetails(int eventId) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -1326,5 +1334,157 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.insert("SCHOOL_MERCH", null, values);
     }
 
+    //Umar Implementation
+
+        // Method to get all fixtures
+    public List<MatchDis> getUpcomingFixtures() {
+        List<MatchDis> fixtures = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT FIXTURE_ID, HOME_TEAM, AWAY_TEAM, SET_TIME, SET_DATE, HOME_LOGO, AWAY_LOGO FROM SPORT_FIXTURES WHERE SET_DATE >= date('now')", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                MatchDis fixture = new MatchDis(
+                        cursor.getString(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SET_TIME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SET_DATE")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
+                        MatchStatus.UPCOMING
+                );
+                fixtures.add(fixture);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return fixtures;
+    }
+
+
+    // Method to get all past fixtures
+    public List<MatchDis> getPastFixtures() {
+        List<MatchDis> fixtures = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT FIXTURE_ID, HOME_TEAM, AWAY_TEAM, SET_TIME, SET_DATE, HOME_LOGO, AWAY_LOGO FROM SPORT_FIXTURES WHERE SET_DATE < date('now')", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                MatchDis fixture = new MatchDis(
+                        cursor.getString(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SET_TIME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SET_DATE")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
+                        MatchStatus.FINISHED
+                );
+                fixtures.add(fixture);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return fixtures;
+    }
+
+    public List<PlayerProfileView> getAllPlayerProfiles() {
+        List<PlayerProfileView> playerProfiles = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT pp.NAME, pp.SURNAME, pp.AGE, pp.GRADE, pp.AGE_GROUP, u.EMAIL " +
+                "FROM PLAYER_PROFILE pp " +
+                "JOIN USERS u ON pp.USER_ID = u.USER_ID " +
+                "WHERE u.ROLE_ID = (SELECT ROLE_ID FROM ROLES WHERE ROLE = 'User')";
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                PlayerProfileView profile = new PlayerProfileView(
+                        cursor.getString(cursor.getColumnIndexOrThrow("NAME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SURNAME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("EMAIL")), // Corrected to getString
+                        cursor.getInt(cursor.getColumnIndexOrThrow("AGE")),      // Corrected to getInt
+                        cursor.getString(cursor.getColumnIndexOrThrow("GRADE"))
+                );
+                playerProfiles.add(profile);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return playerProfiles;
+    }
+    public String getPlayerEmail(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String email = null;
+        String query = "SELECT EMAIL FROM USERS WHERE USER_ID = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+
+        if (cursor.moveToFirst()) {
+            email = cursor.getString(cursor.getColumnIndexOrThrow("EMAIL"));
+        }
+        cursor.close();
+        db.close();
+        return email;
+    }
+    public List<PlayerProfileModel> filterPlayersByAgeGroupAndGrade(String ageGroup, String grade) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<PlayerProfileModel> playerList = new ArrayList<>();
+        String selection = "AGE_GROUP = ? AND GRADE = ?";
+        String[] selectionArgs = new String[]{ageGroup, grade};
+        Cursor cursor = db.query("PLAYER_PROFILE", null, selection, selectionArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("PLAYER_ID"));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("NAME"));
+                String surname = cursor.getString(cursor.getColumnIndexOrThrow("SURNAME"));
+                String nickname = cursor.getString(cursor.getColumnIndexOrThrow("NICKNAME"));
+                int age = cursor.getInt(cursor.getColumnIndexOrThrow("AGE"));
+                String height = cursor.getString(cursor.getColumnIndexOrThrow("HEIGHT"));
+                String position = cursor.getString(cursor.getColumnIndexOrThrow("POSITION"));
+                String dateOfBirth = cursor.getString(cursor.getColumnIndexOrThrow("DATEOFBIRTH"));
+                byte[] profilePicture = cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE"));
+                int userId = cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID"));
+
+                PlayerProfileModel player = new PlayerProfileModel(id, name, surname, nickname, age, grade, height, position, dateOfBirth, ageGroup, userId, false, profilePicture);
+                playerList.add(player);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return playerList;
+    }
+    public List<PlayerProfileModel> searchPlayers(String query) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<PlayerProfileModel> playerList = new ArrayList<>();
+        String selection = "p.NAME LIKE ? OR p.SURNAME LIKE ? OR u.EMAIL LIKE ?";
+        String[] selectionArgs = new String[]{"%" + query + "%", "%" + query + "%", "%" + query + "%"};
+        String queryStr = "SELECT p.*, u.EMAIL FROM PLAYER_PROFILE p " +
+                "JOIN USERS u ON p.USER_ID = u.USER_ID " +
+                "WHERE " + selection;
+
+        Cursor cursor = db.rawQuery(queryStr, selectionArgs);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("PLAYER_ID"));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("NAME"));
+                String surname = cursor.getString(cursor.getColumnIndexOrThrow("SURNAME"));
+                String email = cursor.getString(cursor.getColumnIndexOrThrow("EMAIL"));
+                String nickname = cursor.getString(cursor.getColumnIndexOrThrow("NICKNAME"));
+                int age = cursor.getInt(cursor.getColumnIndexOrThrow("AGE"));
+                String grade = cursor.getString(cursor.getColumnIndexOrThrow("GRADE"));
+                String height = cursor.getString(cursor.getColumnIndexOrThrow("HEIGHT"));
+                String position = cursor.getString(cursor.getColumnIndexOrThrow("POSITION"));
+                String dateOfBirth = cursor.getString(cursor.getColumnIndexOrThrow("DATEOFBIRTH"));
+                String ageGroup = cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP"));
+                byte[] profilePicture = cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE"));
+
+                PlayerProfileModel player = new PlayerProfileModel(id, name, surname, nickname, age, grade, height, position, dateOfBirth, ageGroup, id, false, profilePicture);
+                playerList.add(player);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return playerList;
+    }
 }
 
