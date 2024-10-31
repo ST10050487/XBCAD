@@ -3,6 +3,7 @@ package za.co.varsitycollage.st10050487.knights
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -11,7 +12,6 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -32,9 +32,19 @@ class EditFixture : AppCompatActivity() {
     private val PICK_IMAGE_REQUEST = 1
     private val CAMERA_REQUEST = 2
     private var isHomeLogo: Boolean = true
-    private var fixtureId: Int = 5
+    private var fixtureId: Int = 0 // Variable to hold the fixture ID
     private var userId: Int = 1
     private var leagueId: Int = 0
+
+    private val leagueIdMapping = mapOf(
+        "WP League" to 1,
+        "Inter-School" to 2,
+        "Provincial" to 3,
+        "National" to 4,
+        "International" to 5,
+        "Friendly" to 6,
+        "Tournament" to 7
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,13 +55,24 @@ class EditFixture : AppCompatActivity() {
 
         // Fetch sports data from the database
         sportsList = dbHelper.getAllSports()
-        populateSpinner( binding.spinnerSport, sportsList)
+        populateSpinner(binding.spinnerSport, sportsList)
         // Fetch age group data from the database
         ageGroupList = dbHelper.getAllAgeGroups()
         populateSpinner(binding.spinnerAgeGroup, ageGroupList)
         // Fetch league data from the database
         leagueList = dbHelper.getAllLeagues()
         populateSpinner(binding.spinnerLeague, leagueList)
+
+        // Retrieve the fixture ID from the intent
+        fixtureId = intent.getIntExtra("fixture_id", -1) // Default value of -1
+
+        // Load the fixture data using the fixture ID
+        if (fixtureId != -1) {
+            loadFixture(fixtureId)
+        } else {
+            Toast.makeText(this, "Invalid fixture ID", Toast.LENGTH_SHORT).show()
+            finish() // Close the activity if the ID is invalid
+        }
 
         binding.btnAwayUpload.setOnClickListener {
             isHomeLogo = false
@@ -77,15 +98,37 @@ class EditFixture : AppCompatActivity() {
         }
         binding.btnDelete.setOnClickListener {
             if (!dbHelper.checkIsAdmin(userId)) {
-                Toast.makeText(this, "You do not have permission to delete this fixture", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "You do not have permission to delete this fixture",
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
                 showConfirmationDialog(fixtureId)
             }
         }
-        // take out
-       // val id = dbHelper.addDummyFixtureWithUserId(userId)
-        //Toast.makeText(this, id.toString(), Toast.LENGTH_SHORT).show()
-        loadFixture(fixtureId)
+
+        // Set OnClickListener to the txtTime EditText to show the TimePickerDialog
+        binding.txtTime.setOnClickListener {
+            showTimePickerDialog()
+        }
+
+        // Set OnClickListener to the txtDate EditText to show the DatePickerDialog
+        binding.txtDate.setOnClickListener {
+            showDatePickerDialog()
+        }
+
+        // Set OnClickListener for the back button
+        NavigationBacktoClass()
+    }
+
+    private fun NavigationBacktoClass() {
+        binding.backBtn.setOnClickListener {
+            // Create an intent to navigate back to AdminSportsFixture
+            val intent = Intent(this, AdminSportsFixtures::class.java)
+            startActivity(intent)
+            finish() // Optional: Close this activity
+        }
     }
 
     private fun updateFixtureData() {
@@ -94,15 +137,24 @@ class EditFixture : AppCompatActivity() {
         val description = binding.txtDescrip.text.toString()
         val venue = binding.txtVenue.text.toString()
         val time = binding.txtTime.text.toString()
-        val date = binding.txtDate.text.toString()
+        val date = binding.txtDate.text.toString() // Ensure this is in 'yyyy-MM-dd' format
         val sport = binding.spinnerSport.selectedItem.toString()
         val ageGroup = binding.spinnerAgeGroup.selectedItem.toString()
         val league = binding.spinnerLeague.selectedItem.toString()
-        val leagueId = binding.spinnerLeague.selectedItem.toString().toInt()
+
+        // Get the league ID using the mapping
+        val leagueId = leagueIdMapping[league]
+            ?: throw IllegalArgumentException("League ID not found for league: $league")
+
         val homeLogo = homeHolder
         val awayLogo = awayHolder
         val picture = null
 
+        // Determine if the game is a home game based on venue name
+        val isHomeGame = venue.contains("Bosemansdam high school", ignoreCase = true) ||
+                venue.contains("Boseman'sdam", ignoreCase = true)
+
+        // Prepare the fixture model
         val fixture = FixtureModel(
             fixtureId = fixtureId,
             userId = userId,
@@ -112,15 +164,17 @@ class EditFixture : AppCompatActivity() {
             ageGroup = ageGroup,
             league = league,
             matchLocation = venue,
-            matchDate = date,
+            matchDate = date, // Use the date as it is
             matchTime = time,
             matchDescription = description,
             homeLogo = homeLogo,
             awayLogo = awayLogo,
             picture = picture,
-            leagueId = leagueId
+            leagueId = leagueId, // Use the mapped league ID here
+            isHomeGame = isHomeGame // Add the isHomeGame property
         )
 
+        // Update the fixture in the database
         val result = dbHelper.updateFixture(fixture)
 
         if (result > 0) {
@@ -129,6 +183,7 @@ class EditFixture : AppCompatActivity() {
             Toast.makeText(this, "Failed to update fixture", Toast.LENGTH_SHORT).show()
         }
     }
+
     private fun populateSpinner(spinner: Spinner, data: List<String>) {
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, data)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -151,7 +206,6 @@ class EditFixture : AppCompatActivity() {
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
-
 
     private fun loadFixture(fixtureId: Int) {
         val fixture = dbHelper.getFixtureDetails(fixtureId)
@@ -179,7 +233,7 @@ class EditFixture : AppCompatActivity() {
                 )
             }
         }
-       if (fixture == null) {
+        if (fixture == null) {
             Toast.makeText(this, "Failed to load fixture", Toast.LENGTH_SHORT).show()
         }
     }
@@ -210,6 +264,7 @@ class EditFixture : AppCompatActivity() {
                     val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUri)
                     updatePicture(bitmap)
                 }
+
                 CAMERA_REQUEST -> {
                     val bitmap = data?.extras?.get("data") as Bitmap
                     updatePicture(bitmap)
@@ -249,12 +304,20 @@ class EditFixture : AppCompatActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CAMERA_REQUEST && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             openCamera()
         } else {
-            Toast.makeText(this, "Camera permission is required to take a picture.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Camera permission is required to take a picture.",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -284,6 +347,20 @@ class EditFixture : AppCompatActivity() {
             calendar.get(Calendar.DAY_OF_MONTH)
         )
         datePickerDialog.show()
+    }
+
+    private fun showTimePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = calendar.get(Calendar.MINUTE)
+
+        val timePickerDialog = TimePickerDialog(this, { _, selectedHour, selectedMinute ->
+            // Format the selected time
+            val formattedTime = String.format("%02d:%02d", selectedHour, selectedMinute)
+            binding.txtTime.setText(formattedTime) // Set the selected time to the EditText
+        }, hour, minute, true) // true for 24-hour format
+
+        timePickerDialog.show()
     }
 
     private fun validateInputs(): Boolean {

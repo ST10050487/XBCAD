@@ -9,8 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 //import net.sqlcipher.database.SQLiteOpenHelper;
 import android.util.Log;
 
-import org.mindrot.jbcrypt.BCrypt;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +17,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 19;
+    private static final int DATABASE_VERSION = 18;
 
 
     // Constructor
@@ -199,6 +197,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "USER_ID INTEGER NOT NULL," +
                 "LEAGUE_ID INTEGER," +
                 "MATCH_STATUS_ID INTEGER," +
+                "IS_HOME_GAME INTEGER DEFAULT 0, " + // Add this line
                 "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID)," +
                 "FOREIGN KEY (LEAGUE_ID) REFERENCES HIGH_SCHOOL_LEAGUE(LEAGUE_ID)," +
                 "FOREIGN KEY (MATCH_STATUS_ID) REFERENCES MATCH_STATUS(MATCH_STATUS_ID))";
@@ -284,18 +283,13 @@ public class DBHelper extends SQLiteOpenHelper {
                 "('Second Half')," +
                 "('Match Over')," +
                 "('Cancelled')";
-
-        String CREATE_SUSPICIOUS_ACTIVITY_TABLE = "CREATE TABLE IF NOT EXISTS SUSPICIOUS_ACTIVITY (" +
-                "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "USER_ID INTEGER, " +
-                "ACTIVITY_DESCRIPTION TEXT, " +
-                "UNKNOWN TEXT, " +
-                "TIMESTAMP DATETIME DEFAULT CURRENT_TIMESTAMP)";
-        db.execSQL(CREATE_SUSPICIOUS_ACTIVITY_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion < 17) { // Assuming 17 is the version where IS_HOME_GAME is added
+            db.execSQL("ALTER TABLE SPORT_FIXTURES ADD COLUMN IS_HOME_GAME INTEGER DEFAULT 0");
+        }
         // Drop older tables if existed
         db.execSQL("DROP TABLE IF EXISTS USERS");
         db.execSQL("DROP TABLE IF EXISTS ROLES");
@@ -314,7 +308,6 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS FIXTURE_PLAYERS");
         db.execSQL("DROP TABLE IF EXISTS TIME_HIGHLIGHTS");
         db.execSQL("DROP TABLE IF EXISTS TIME_STATUS");
-        db.execSQL("DROP TABLE IF EXISTS SUSPICIOUS_ACTIVITY");
 
         // Recreate tables
         onCreate(db);
@@ -366,16 +359,29 @@ public class DBHelper extends SQLiteOpenHelper {
 //        }
 //        return false;
 //    }
+    // HANNAH ADDED, CAUSE NO PASSWORD IN addUsers and to log user in ********************************/  /*********************************/  /*********************************/
+    public boolean addUser(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("NAME", name);
+        values.put("SURNAME", surname);
+        values.put("DATEOFBIRTH", dateOfBirth);
+        values.put("EMAIL", email);
+        values.put("PASSWORD", password);
+        values.put("ROLE_ID", roleId);
+        long result = db.insert("USERS", null, values);
+        return result != -1;
+    }
 
-//__Suspicious Activity Table CRUD_________________________________________________________________________________\\
-public void addSuspiciousActivity(int userId, String activityDescription, long timestamp) {
-    SQLiteDatabase db = this.getWritableDatabase();
-    ContentValues values = new ContentValues();
-    values.put("USER_ID", userId);
-    values.put("ACTIVITY_DESCRIPTION", activityDescription);
-    values.put("TIMESTAMP", timestamp);
-    db.insert("SUSPICIOUS_ACTIVITY", null, values);
-}
+    //__Suspicious Activity Table CRUD_________________________________________________________________________________\\
+    public void addSuspiciousActivity(int userId, String activityDescription, long timestamp) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("USER_ID", userId);
+        values.put("ACTIVITY_DESCRIPTION", activityDescription);
+        values.put("TIMESTAMP", timestamp);
+        db.insert("SUSPICIOUS_ACTIVITY", null, values);
+    }
     public void addSuspiciousActivity(String userId, String activityDescription, long timestamp) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -398,7 +404,6 @@ public void addSuspiciousActivity(int userId, String activityDescription, long t
         return userId;
     }
 
-    //__Event Table CRUD_________________________________________________________________________________\\
     public List<EventModel> getAllEvents() {
         List<EventModel> events = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -455,21 +460,8 @@ public void addSuspiciousActivity(int userId, String activityDescription, long t
         }
         db.close();
     }
-    //__User Table CRUD_________________________________________________________________________________\\
-    public boolean addUser(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("NAME", name);
-        values.put("SURNAME", surname);
-        values.put("DATEOFBIRTH", dateOfBirth);
-        values.put("EMAIL", email);
-        values.put("PASSWORD", password);
-        values.put("ROLE_ID", roleId);
-        long result = db.insert("USERS", null, values);
-        return result != -1;
-    }
 
-    //__Admin user________________________________________________________________________________\\
+    //Admin User
     public AdminModel getAdminUserDetails() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query("USERS", null, "ROLE_ID = ?", new String[]{"1"}, null, null, null);
@@ -514,11 +506,11 @@ public void addSuspiciousActivity(int userId, String activityDescription, long t
         values.put("PASSWORD", adminUser.getPassword());
         values.put("DATEOFBIRTH", adminUser.getDateOfBirth());
 
-
+        // Update the row and return the number of rows affected
         return db.update("USERS", values, "USER_ID = ?", new String[]{String.valueOf(adminUser.getUserId())});
     }
 
-    //__Student/Parent user________________________________________________________________________________\\
+    // User
     public UserModel getUserDetails(int userId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query("USERS", null, "ROLE_ID = ?", new String[]{"1"}, null, null, null);
@@ -547,6 +539,7 @@ public void addSuspiciousActivity(int userId, String activityDescription, long t
         }
         return null;
     }
+
     // Method to update user details
     public int updateUser(UserModel user) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -561,7 +554,7 @@ public void addSuspiciousActivity(int userId, String activityDescription, long t
         return db.update("USERS", values, "USER_ID = ?", new String[]{String.valueOf(user.getUserId())});
     }
 
-    //__Times Table CRUD_______________________________________________________________________________\\
+    // TIMES
     public void addTimes(String meetingTime, String busDepatureTime, String busReturnTime, String message) {
         // Add times to the database
         SQLiteDatabase db = this.getWritableDatabase();
@@ -703,7 +696,7 @@ public void addSuspiciousActivity(int userId, String activityDescription, long t
     }
 
 
-    //__Fixture Table CRUD_______________________________________________________________________________\\
+    //Fixture
     public List<String> getAllSports() {
         List<String> sportsList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -749,6 +742,7 @@ public void addSuspiciousActivity(int userId, String activityDescription, long t
         values.put("PICTURE", fixture.getPicture());
         values.put("USER_ID", fixture.getUserId());
         values.put("LEAGUE_ID", fixture.getLeagueId());
+        values.put("IS_HOME_GAME", fixture.isHomeGame() ? 1 : 0); // Add this line
 
         // Update the row and return the number of rows affected
         return db.update("SPORT_FIXTURES", values, "FIXTURE_ID = ?", new String[]{String.valueOf(fixture.getFixtureId())});
@@ -771,6 +765,7 @@ public void addSuspiciousActivity(int userId, String activityDescription, long t
         values.put("PICTURE", (byte[]) null); // Assuming no picture for dummy data
         values.put("USER_ID", userId); // Link to the current user
         values.put("LEAGUE_ID", 1); // Assuming a valid LEAGUE_ID
+        values.put("IS_HOME_GAME", 0); // Add this line
 
         long fixid = db.insert("SPORT_FIXTURES", null, values);
         return fixid;
@@ -797,7 +792,8 @@ public void addSuspiciousActivity(int userId, String activityDescription, long t
                     cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
                     cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
                     cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID"))
+                    cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1 // Add this line
             );
             cursor.close();
             return fixture;
@@ -834,7 +830,8 @@ public void addSuspiciousActivity(int userId, String activityDescription, long t
                         cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
                         cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
                         cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
-                        cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID"))
+                        cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1 // Add this line
                 );
                 fixtures.add(fixture);
             } while (cursor.moveToNext());
@@ -851,7 +848,7 @@ public void addSuspiciousActivity(int userId, String activityDescription, long t
         db.insert("FIXTURE_PLAYERS", null, values);
     }
 
-    //__Players Table CRUD_______________________________________________________________________________\\
+// PLAYERS
 
     public List<PlayerProfileModel> getAllPlayers() {
         List<PlayerProfileModel> players = new ArrayList<>();
@@ -953,7 +950,7 @@ public void addSuspiciousActivity(int userId, String activityDescription, long t
         db.insert("PLAYER_PROFILE", null, values);
     }
 
-    //__Merch/Product  Table CRUD_______________________________________________________________________________\\
+    // MERCH / PRODUCT
     public long dummyProduct(int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -1022,6 +1019,8 @@ public void addSuspiciousActivity(int userId, String activityDescription, long t
     }
 
 
+    /*********************************/  /*********************************/  /*********************************/
+    /*********************************/
     // A method to add users to the database
     public void addUsers(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
         // Add users to the database
@@ -1151,33 +1150,24 @@ public void addSuspiciousActivity(int userId, String activityDescription, long t
 
         try {
             // Query to check if user exists
-            cursor = db.rawQuery("SELECT USER_ID, PASSWORD FROM USERS WHERE EMAIL=?", new String[]{email});
+            cursor = db.rawQuery("SELECT USER_ID FROM USERS WHERE EMAIL=? AND PASSWORD=?", new String[]{email, password});
 
             // Checking if cursor is not null and move to first
             if (cursor != null && cursor.moveToFirst()) {
                 int userIdColumnIndex = cursor.getColumnIndex("USER_ID");
-                int passwordColumnIndex = cursor.getColumnIndex("PASSWORD");
-
-                if (userIdColumnIndex != -1 && passwordColumnIndex != -1) {
+                if (userIdColumnIndex != -1) {
                     // Getting the USER_ID
                     userId = cursor.getInt(userIdColumnIndex);
-                    String storedHashedPassword = cursor.getString(passwordColumnIndex);
-
-                    // Verify the password using bcrypt
-                    if (BCrypt.checkpw(password, storedHashedPassword)) {
-                        return userId;
-                    } else {
-                        return null; // Password does not match
-                    }
                 }
             }
         } finally {
+            // Closing cursor
             if (cursor != null) {
                 cursor.close();
             }
-            db.close();
         }
-        return null; // User not found
+        // Returning the USER_ID or null
+        return userId;
     }
 
     // Method to check if a user exists and retrieve ROLE_ID
