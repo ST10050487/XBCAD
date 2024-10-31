@@ -79,6 +79,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <Button
+            android:id="@+id/uploadBtn"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+            android:layout_width="215dp"
+            android:layout_height="58dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="30dp"
+            android:backgroundTint="@color/primaryColor"
+            android:fontFamily="@font/inter_bold"
+            android:text="Create Fixture"
+            android:textColor="@color/white"
+            app:icon="@drawable/ic_plus"
+            app:iconGravity="end"
+            app:iconTint="@color/white" />
+
+    </LinearLayout>
+
     <!-- Search Bar Layout -->
     <LinearLayout
         android:id="@+id/search_fixtures_layout"
@@ -92,7 +119,7 @@
         android:paddingEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_title">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
         <!-- Search Icon -->
         <ImageView
