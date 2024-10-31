@@ -34,6 +34,15 @@ class CreateTimesheet : AppCompatActivity() {
     private var imageByteArrayList = mutableListOf<ByteArray?>()
 
     // List of match statuses
+    private val matchStatusMap = mapOf(
+        "First Half" to 1,
+        "Half Time" to 2,
+        "Second Half" to 3,
+        "Match Over" to 4,
+        "Cancelled" to 5
+    )
+
+    // List of match statuses (Add this line)
     private val matchStatuses = listOf(
         "First Half",
         "Half Time",
@@ -189,8 +198,10 @@ class CreateTimesheet : AppCompatActivity() {
         val busDepartureTime = binding.txtDepTime.text.toString()
         val busReturnTime = binding.txtArrTime.text.toString()
         val message = binding.txtHomeTeam.text.toString()
-        val matchStatus =
-            binding.spinnerMatchStatus.selectedItem.toString() // Get selected match status
+
+        // Get selected match status and convert to its numeric value
+        val matchStatusText = binding.spinnerMatchStatus.selectedItem.toString()
+        val matchStatusValue = matchStatusMap[matchStatusText] ?: 0 // Default to 0 if not found
 
         val dbHelper = DBHelper(this)
         dbHelper.addTimes(
@@ -198,8 +209,8 @@ class CreateTimesheet : AppCompatActivity() {
             busDepartureTime,
             busReturnTime,
             message,
-            matchStatus
-        ) // Pass match status
+            matchStatusValue
+        )
 
         Toast.makeText(this, "Timesheet saved successfully", Toast.LENGTH_SHORT).show()
     }
