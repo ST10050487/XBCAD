@@ -44,6 +44,15 @@ class EditTimesheet : AppCompatActivity() {
         "Cancelled"
     )
 
+    // Map to convert match status text to numeric values
+    private val matchStatusMap = mapOf(
+        "First Half" to 1,
+        "Half Time" to 2,
+        "Second Half" to 3,
+        "Match Over" to 4,
+        "Cancelled" to 5
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -98,12 +107,12 @@ class EditTimesheet : AppCompatActivity() {
             binding.txtAwayResult.setText(timesheet.awayScore?.toString())
             binding.txtManOfTheMatch.setText(timesheet.manOfTheMatch)
 
-            // Set the spinner to the current match status
-            setSpinner(
-                binding.spinnerMatchStatus,
-                matchStatuses,
-                timesheet.matchstatus
-            ) // Ensure this matches your TimesheetModel field
+            // Set the spinner to the current match status based on its numeric value
+            val matchStatusValue = timesheet.matchstatus
+            val matchStatusText = matchStatusMap.entries.firstOrNull { it.value == matchStatusValue }?.key
+            if (matchStatusText != null) {
+                setSpinner(binding.spinnerMatchStatus, matchStatuses, matchStatusText)
+            }
 
             // Load existing highlights
             loadHighlights(timesheet.timeId)
@@ -112,25 +121,13 @@ class EditTimesheet : AppCompatActivity() {
         }
     }
 
-    private fun loadHighlights(timesheetId: Int) {
-        val highlights = dbHelper.getHighlights(timesheetId)
-        highlights.forEach { highlight ->
-            imageByteArrayList.add(highlight)
-            fileNameList.add("Highlight ${imageByteArrayList.size}") // Change as needed
-        }
-        adapter.getItems(
-            imageByteArrayList,
-            fileNameList
-        ) // Assuming you have a method to set the adapter items
-    }
-
     private fun updateTimesheetData() {
         val meetTime = binding.txtMeetTime.text.toString()
         val busDepartureTime = binding.txtDepTime.text.toString()
         val busReturnTime = binding.txtReturnTime.text.toString()
         val message = binding.txtMsg.text.toString()
-        val matchStatus =
-            binding.spinnerMatchStatus.selectedItem.toString() // Get selected match status
+        val matchStatusText = binding.spinnerMatchStatus.selectedItem.toString() // Get selected match status
+        val matchStatusValue = matchStatusMap[matchStatusText] ?: 0 // Convert to numeric value
         val homeScore = binding.txtHomeResult.text.toString().toIntOrNull()
         val awayScore = binding.txtAwayResult.text.toString().toIntOrNull()
         val manOfTheMatch = binding.txtManOfTheMatch.text.toString()
@@ -146,7 +143,7 @@ class EditTimesheet : AppCompatActivity() {
             homeScore = homeScore,
             awayScore = awayScore,
             manOfTheMatch = manOfTheMatch,
-            matchstatus = matchStatus // Pass the updated match status
+            matchstatus = matchStatusValue // Store as a number
         )
 
         val rowsAffected = dbHelper.updateTimesheet(timesheet)
@@ -226,7 +223,6 @@ class EditTimesheet : AppCompatActivity() {
     }
 
     // Activity result launcher for image selection
-// Activity result launcher for image selection
     private val imageLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
