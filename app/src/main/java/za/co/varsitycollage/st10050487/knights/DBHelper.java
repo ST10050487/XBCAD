@@ -17,7 +17,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 18;
+    private static final int DATABASE_VERSION = 19;
 
 
     // Constructor
@@ -129,8 +129,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "MAN_OF_THE_MATCH TEXT," +
                 "HOME_SCORE INTEGER," +
                 "AWAY_SCORE INTEGER," +
-                "TIME_STATUS_ID INTEGER NOT NULL," +
                 "FIXTURE_ID INTEGER NOT NULL," +
+                "MATCH_STATUS TEXT NOT NULL," +
                 "FOREIGN KEY (TIME_STATUS_ID) REFERENCES TIME_STATUS(TIME_STATUS_ID)," +
                 "FOREIGN KEY (FIXTURE_ID) REFERENCES SPORT_FIXTURES(FIXTURE_ID))";
         db.execSQL(CREATE_TABLE_TIMES);
@@ -382,6 +382,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("TIMESTAMP", timestamp);
         db.insert("SUSPICIOUS_ACTIVITY", null, values);
     }
+
     public void addSuspiciousActivity(String userId, String activityDescription, long timestamp) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -390,6 +391,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("TIMESTAMP", timestamp);
         db.insert("SUSPICIOUS_ACTIVITY", null, values);
     }
+
     public Integer getUserIdByEmail(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
         Integer userId = null;
@@ -555,14 +557,14 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // TIMES
-    public void addTimes(String meetingTime, String busDepatureTime, String busReturnTime, String message) {
-        // Add times to the database
+    public void addTimes(String meetingTime, String busDepatureTime, String busReturnTime, String message, String matchStatus) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("MEETING_TIME", meetingTime);
         values.put("BUS_DEPATURE_TIME", busDepatureTime);
         values.put("BUS_RETURN_TIME", busReturnTime);
         values.put("MESSAGE", message);
+        values.put("MATCH_STATUS", matchStatus); // Keep this line
         db.insert("TIMES", null, values);
     }
 
@@ -591,12 +593,12 @@ public class DBHelper extends SQLiteOpenHelper {
             TimesheetModel timesheet = new TimesheetModel(
                     cursor.getInt(cursor.getColumnIndexOrThrow("TIME_ID")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("TIMES_STATUS_ID")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_STATUS")), // Use MATCH_STATUS
                     cursor.getString(cursor.getColumnIndexOrThrow("MEETING_TIME")),
                     cursor.getString(cursor.getColumnIndexOrThrow("BUS_DEPATURE_TIME")),
                     cursor.getString(cursor.getColumnIndexOrThrow("BUS_RETURN_TIME")),
                     cursor.getString(cursor.getColumnIndexOrThrow("MESSAGE")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("ANOTHER_STRING")), // Add this line
+                    cursor.getString(cursor.getColumnIndexOrThrow("MAN_OF_THE_MATCH")), // Adjusted to match your data class
                     cursor.isNull(cursor.getColumnIndexOrThrow("HOME_SCORE")) ? null : cursor.getInt(cursor.getColumnIndexOrThrow("HOME_SCORE")),
                     cursor.isNull(cursor.getColumnIndexOrThrow("AWAY_SCORE")) ? null : cursor.getInt(cursor.getColumnIndexOrThrow("AWAY_SCORE"))
             );
@@ -617,7 +619,6 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("BUS_DEPATURE_TIME", timesheet.getBusDepartureTime());
         values.put("BUS_RETURN_TIME", timesheet.getBusReturnTime());
         values.put("MESSAGE", timesheet.getMessage());
-        values.put("TIMES_STATUS_ID", timesheet.getStatusId());
         values.put("HOME_SCORE", timesheet.getHomeScore());
         values.put("AWAY_SCORE", timesheet.getAwayScore());
 
@@ -1542,5 +1543,20 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return playerList;
     }
-}
 
+    public long addEvent(String name, String date, String time, String location, double price, String description, byte[] picture, int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("EVENT_NAME", name);
+        values.put("EVENT_DATE", date);
+        values.put("EVENT_TIME", time);
+        values.put("EVENT_LOCATION", location);
+        values.put("EVENT_PRICE", price);
+        values.put("EVENT_DESCRIPTION", description);
+        values.put("PICTURE", picture);
+        values.put("USER_ID", userId);
+        return db.insert("EVENTS", null, values);
+    }
+
+
+}
