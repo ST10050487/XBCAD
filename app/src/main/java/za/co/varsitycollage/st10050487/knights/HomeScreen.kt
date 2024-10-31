@@ -20,7 +20,7 @@ import java.util.Locale
 
 class HomeScreen : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var eventAdapter: UpcomingEventInforAdptor
+    private lateinit var eventAdapter: UpcomingEvent
     private lateinit var dbHelper: DBHelper
     private lateinit var toggle: ActionBarDrawerToggle
 
@@ -38,7 +38,6 @@ class HomeScreen : AppCompatActivity() {
             insets
         }
 
-
         ExtractingFragmentContainer()
 
         toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
@@ -49,38 +48,34 @@ class HomeScreen : AppCompatActivity() {
 
         navView.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.nav_home -> {
-                    // Handle the Home action
-                }
-                R.id.nav_events -> {
-                    // Handle the Events action
-                }
-                R.id.nav_profile -> {
-                    // Handle the Profile action
-                }
-                R.id.nav_logout -> {
-                    // Handle the Logout action
-                }
+                R.id.nav_home -> { /* Handle the Home action */ }
+                R.id.nav_events -> { /* Handle the Events action */ }
+                R.id.nav_profile -> { /* Handle the Profile action */ }
+                R.id.nav_logout -> { /* Handle the Logout action */ }
             }
             true
         }
 
         dbHelper = DBHelper(this)
         recyclerView = findViewById(R.id.events_recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
         val eventList = dbHelper.getAllEvents()
         if (eventList.isNotEmpty()) {
-            eventAdapter = UpcomingEventInforAdptor(eventList)
+            eventAdapter = UpcomingEvent(eventList)
             recyclerView.adapter = eventAdapter
             Log.d("HomeScreen", "RecyclerView adapter set with ${eventList.size} items.")
+
+            // Adjust the RecyclerView height based on the number of events
+            val layoutParams = recyclerView.layoutParams
+            layoutParams.height = (163 * eventList.size).coerceAtMost(800) // max height limit
+            recyclerView.layoutParams = layoutParams
         } else {
             Log.d("HomeScreen", "No events found.")
         }
 
         // Displaying the current date
         val dateTextView: TextView = findViewById(R.id.date)
-        // Update the date format to "dd MMMM yyyy" (e.g., "20 November 2024")
         val currentDate = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(Date())
         dateTextView.text = currentDate
 
@@ -90,7 +85,6 @@ class HomeScreen : AppCompatActivity() {
     }
 
     private fun ExtractingFragmentContainer() {
-        // Load the SportsFixturesHomeScreen fragment into the container
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(
@@ -100,7 +94,6 @@ class HomeScreen : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 
-    // A method to determine the current school term
     private fun getCurrentTerm(): String {
         val calendar = Calendar.getInstance()
         val month = calendar.get(Calendar.MONTH)
@@ -110,15 +103,7 @@ class HomeScreen : AppCompatActivity() {
             (month == Calendar.JANUARY && day >= 15) || (month == Calendar.FEBRUARY) || (month == Calendar.MARCH && day <= 31) -> "Term 1"
             (month == Calendar.APRIL) || (month == Calendar.MAY) || (month == Calendar.JUNE && day <= 15) -> "Term 2"
             (month == Calendar.JULY) || (month == Calendar.AUGUST) || (month == Calendar.SEPTEMBER && day <= 30) -> "Term 3"
-            (month == Calendar.OCTOBER) || (month == Calendar.NOVEMBER) || (month == Calendar.DECEMBER && day <= 15) -> "Term 4"
-            else -> "Unknown Term"
+            else -> "Term 4"
         }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (toggle.onOptionsItemSelected(item)) {
-            return true
-        }
-        return super.onOptionsItemSelected(item)
     }
 }

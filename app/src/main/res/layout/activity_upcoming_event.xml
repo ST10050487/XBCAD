@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/event_image"
         android:layout_width="245dp"
-        android:layout_height="140dp"
+        android:layout_height="150dp"
         android:src="@drawable/ic_no_image_icon"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"

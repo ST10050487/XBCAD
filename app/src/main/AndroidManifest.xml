@@ -83,6 +83,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".DisplayMatch"/>
         <activity android:name=".GetStarted" />
         <activity android:name=".Login" />
         <activity android:name=".HomeActivity" />
