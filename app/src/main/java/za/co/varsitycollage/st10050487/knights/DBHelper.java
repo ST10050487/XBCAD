@@ -30,7 +30,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create USERS table
-        String CREATE_TABLE_USERS = "CREATE TABLE USERS (" +
+        String CREATE_TABLE_USERS = "CREATE TABLE IF NOT EXISTS USERS (" +
                 "USER_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "NAME TEXT NOT NULL," +
                 "SURNAME TEXT NOT NULL," +
