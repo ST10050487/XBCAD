@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.LinearLayout
@@ -60,6 +61,17 @@ class CreateTimesheet : AppCompatActivity() {
         binding = ActivityCreateTimesheetBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Retrieve the fixture ID from the Intent
+        val fixtureId = intent.getLongExtra("FIXTURE_ID", -1) // Default value is -1 if not found
+        if (fixtureId != -1L) {
+            Log.d("CreateTimesheet", "Received Fixture ID: $fixtureId")
+            // Proceed with using the fixture ID
+        } else {
+            Toast.makeText(this, "No Fixture ID received", Toast.LENGTH_SHORT).show()
+            // Optionally, you can finish the activity if the fixture ID is not valid
+            finish()
+        }
+
         // Initialize the RecyclerView and its adapter
         adapter = MultipleImageAdapter(imageByteArrayList, fileNameList)
         binding.rvHighlights.layoutManager = LinearLayoutManager(this)
@@ -74,7 +86,7 @@ class CreateTimesheet : AppCompatActivity() {
         setupSpinner()
 
         binding.btnSave.setOnClickListener {
-            saveTimesheet()
+            saveTimesheet(fixtureId) // Pass the fixture ID to saveTimesheet
         }
     }
 
@@ -193,7 +205,7 @@ class CreateTimesheet : AppCompatActivity() {
     }
 
     // Function to save the timesheet
-    private fun saveTimesheet() {
+    private fun saveTimesheet(fixtureId: Long) {
         val meetingTime = binding.txtMeetTime.text.toString()
         val busDepartureTime = binding.txtDepTime.text.toString()
         val busReturnTime = binding.txtArrTime.text.toString()
@@ -209,7 +221,8 @@ class CreateTimesheet : AppCompatActivity() {
             busDepartureTime,
             busReturnTime,
             message,
-            matchStatusValue
+            matchStatusValue,
+            fixtureId // Pass the fixture ID to the database method
         )
 
         Toast.makeText(this, "Timesheet saved successfully", Toast.LENGTH_SHORT).show()

@@ -29,7 +29,6 @@ class CreateSportFixture : AppCompatActivity() {
     private lateinit var awayTeamLogo: ImageView
     private lateinit var matchTimeEditText: EditText
     private lateinit var matchDateEditText: EditText
-    private lateinit var awayTeamFabAdd: FloatingActionButton
     private lateinit var uploadHomeTeamBtn: TextView
     private lateinit var uploadAwayTeamBtn: TextView
     private lateinit var homeTeamNameEditText: EditText
@@ -37,6 +36,7 @@ class CreateSportFixture : AppCompatActivity() {
     private lateinit var venueEditText: EditText
     private lateinit var matchDescriptionEditText: EditText
     private lateinit var createFixtureButton: Button
+    private lateinit var navigateToTimesheetButton: FloatingActionButton // Change to FloatingActionButton
 
     private val PICK_IMAGE_REQUEST = 1
     private var selectedSport: String? = null
@@ -64,6 +64,7 @@ class CreateSportFixture : AppCompatActivity() {
     )
 
     private var leagueId: Int? = null // Variable to hold the selected league ID
+    private var generatedFixtureId: Long = -1 // Variable to hold the generated fixture ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,6 +95,7 @@ class CreateSportFixture : AppCompatActivity() {
         venueEditText = findViewById(R.id.venue)
         matchDescriptionEditText = findViewById(R.id.Matchdescription)
         createFixtureButton = findViewById(R.id.create_fixtureBtn)
+        navigateToTimesheetButton = findViewById(R.id.timesheet_fab) // Updated ID
 
         // Set onClickListener to the upload buttons
         uploadHomeTeamBtn.setOnClickListener {
@@ -113,12 +115,16 @@ class CreateSportFixture : AppCompatActivity() {
             }
         }
 
+        // Set onClickListener to the navigate to timesheet button
+        navigateToTimesheetButton.setOnClickListener {
+            navigateToCreateTimesheet() // Call the method to navigate
+        }
+
         val sportSpinner: Spinner = findViewById(R.id.sport_dropdown)
         val ageGroupSpinner: Spinner = findViewById(R.id.age_group_dropdown)
         val leagueSpinner: Spinner = findViewById(R.id.league_dropdown)
         matchTimeEditText = findViewById(R.id.Matchtime)
         matchDateEditText = findViewById(R.id.Matchdate)
-        awayTeamFabAdd = findViewById(R.id.Away_teamFab_add)
 
         val sports = dbHelper.getAllSports()
         val ageGroups = dbHelper.getAllAgeGroups()
@@ -190,11 +196,6 @@ class CreateSportFixture : AppCompatActivity() {
         // Set OnClickListener to the matchDateEditText
         matchDateEditText.setOnClickListener {
             showDatePicker()
-        }
-
-        // Set OnClickListener to the FloatingActionButton
-        awayTeamFabAdd.setOnClickListener {
-            navigateToCreateTimesheet()
         }
     }
 
@@ -343,8 +344,13 @@ class CreateSportFixture : AppCompatActivity() {
     }
 
     private fun navigateToCreateTimesheet() {
-        val intent = Intent(this, CreateTimesheet::class.java)
-        startActivity(intent)
+        if (generatedFixtureId != -1L) { // Check if the fixture ID is valid
+            val intent = Intent(this, CreateTimesheet::class.java)
+            intent.putExtra("FIXTURE_ID", generatedFixtureId) // Pass the fixture ID
+            startActivity(intent)
+        } else {
+            Toast.makeText(this, "You must Create a Sports Fixture first", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun storeValues() {
@@ -410,12 +416,18 @@ class CreateSportFixture : AppCompatActivity() {
         val fixtureId = dbHelper.writableDatabase.insert("SPORT_FIXTURES", null, values)
         if (fixtureId == -1L) {
             Toast.makeText(this, "Failed to create sports fixture", Toast.LENGTH_LONG).show()
+        } else {
+            generatedFixtureId = fixtureId // Store the generated fixture ID
+            Log.d(
+                "CreateSportFixture",
+                "Generated Fixture ID: $generatedFixtureId"
+            ) // Log the fixture ID
+            Toast.makeText(
+                this,
+                "You have successfully created the sports fixture",
+                Toast.LENGTH_LONG
+            ).show()
         }
-
-        fixtureID = fixtureId // Set the static fixture ID
-        Log.d("CreateSportFixture", "Generated Fixture ID: $fixtureID") // Log the fixture ID
-        Toast.makeText(this, "You have successfully created the sports fixture", Toast.LENGTH_LONG)
-            .show()
 
         // Clear the input fields
         homeTeamNameEditText.text.clear()
