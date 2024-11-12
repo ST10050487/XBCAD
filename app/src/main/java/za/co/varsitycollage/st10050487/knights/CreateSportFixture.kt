@@ -379,9 +379,16 @@ class CreateSportFixture : AppCompatActivity() {
             }
         }
 
-        // Determine if the game is a home game based on venue name
-        val isHomeGame = venue?.contains("Bosemansdam high school", ignoreCase = true) == true ||
-                venue?.contains("Boseman'sdam", ignoreCase = true) == true
+        // Determine if the game is a home game based on away team name and venue
+        val isHomeGame = when {
+            awayTeamName?.contains("Bosemansdam", ignoreCase = true) == true ||
+                    awayTeamName?.contains("Boseman'sdam", ignoreCase = true) == true -> false
+
+            venue?.contains("Bosemansdam High School", ignoreCase = true) == true ||
+                    venue?.contains("Boseman'sdam High School", ignoreCase = true) == true -> true
+
+            else -> false // If venue is not one of the specified, consider it an away game
+        }
 
         val values = ContentValues().apply {
             put("SPORT", selectedSport)
