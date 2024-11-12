@@ -290,7 +290,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "('Cancelled')";
         db.execSQL(CREATE_TABLE_USERS);
 
-  // Create SUSPICIOUS_ACTIVITY table
+        // Create SUSPICIOUS_ACTIVITY table
         String CREATE_TABLE_SUSPICIOUS_ACTIVITY = "CREATE TABLE IF NOT EXISTS  SUSPICIOUS_ACTIVITY (" +
                 "ACTIVITY_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "USER_ID INTEGER," +

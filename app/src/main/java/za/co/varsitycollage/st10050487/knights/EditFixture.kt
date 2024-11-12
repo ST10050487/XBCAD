@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import za.co.varsitycollage.st10050487.knights.databinding.ActivityEditFixtureBinding
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
@@ -120,6 +121,14 @@ class EditFixture : AppCompatActivity() {
 
         // Set OnClickListener for the back button
         NavigationBacktoClass()
+
+        // Find the FAB and set the OnClickListener
+        val fabAdd = findViewById<FloatingActionButton>(R.id.fab_add)
+        fabAdd.setOnClickListener {
+            // Navigate to EditTimesheet activity
+            val intent = Intent(this, EditTimesheet::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun NavigationBacktoClass() {

@@ -61,6 +61,17 @@ class EditTimesheet : AppCompatActivity() {
 
         dbHelper = DBHelper(this) // Initialize DBHelper
 
+        // Retrieve the fixture ID from the intent
+        fixtureId = intent.getIntExtra("FIXTURE_ID", -1) // Default value of -1
+
+        // Load the timesheet data
+        if (fixtureId != -1) {
+            loadTimesheet(fixtureId)
+        } else {
+            Toast.makeText(this, "Invalid fixture ID", Toast.LENGTH_SHORT).show()
+            finish() // Close the activity if the ID is invalid
+        }
+
         // Initialize the RecyclerView and its adapter
         adapter = MultipleImageAdapter()
         binding.rvHighlights.layoutManager = LinearLayoutManager(this)
@@ -68,9 +79,6 @@ class EditTimesheet : AppCompatActivity() {
 
         // Initialize the Spinner
         setupSpinner() // Call to set up the spinner
-
-        // Load the timesheet data
-        loadTimesheet(fixtureId)
 
         // Set up button listeners
         binding.btnBack.setOnClickListener { finish() }
@@ -109,7 +117,8 @@ class EditTimesheet : AppCompatActivity() {
 
             // Set the spinner to the current match status based on its numeric value
             val matchStatusValue = timesheet.matchstatus
-            val matchStatusText = matchStatusMap.entries.firstOrNull { it.value == matchStatusValue }?.key
+            val matchStatusText =
+                matchStatusMap.entries.firstOrNull { it.value == matchStatusValue }?.key
             if (matchStatusText != null) {
                 setSpinner(binding.spinnerMatchStatus, matchStatuses, matchStatusText)
             }
@@ -138,7 +147,8 @@ class EditTimesheet : AppCompatActivity() {
         val busDepartureTime = binding.txtDepTime.text.toString()
         val busReturnTime = binding.txtReturnTime.text.toString()
         val message = binding.txtMsg.text.toString()
-        val matchStatusText = binding.spinnerMatchStatus.selectedItem.toString() // Get selected match status
+        val matchStatusText =
+            binding.spinnerMatchStatus.selectedItem.toString() // Get selected match status
         val matchStatusValue = matchStatusMap[matchStatusText] ?: 0 // Convert to numeric value
         val homeScore = binding.txtHomeResult.text.toString().toIntOrNull()
         val awayScore = binding.txtAwayResult.text.toString().toIntOrNull()
