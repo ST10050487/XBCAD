@@ -90,6 +90,7 @@ class CreateTimesheet : AppCompatActivity() {
         }
     }
 
+
     // Function to set up the Spinner
     private fun setupSpinner() {
         val spinner: Spinner = binding.spinnerMatchStatus // Use binding to get the Spinner
@@ -196,11 +197,9 @@ class CreateTimesheet : AppCompatActivity() {
 
     // Function to set up the back button functionality
     private fun setupBackButton() {
-        val backButton = findViewById<LinearLayout>(R.id.back_btn)
+        val backButton = binding.backBtn // Use the binding to get the back button layout
         backButton.setOnClickListener {
-//            val intent = Intent(this, Admin_Home::class.java)
-            startActivity(intent)
-            finish()
+            finish() // This will close the current activity and return to the previous one
         }
     }
 

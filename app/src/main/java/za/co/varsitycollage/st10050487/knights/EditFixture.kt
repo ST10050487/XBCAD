@@ -211,8 +211,17 @@ class EditFixture : AppCompatActivity() {
         builder.setMessage("Are you sure you want to delete this Fixture?")
 
         builder.setPositiveButton("Yes") { dialog: DialogInterface, which: Int ->
-            dbHelper.deleteFixture(fixtureId)
-            Toast.makeText(this, "Fixture deleted successfully", Toast.LENGTH_SHORT).show()
+            // Attempt to delete the fixture
+            val deleteSuccess = dbHelper.deleteFixture(fixtureId)
+            if (deleteSuccess) {
+                Toast.makeText(this, "Fixture deleted successfully", Toast.LENGTH_SHORT).show()
+                // Redirect to AdminSportsFixtures
+                val intent = Intent(this, AdminSportsFixtures::class.java)
+                startActivity(intent)
+                finish() // Close the current activity
+            } else {
+                Toast.makeText(this, "Failed to delete fixture", Toast.LENGTH_SHORT).show()
+            }
         }
         builder.setNegativeButton("No") { dialog: DialogInterface, which: Int ->
             // Dismiss the dialog
