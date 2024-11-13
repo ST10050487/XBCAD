@@ -215,11 +215,6 @@ class CreateSportFixture : AppCompatActivity() {
             return false
         }
 
-        if (matchDescriptionEditText.text.toString().trim().isEmpty()) {
-            matchDescriptionEditText.error = "Match description is required"
-            return false
-        }
-
         if (selectedMatchTime.isNullOrEmpty()) {
             matchTimeEditText.error = "Match time is required"
             return false
@@ -404,7 +399,7 @@ class CreateSportFixture : AppCompatActivity() {
             put("MATCH_LOCATION", venue)
             put("MATCH_DATE", selectedMatchDate)
             put("MATCH_TIME", selectedMatchTime)
-            put("MATCH_DESCRIPTION", matchDescription)
+            put("MATCH_DESCRIPTION", matchDescription ?: "") // Insert as empty string if null
             put("USER_ID", userId) // Use the retrieved user ID
             put("LEAGUE_ID", leagueId)
             put("IS_HOME_GAME", isHomeGame) // Store whether it's a home game
