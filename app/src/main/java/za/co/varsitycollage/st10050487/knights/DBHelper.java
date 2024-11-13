@@ -1207,7 +1207,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public Integer validateUser(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
-        Integer userId = null; // Initialize userId to null
+        Integer userId = null;
 
         try {
             // Query to check if user exists
@@ -1224,7 +1224,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     if (BCrypt.checkpw(password, storedHashedPassword)) {
                         return userId;
                     } else {
-                        return null; // Password does not match
+                        return null;
                     }
                 }
             }
