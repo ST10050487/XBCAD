@@ -344,13 +344,10 @@ class CreateSportFixture : AppCompatActivity() {
     }
 
     private fun navigateToCreateTimesheet() {
-        if (generatedFixtureId != -1L) { // Check if the fixture ID is valid
-            val intent = Intent(this, CreateTimesheet::class.java)
-            intent.putExtra("FIXTURE_ID", generatedFixtureId) // Pass the fixture ID
-            startActivity(intent)
-        } else {
-            Toast.makeText(this, "You must Create a Sports Fixture first", Toast.LENGTH_SHORT).show()
-        }
+        // Allow navigation to the CreateTimesheet activity regardless of fixture ID
+        val intent = Intent(this, CreateTimesheet::class.java)
+        intent.putExtra("FIXTURE_ID", generatedFixtureId) // Pass the fixture ID
+        startActivity(intent)
     }
 
     private fun storeValues() {
@@ -418,6 +415,7 @@ class CreateSportFixture : AppCompatActivity() {
             Toast.makeText(this, "Failed to create sports fixture", Toast.LENGTH_LONG).show()
         } else {
             generatedFixtureId = fixtureId // Store the generated fixture ID
+            fixtureID = generatedFixtureId // Update the static variable
             Log.d(
                 "CreateSportFixture",
                 "Generated Fixture ID: $generatedFixtureId"

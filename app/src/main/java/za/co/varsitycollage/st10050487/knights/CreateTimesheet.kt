@@ -61,16 +61,8 @@ class CreateTimesheet : AppCompatActivity() {
         binding = ActivityCreateTimesheetBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Retrieve the fixture ID from the Intent
-        val fixtureId = intent.getLongExtra("FIXTURE_ID", -1) // Default value is -1 if not found
-        if (fixtureId != -1L) {
-            Log.d("CreateTimesheet", "Received Fixture ID: $fixtureId")
-            // Proceed with using the fixture ID
-        } else {
-            Toast.makeText(this, "No Fixture ID received", Toast.LENGTH_SHORT).show()
-            // Optionally, you can finish the activity if the fixture ID is not valid
-            finish()
-        }
+        // Retrieve the fixture ID from the static variable
+        val fixtureId = CreateSportFixture.fixtureID // Access the static variable
 
         // Initialize the RecyclerView and its adapter
         adapter = MultipleImageAdapter(imageByteArrayList, fileNameList)
@@ -85,8 +77,25 @@ class CreateTimesheet : AppCompatActivity() {
         // Initialize the Spinner
         setupSpinner()
 
+        // Disable the save button if the fixture ID is invalid
+        if (fixtureId == -1L) {
+            binding.btnSave.isEnabled = false // Disable the button
+            Toast.makeText(this, "Please create a sports fixture first", Toast.LENGTH_SHORT).show()
+        } else {
+            binding.btnSave.isEnabled = true // Enable the button if fixture ID is valid
+        }
+
         binding.btnSave.setOnClickListener {
-            saveTimesheet(fixtureId) // Pass the fixture ID to saveTimesheet
+            if (fixtureId == -1L) {
+                // If the fixture ID is invalid, show a message
+                Toast.makeText(
+                    this,
+                    "You need to create a sports fixture first",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                saveTimesheet(fixtureId) // Pass the fixture ID to saveTimesheet
+            }
         }
     }
 
@@ -205,6 +214,18 @@ class CreateTimesheet : AppCompatActivity() {
 
     // Function to save the timesheet
     private fun saveTimesheet(fixtureId: Long) {
+        // Check if the fixture ID is valid
+        if (fixtureId == -1L) {
+            Toast.makeText(this, "You need to create a sports fixture first", Toast.LENGTH_SHORT)
+                .show()
+
+            // Navigate back to the CreateSportFixture activity
+            val intent = Intent(this, CreateSportFixture::class.java)
+            startActivity(intent)
+            finish() // Finish the current activity to prevent going back to it
+            return
+        }
+
         val meetingTime = binding.txtMeetTime.text.toString()
         val busDepartureTime = binding.txtDepTime.text.toString()
         val busReturnTime = binding.txtArrTime.text.toString()
