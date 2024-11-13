@@ -11,6 +11,7 @@ import android.content.DialogInterface
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
@@ -125,8 +126,12 @@ class EditFixture : AppCompatActivity() {
         // Find the FAB and set the OnClickListener
         val fabAdd = findViewById<FloatingActionButton>(R.id.fab_add)
         fabAdd.setOnClickListener {
-            // Navigate to EditTimesheet activity
+            // Log the fixtureId to check its value
+            Log.d("EditFixture", "Fixture ID: $fixtureId")
+            // Navigate to EditTimesheet activity and pass the fixtureId
             val intent = Intent(this, EditTimesheet::class.java)
+            // Change this line
+            intent.putExtra("FIXTURE_ID", fixtureId) // Pass the fixtureId
             startActivity(intent)
         }
     }

@@ -8,6 +8,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
@@ -61,21 +62,21 @@ class EditTimesheet : AppCompatActivity() {
 
         dbHelper = DBHelper(this) // Initialize DBHelper
 
+        // Initialize the RecyclerView and its adapter
+        adapter = MultipleImageAdapter()
+        binding.rvHighlights.layoutManager = LinearLayoutManager(this)
+        binding.rvHighlights.adapter = adapter
+
         // Retrieve the fixture ID from the intent
         fixtureId = intent.getIntExtra("FIXTURE_ID", -1) // Default value of -1
+        Log.d("EditTimesheet", "Retrieved Fixture ID: $fixtureId") // Log the fixture ID
 
-        // Load the timesheet data
         if (fixtureId != -1) {
             loadTimesheet(fixtureId)
         } else {
             Toast.makeText(this, "Invalid fixture ID", Toast.LENGTH_SHORT).show()
             finish() // Close the activity if the ID is invalid
         }
-
-        // Initialize the RecyclerView and its adapter
-        adapter = MultipleImageAdapter()
-        binding.rvHighlights.layoutManager = LinearLayoutManager(this)
-        binding.rvHighlights.adapter = adapter
 
         // Initialize the Spinner
         setupSpinner() // Call to set up the spinner
@@ -105,10 +106,12 @@ class EditTimesheet : AppCompatActivity() {
         // Retrieve the timesheet details based on the fixture ID
         val timesheet = dbHelper.getTimesDetails(fixtureId)
 
+        Log.d("EditTimesheet", "Loaded Timesheet: $timesheet") // Log the timesheet object
+
         if (timesheet != null) {
             timesheetID = timesheet.timeId
             binding.txtMsg.setText(timesheet.message)
-            binding.txtMeetTime.setText(timesheet.meetTime) // Ensure this matches your TimesheetModel field
+            binding.txtMeetTime.setText(timesheet.meetTime)
             binding.txtDepTime.setText(timesheet.busDepartureTime)
             binding.txtReturnTime.setText(timesheet.busReturnTime)
             binding.txtHomeResult.setText(timesheet.homeScore?.toString())
