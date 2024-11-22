@@ -11,10 +11,12 @@ import android.content.DialogInterface
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import za.co.varsitycollage.st10050487.knights.databinding.ActivityEditFixtureBinding
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
@@ -120,6 +122,18 @@ class EditFixture : AppCompatActivity() {
 
         // Set OnClickListener for the back button
         NavigationBacktoClass()
+
+        // Find the FAB and set the OnClickListener
+        val fabAdd = findViewById<FloatingActionButton>(R.id.fab_add)
+        fabAdd.setOnClickListener {
+            // Log the fixtureId to check its value
+            Log.d("EditFixture", "Fixture ID: $fixtureId")
+            // Navigate to EditTimesheet activity and pass the fixtureId
+            val intent = Intent(this, EditTimesheet::class.java)
+            // Change this line
+            intent.putExtra("FIXTURE_ID", fixtureId) // Pass the fixtureId
+            startActivity(intent)
+        }
     }
 
     private fun NavigationBacktoClass() {
@@ -197,8 +211,17 @@ class EditFixture : AppCompatActivity() {
         builder.setMessage("Are you sure you want to delete this Fixture?")
 
         builder.setPositiveButton("Yes") { dialog: DialogInterface, which: Int ->
-            dbHelper.deleteFixture(fixtureId)
-            Toast.makeText(this, "Fixture deleted successfully", Toast.LENGTH_SHORT).show()
+            // Attempt to delete the fixture
+            val deleteSuccess = dbHelper.deleteFixture(fixtureId)
+            if (deleteSuccess) {
+                Toast.makeText(this, "Fixture deleted successfully", Toast.LENGTH_SHORT).show()
+                // Redirect to AdminSportsFixtures
+                val intent = Intent(this, AdminSportsFixtures::class.java)
+                startActivity(intent)
+                finish() // Close the current activity
+            } else {
+                Toast.makeText(this, "Failed to delete fixture", Toast.LENGTH_SHORT).show()
+            }
         }
         builder.setNegativeButton("No") { dialog: DialogInterface, which: Int ->
             // Dismiss the dialog
