@@ -8,8 +8,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.util.Log
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -17,12 +17,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import za.co.varsitycollage.st10050487.knights.databinding.ActivityEditTimesheetBinding
 import java.util.Calendar
 
 class EditTimesheet : AppCompatActivity() {
-    // Binding object to access views in the layout
     private lateinit var binding: ActivityEditTimesheetBinding
     private lateinit var dbHelper: DBHelper
     private lateinit var adapter: MultipleImageAdapter
@@ -31,11 +29,9 @@ class EditTimesheet : AppCompatActivity() {
     private var timesheetID: Int = 0
     private var isGetItemsCalled = false
 
-    // Lists to store image URIs and filenames
     private var imageByteArrayList = mutableListOf<ByteArray?>()
     private var fileNameList = mutableListOf<String?>()
 
-    // List of match statuses
     private val matchStatuses = listOf(
         "First Half",
         "Half Time",
@@ -44,7 +40,6 @@ class EditTimesheet : AppCompatActivity() {
         "Cancelled"
     )
 
-    // Map to convert match status text to numeric values
     private val matchStatusMap = mapOf(
         "First Half" to 1,
         "Half Time" to 2,
@@ -59,22 +54,25 @@ class EditTimesheet : AppCompatActivity() {
         binding = ActivityEditTimesheetBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        dbHelper = DBHelper(this) // Initialize DBHelper
+        dbHelper = DBHelper(this)
 
-        // Initialize the RecyclerView and its adapter
         adapter = MultipleImageAdapter()
         binding.rvHighlights.layoutManager = LinearLayoutManager(this)
         binding.rvHighlights.adapter = adapter
 
-        // Initialize the Spinner
-        setupSpinner() // Call to set up the spinner
+        fixtureId = intent.getIntExtra("FIXTURE_ID", -1)
+        Log.d("EditTimesheet", "Retrieved Fixture ID: $fixtureId")
 
-        // Load the timesheet data
-        loadTimesheet(fixtureId)
+        if (fixtureId != -1) {
+            loadTimesheet(fixtureId)
+        } else {
+            Toast.makeText(this, "Invalid fixture ID", Toast.LENGTH_SHORT).show()
+            finish()
+        }
 
-        // Set up button listeners
+        setupSpinner()
+
         binding.btnBack.setOnClickListener { finish() }
-        binding.btnDelete.setOnClickListener { deleteTimesheet() }
         binding.btnSave.setOnClickListener {
             if (validateInputs()) {
                 updateTimesheetData()
@@ -85,36 +83,35 @@ class EditTimesheet : AppCompatActivity() {
         setupTimePickers()
     }
 
-    // Function to set up the Spinner
     private fun setupSpinner() {
-        val spinner: Spinner = binding.spinnerMatchStatus // Use binding to get the Spinner
+        val spinner: Spinner = binding.spinnerMatchStatus
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, matchStatuses)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
     }
 
     private fun loadTimesheet(fixtureId: Int) {
-        // Retrieve the timesheet details based on the fixture ID
         val timesheet = dbHelper.getTimesDetails(fixtureId)
+
+        Log.d("EditTimesheet", "Loaded Timesheet: $timesheet")
 
         if (timesheet != null) {
             timesheetID = timesheet.timeId
             binding.txtMsg.setText(timesheet.message)
-            binding.txtMeetTime.setText(timesheet.meetTime) // Ensure this matches your TimesheetModel field
+            binding.txtMeetTime.setText(timesheet.meetTime)
             binding.txtDepTime.setText(timesheet.busDepartureTime)
             binding.txtReturnTime.setText(timesheet.busReturnTime)
             binding.txtHomeResult.setText(timesheet.homeScore?.toString())
             binding.txtAwayResult.setText(timesheet.awayScore?.toString())
             binding.txtManOfTheMatch.setText(timesheet.manOfTheMatch)
 
-            // Set the spinner to the current match status based on its numeric value
             val matchStatusValue = timesheet.matchstatus
-            val matchStatusText = matchStatusMap.entries.firstOrNull { it.value == matchStatusValue }?.key
+            val matchStatusText =
+                matchStatusMap.entries.firstOrNull { it.value == matchStatusValue }?.key
             if (matchStatusText != null) {
                 setSpinner(binding.spinnerMatchStatus, matchStatuses, matchStatusText)
             }
 
-            // Load existing highlights
             loadHighlights(timesheet.timeId)
         } else {
             Toast.makeText(this, "Failed to load timesheet", Toast.LENGTH_SHORT).show()
@@ -125,12 +122,9 @@ class EditTimesheet : AppCompatActivity() {
         val highlights = dbHelper.getHighlights(timesheetId)
         highlights.forEach { highlight ->
             imageByteArrayList.add(highlight)
-            fileNameList.add("Highlight ${imageByteArrayList.size}") // Change as needed
+            fileNameList.add("Highlight ${imageByteArrayList.size}")
         }
-        adapter.getItems(
-            imageByteArrayList,
-            fileNameList
-        ) // Assuming you have a method to set the adapter items
+        adapter.getItems(imageByteArrayList, fileNameList)
     }
 
     private fun updateTimesheetData() {
@@ -138,24 +132,23 @@ class EditTimesheet : AppCompatActivity() {
         val busDepartureTime = binding.txtDepTime.text.toString()
         val busReturnTime = binding.txtReturnTime.text.toString()
         val message = binding.txtMsg.text.toString()
-        val matchStatusText = binding.spinnerMatchStatus.selectedItem.toString() // Get selected match status
-        val matchStatusValue = matchStatusMap[matchStatusText] ?: 0 // Convert to numeric value
+        val matchStatusText = binding.spinnerMatchStatus.selectedItem.toString()
+        val matchStatusValue = matchStatusMap[matchStatusText] ?: 0
         val homeScore = binding.txtHomeResult.text.toString().toIntOrNull()
         val awayScore = binding.txtAwayResult.text.toString().toIntOrNull()
         val manOfTheMatch = binding.txtManOfTheMatch.text.toString()
 
-        // Create a TimesheetModel with updated values
         val timesheet = TimesheetModel(
             timeId = timesheetID,
             fixtureId = fixtureId,
-            meetTime = meetTime,
-            busDepartureTime = busDepartureTime,
-            busReturnTime = busReturnTime,
-            message = message,
+            meetTime = if (meetTime.isNotBlank()) meetTime else null,
+            busDepartureTime = if (busDepartureTime.isNotBlank()) busDepartureTime else null,
+            busReturnTime = if (busReturnTime.isNotBlank()) busReturnTime else null,
+            message = if (message.isNotBlank()) message else null,
             homeScore = homeScore,
             awayScore = awayScore,
-            manOfTheMatch = manOfTheMatch,
-            matchstatus = matchStatusValue // Store as a number
+            manOfTheMatch = if (manOfTheMatch.isNotBlank()) manOfTheMatch else null,
+            matchstatus = matchStatusValue
         )
 
         val rowsAffected = dbHelper.updateTimesheet(timesheet)
@@ -173,25 +166,13 @@ class EditTimesheet : AppCompatActivity() {
         }
     }
 
-    private fun populateSpinner(spinner: Spinner, data: List<String>) {
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, data)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
-    }
-
     private fun saveHighlights() {
         val dbHelper = DBHelper(this)
         if (imageByteArrayList.isNotEmpty()) {
-            // dbHelper.updateHighlights(timesheetID, adapter.returnItems())
             Toast.makeText(this, "Highlights updated successfully", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(this, "Failed to update highlights", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun saveDummyData() {
-        val dbHelper = DBHelper(this)
-        dbHelper.addDummyTimesEntry(1)
     }
 
     private fun deleteTimesheet() {
@@ -207,13 +188,11 @@ class EditTimesheet : AppCompatActivity() {
                 if (successTime && successHighlights) {
                     Toast.makeText(this, "Timesheet deleted successfully", Toast.LENGTH_SHORT)
                         .show()
-                    // finish() // Close the activity
                 } else {
                     Toast.makeText(this, "Failed to delete timesheet", Toast.LENGTH_SHORT).show()
                 }
             }
             builder.setNegativeButton("No") { dialog: DialogInterface, which: Int ->
-                // Dismiss the dialog
                 dialog.dismiss()
             }
             val dialog: AlertDialog = builder.create()
@@ -223,7 +202,6 @@ class EditTimesheet : AppCompatActivity() {
         }
     }
 
-    // Function to handle image upload
     private fun ImageUpload() {
         binding.uploadBtn.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT).also {
@@ -234,7 +212,6 @@ class EditTimesheet : AppCompatActivity() {
         }
     }
 
-    // Activity result launcher for image selection
     private val imageLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
@@ -249,23 +226,17 @@ class EditTimesheet : AppCompatActivity() {
                             filenames.add(getFilenameFromUri(this, uri))
                             imageByteArrayList.add(
                                 contentResolver.openInputStream(uri)?.readBytes()
-                            ) // Add to class-level list
+                            )
                         }
                     } ?: data.data?.let { uri ->
                         uris.add(uri)
                         filenames.add(getFilenameFromUri(this, uri))
-                        imageByteArrayList.add(
-                            contentResolver.openInputStream(uri)?.readBytes()
-                        ) // Add to class-level list
+                        imageByteArrayList.add(contentResolver.openInputStream(uri)?.readBytes())
                     }
 
                     if (uris.isNotEmpty()) {
-                        // Update the adapter with the new highlights
-                        adapter.getItems(
-                            imageByteArrayList,
-                            filenames
-                        ) // Assuming you have a method to set the adapter items
-                        saveHighlights() // Call to save highlights if needed
+                        adapter.getItems(imageByteArrayList, filenames)
+                        saveHighlights()
                     } else {
                         Toast.makeText(this, "No images selected", Toast.LENGTH_SHORT).show()
                     }
@@ -275,7 +246,6 @@ class EditTimesheet : AppCompatActivity() {
             }
         }
 
-    // Function to get the filename from a URI
     private fun getFilenameFromUri(context: Context, uri: Uri): String? {
         val fileName: String?
         val cursor = context.contentResolver.query(uri, null, null, null, null)
@@ -285,14 +255,12 @@ class EditTimesheet : AppCompatActivity() {
         return fileName
     }
 
-    // Function to set up time pickers for the time fields
     private fun setupTimePickers() {
         binding.txtMeetTime.setOnClickListener { showTimePickerDialog(binding.txtMeetTime) }
         binding.txtDepTime.setOnClickListener { showTimePickerDialog(binding.txtDepTime) }
         binding.txtReturnTime.setOnClickListener { showTimePickerDialog(binding.txtReturnTime) }
     }
 
-    // Function to show a time picker dialog
     private fun showTimePickerDialog(textView: TextView) {
         val calendar = Calendar.getInstance()
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
@@ -305,31 +273,6 @@ class EditTimesheet : AppCompatActivity() {
     }
 
     private fun validateInputs(): Boolean {
-        val message = binding.txtMsg.text.toString().trim()
-        val meetTime = binding.txtMeetTime.text.toString().trim()
-        val depTime = binding.txtDepTime.text.toString().trim()
-        val returnTime = binding.txtReturnTime.text.toString().trim()
-
-        if (message.isEmpty()) {
-            binding.txtMsg.error = "Message is required"
-            return false
-        }
-
-        if (meetTime.isEmpty()) {
-            binding.txtMeetTime.error = "Meet time is required"
-            return false
-        }
-
-        if (depTime.isEmpty()) {
-            binding.txtDepTime.error = "Bus departure time is required"
-            return false
-        }
-
-        if (returnTime.isEmpty()) {
-            binding.txtReturnTime.error = "Bus return time is required"
-            return false
-        }
-
         return true
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.LinearLayout
@@ -60,6 +61,9 @@ class CreateTimesheet : AppCompatActivity() {
         binding = ActivityCreateTimesheetBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Retrieve the fixture ID from the static variable
+        val fixtureId = CreateSportFixture.fixtureID // Access the static variable
+
         // Initialize the RecyclerView and its adapter
         adapter = MultipleImageAdapter(imageByteArrayList, fileNameList)
         binding.rvHighlights.layoutManager = LinearLayoutManager(this)
@@ -73,10 +77,28 @@ class CreateTimesheet : AppCompatActivity() {
         // Initialize the Spinner
         setupSpinner()
 
+        // Disable the save button if the fixture ID is invalid
+        if (fixtureId == -1L) {
+            binding.btnSave.isEnabled = false // Disable the button
+            Toast.makeText(this, "Please create a sports fixture first", Toast.LENGTH_SHORT).show()
+        } else {
+            binding.btnSave.isEnabled = true // Enable the button if fixture ID is valid
+        }
+
         binding.btnSave.setOnClickListener {
-            saveTimesheet()
+            if (fixtureId == -1L) {
+                // If the fixture ID is invalid, show a message
+                Toast.makeText(
+                    this,
+                    "You need to create a sports fixture first",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                saveTimesheet(fixtureId) // Pass the fixture ID to saveTimesheet
+            }
         }
     }
+
 
     // Function to set up the Spinner
     private fun setupSpinner() {
@@ -184,16 +206,26 @@ class CreateTimesheet : AppCompatActivity() {
 
     // Function to set up the back button functionality
     private fun setupBackButton() {
-        val backButton = findViewById<LinearLayout>(R.id.back_btn)
+        val backButton = binding.backBtn // Use the binding to get the back button layout
         backButton.setOnClickListener {
-//            val intent = Intent(this, Admin_Home::class.java)
-            startActivity(intent)
-            finish()
+            finish() // This will close the current activity and return to the previous one
         }
     }
 
     // Function to save the timesheet
-    private fun saveTimesheet() {
+    private fun saveTimesheet(fixtureId: Long) {
+        // Check if the fixture ID is valid
+        if (fixtureId == -1L) {
+            Toast.makeText(this, "You need to create a sports fixture first", Toast.LENGTH_SHORT)
+                .show()
+
+            // Navigate back to the CreateSportFixture activity
+            val intent = Intent(this, CreateSportFixture::class.java)
+            startActivity(intent)
+            finish() // Finish the current activity to prevent going back to it
+            return
+        }
+
         val meetingTime = binding.txtMeetTime.text.toString()
         val busDepartureTime = binding.txtDepTime.text.toString()
         val busReturnTime = binding.txtArrTime.text.toString()
@@ -209,7 +241,8 @@ class CreateTimesheet : AppCompatActivity() {
             busDepartureTime,
             busReturnTime,
             message,
-            matchStatusValue
+            matchStatusValue,
+            fixtureId // Pass the fixture ID to the database method
         )
 
         Toast.makeText(this, "Timesheet saved successfully", Toast.LENGTH_SHORT).show()

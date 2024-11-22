@@ -131,13 +131,12 @@ public class DBHelper extends SQLiteOpenHelper {
                 "MAN_OF_THE_MATCH TEXT," +
                 "HOME_SCORE INTEGER," +
                 "AWAY_SCORE INTEGER," +
-                "FIXTURE_ID INTEGER NOT NULL," +
+                "FIXTURE_ID INTEGER NOT NULL," + // Ensure this line exists
                 "MATCH_STATUS TEXT NOT NULL," +
-                "MATCH_STATUS_ID INTEGER," +  // Ensure this is the correct column name
-                "FOREIGN KEY (FIXTURE_ID) REFERENCES SPORT_FIXTURES(FIXTURE_ID)," + // Comma here
-                "FOREIGN KEY (MATCH_STATUS_ID) REFERENCES MATCH_STATUS(MATCH_STATUS_ID)" + // Comma removed
-                ");"; // Add a closing parenthesis and semicolon at the end
-
+                "MATCH_STATUS_ID INTEGER," +
+                "FOREIGN KEY (FIXTURE_ID) REFERENCES SPORT_FIXTURES(FIXTURE_ID)," + // Foreign key reference
+                "FOREIGN KEY (MATCH_STATUS_ID) REFERENCES MATCH_STATUS(MATCH_STATUS_ID)" +
+                ");";
         db.execSQL(CREATE_TABLE_TIMES);
 
         // Create SCHOOL_MERCH table
@@ -290,7 +289,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "('Cancelled')";
         db.execSQL(CREATE_TABLE_USERS);
 
-  // Create SUSPICIOUS_ACTIVITY table
+        // Create SUSPICIOUS_ACTIVITY table
         String CREATE_TABLE_SUSPICIOUS_ACTIVITY = "CREATE TABLE IF NOT EXISTS  SUSPICIOUS_ACTIVITY (" +
                 "ACTIVITY_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "USER_ID INTEGER," +
@@ -302,8 +301,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < 17) { // Assuming 17 is the version where IS_HOME_GAME is added
-            db.execSQL("ALTER TABLE SPORT_FIXTURES ADD COLUMN IS_HOME_GAME INTEGER DEFAULT 0");
+        if (oldVersion < 19) { // Assuming 19 is the version where FIXTURE_ID is added
+            db.execSQL("ALTER TABLE TIMES ADD COLUMN FIXTURE_ID INTEGER NOT NULL DEFAULT 0"); // Add the column
         }
         // Drop older tables if existed
         db.execSQL("DROP TABLE IF EXISTS USERS");
@@ -573,14 +572,15 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // TIMES
-    public void addTimes(String meetingTime, String busDepatureTime, String busReturnTime, String message, int matchStatus) {
+    public void addTimes(String meetingTime, String busDepartureTime, String busReturnTime, String message, int matchStatus, long fixtureID) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("MEETING_TIME", meetingTime);
-        values.put("BUS_DEPATURE_TIME", busDepatureTime);
+        values.put("BUS_DEPATURE_TIME", busDepartureTime);
         values.put("BUS_RETURN_TIME", busReturnTime);
         values.put("MESSAGE", message);
         values.put("MATCH_STATUS", matchStatus); // Keep this line
+        values.put("FIXTURE_ID", fixtureID); // Add the fixture ID to the ContentValues
         db.insert("TIMES", null, values);
     }
 
@@ -1224,6 +1224,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return null; // User not found
     }
+
     // Method to check if a user exists and retrieve ROLE_ID
     public PlayerProfileModel getPlayerProfile(int userId) {
         SQLiteDatabase db = this.getReadableDatabase();
