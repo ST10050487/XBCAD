@@ -33,15 +33,12 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
     ): View? {
         val view = inflater.inflate(R.layout.fragment_upcoming_matches, container, false)
         val linearLayout = view.findViewById<LinearLayout>(R.id.linear_layout)
-        val noMatchesImage = view.findViewById<ImageView>(R.id.no_matches_image)
 
         val dbHelper = DBHelper(requireContext())
         val fixtures = dbHelper.getAllFixtures()
 
-        // Check if there are any fixtures
+        // Inside the for loop in onCreateView
         if (fixtures.isNotEmpty()) {
-            noMatchesImage.visibility = View.GONE // Hide the image if there are matches
-
             for (fixture in fixtures) {
                 if ((selectedSports.isEmpty() || selectedSports.contains(fixture.sport)) &&
                     (searchQuery.isEmpty() || fixture.homeTeam.contains(
@@ -101,7 +98,6 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                 }
             }
         } else {
-            noMatchesImage.visibility = View.VISIBLE // Show the image if no matches are found
             Log.e("UpcomingMatchesFragment", "No fixtures found in the database.")
         }
         return view
