@@ -55,18 +55,21 @@ class CreateTimesheet : AppCompatActivity() {
             if (result.resultCode == RESULT_OK) {
                 result.data?.let { data ->
                     val byteArrayList = mutableListOf<ByteArray?>()
+                    val fileNameList = mutableListOf<String>() // New list for file names
 
                     data.clipData?.let { clipData ->
                         for (i in 0 until clipData.itemCount) {
                             val uri = clipData.getItemAt(i).uri
                             byteArrayList.add(uriToByteArray(uri))
+                            fileNameList.add(getFileName(uri)) // Get the file name and add to the list
                         }
                     } ?: data.data?.let { uri ->
                         byteArrayList.add(uriToByteArray(uri))
+                        fileNameList.add(getFileName(uri)) // Get the file name and add to the list
                     }
 
                     if (byteArrayList.isNotEmpty()) {
-                        adapter.addItems(byteArrayList)
+                        adapter.addItems(byteArrayList, fileNameList) // Pass both byte arrays and file names
                     } else {
                         Toast.makeText(this, "No images selected", Toast.LENGTH_SHORT).show()
                     }
@@ -92,6 +95,18 @@ class CreateTimesheet : AppCompatActivity() {
             e.printStackTrace()
             null
         }
+    }
+
+    private fun getFileName(uri: Uri): String {
+        var name = "unknown"
+        val cursor = contentResolver.query(uri, null, null, null, null)
+        cursor?.use {
+            val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (it.moveToFirst()) {
+                name = it.getString(nameIndex)
+            }
+        }
+        return name
     }
 
     private fun setupBackButton() {

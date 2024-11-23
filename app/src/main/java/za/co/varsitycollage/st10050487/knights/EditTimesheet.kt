@@ -30,7 +30,7 @@ class EditTimesheet : AppCompatActivity() {
     private var isGetItemsCalled = false
 
     private var imageByteArrayList = mutableListOf<ByteArray?>()
-    private var fileNameList = mutableListOf<String?>()
+    private var fileNameList = mutableListOf<String>()
 
     private val matchStatuses = listOf(
         "First Half",
@@ -56,7 +56,7 @@ class EditTimesheet : AppCompatActivity() {
 
         dbHelper = DBHelper(this)
 
-        adapter = MultipleImageAdapter()
+        adapter = MultipleImageAdapter(imageByteArrayList, fileNameList)
         binding.rvHighlights.layoutManager = LinearLayoutManager(this)
         binding.rvHighlights.adapter = adapter
 
@@ -120,11 +120,11 @@ class EditTimesheet : AppCompatActivity() {
 
     private fun loadHighlights(timesheetId: Int) {
         val highlights = dbHelper.getHighlights(timesheetId)
-        imageByteArrayList.clear() // Clear the list before adding new highlights
         highlights.forEach { highlight ->
             imageByteArrayList.add(highlight)
+            fileNameList.add("Highlight ${imageByteArrayList.size}")
         }
-        adapter.updateItems(imageByteArrayList) // Use the new updateItems method
+        adapter.addItems(imageByteArrayList, fileNameList)
     }
 
     private fun updateTimesheetData() {
@@ -216,26 +216,22 @@ class EditTimesheet : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let { data ->
-                    val uris = mutableListOf<Uri?>()
-                    val filenames = mutableListOf<String?>()
+                    val byteArrayList = mutableListOf<ByteArray?>()
+                    val fileNameList = mutableListOf<String>()
 
                     data.clipData?.let { clipData ->
                         for (i in 0 until clipData.itemCount) {
                             val uri = clipData.getItemAt(i).uri
-                            uris.add(uri)
-                            filenames.add(getFilenameFromUri(this, uri))
-                            imageByteArrayList.add(
-                                contentResolver.openInputStream(uri)?.readBytes()
-                            )
+                            byteArrayList.add(contentResolver.openInputStream(uri)?.readBytes())
+                            fileNameList.add(getFilenameFromUri(this, uri))
                         }
                     } ?: data.data?.let { uri ->
-                        uris.add(uri)
-                        filenames.add(getFilenameFromUri(this, uri))
-                        imageByteArrayList.add(contentResolver.openInputStream(uri)?.readBytes())
+                        byteArrayList.add(contentResolver.openInputStream(uri)?.readBytes())
+                        fileNameList.add(getFilenameFromUri(this, uri))
                     }
 
-                    if (uris.isNotEmpty()) {
-                        adapter.updateItems(imageByteArrayList) // Update the adapter with new items
+                    if (byteArrayList.isNotEmpty()) {
+                        adapter.addItems(byteArrayList, fileNameList)
                         saveHighlights()
                     } else {
                         Toast.makeText(this, "No images selected", Toast.LENGTH_SHORT).show()
@@ -246,13 +242,14 @@ class EditTimesheet : AppCompatActivity() {
             }
         }
 
-    private fun getFilenameFromUri(context: Context, uri: Uri): String? {
-        val fileName: String?
+    private fun getFilenameFromUri(context: Context, uri: Uri): String {
         val cursor = context.contentResolver.query(uri, null, null, null, null)
-        cursor?.moveToFirst()
-        fileName = cursor?.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
-        cursor?.close()
-        return fileName
+        cursor?.use {
+            if (it.moveToFirst()) {
+                return it.getString(it.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME)) ?: "unknown"
+            }
+        }
+        return "unknown"
     }
 
     private fun setupTimePickers() {
