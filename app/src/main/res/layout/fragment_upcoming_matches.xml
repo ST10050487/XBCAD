@@ -15,9 +15,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-
-
+            <!-- Content for upcoming matches will be added here -->
         </LinearLayout>
     </ScrollView>
+
+    <!-- ImageView to show when there are no matches -->
+    <ImageView
+        android:id="@+id/no_matches_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/emptymatchinfo"
+        android:visibility="gone" />
+
 </FrameLayout>
