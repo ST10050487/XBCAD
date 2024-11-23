@@ -19,7 +19,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 19;
+    private static final int DATABASE_VERSION = 23;
 
 
     // Constructor
@@ -196,12 +196,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 "MATCH_LOCATION TEXT NOT NULL," +
                 "MATCH_DATE TEXT NOT NULL," +
                 "MATCH_TIME TEXT NOT NULL," +
+                "SET_TIME TEXT NOT NULL," +
+                "SET_DATE TEXT NOT NULL," +
                 "MATCH_DESCRIPTION TEXT," +
                 "PICTURE BLOB," +
                 "USER_ID INTEGER NOT NULL," +
                 "LEAGUE_ID INTEGER," +
                 "MATCH_STATUS_ID INTEGER," +
-                "IS_HOME_GAME INTEGER DEFAULT 0, " + // Add this line
+                "IS_HOME_GAME INTEGER DEFAULT 0, " +
                 "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID)," +
                 "FOREIGN KEY (LEAGUE_ID) REFERENCES HIGH_SCHOOL_LEAGUE(LEAGUE_ID)," +
                 "FOREIGN KEY (MATCH_STATUS_ID) REFERENCES MATCH_STATUS(MATCH_STATUS_ID))";
@@ -301,9 +303,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < 19) { // Assuming 19 is the version where FIXTURE_ID is added
-            db.execSQL("ALTER TABLE TIMES ADD COLUMN FIXTURE_ID INTEGER NOT NULL DEFAULT 0"); // Add the column
-        }
+
         // Drop older tables if existed
         db.execSQL("DROP TABLE IF EXISTS USERS");
         db.execSQL("DROP TABLE IF EXISTS ROLES");
@@ -1611,6 +1611,6 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("USER_ID", userId);
         return db.insert("EVENTS", null, values);
     }
-
-
 }
+
+
