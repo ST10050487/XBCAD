@@ -120,11 +120,11 @@ class EditTimesheet : AppCompatActivity() {
 
     private fun loadHighlights(timesheetId: Int) {
         val highlights = dbHelper.getHighlights(timesheetId)
+        imageByteArrayList.clear() // Clear the list before adding new highlights
         highlights.forEach { highlight ->
             imageByteArrayList.add(highlight)
-            fileNameList.add("Highlight ${imageByteArrayList.size}")
         }
-        adapter.getItems(imageByteArrayList, fileNameList)
+        adapter.updateItems(imageByteArrayList) // Use the new updateItems method
     }
 
     private fun updateTimesheetData() {
@@ -235,7 +235,7 @@ class EditTimesheet : AppCompatActivity() {
                     }
 
                     if (uris.isNotEmpty()) {
-                        adapter.getItems(imageByteArrayList, filenames)
+                        adapter.updateItems(imageByteArrayList) // Update the adapter with new items
                         saveHighlights()
                     } else {
                         Toast.makeText(this, "No images selected", Toast.LENGTH_SHORT).show()
