@@ -102,6 +102,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics:22.1.2")
     implementation("net.zetetic:android-database-sqlcipher:4.5.4")
     implementation("androidx.sqlite:sqlite:2.4.0")
+    implementation("com.github.bumptech.glide:glide:4.15.1")
 }
 apply(plugin ="com.google.gms.google-services")
 apply(plugin = "com.google.firebase.crashlytics")

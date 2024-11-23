@@ -59,6 +59,9 @@ navView.setNavigationItemSelectedListener {
         R.id.nav_events -> { val intent = Intent(this, UpcomingRecentEvents::class.java)
             startActivity(intent)
         }
+        R.id.nav_shop -> { val intent = Intent(this, ViewProduct::class.java)
+            startActivity(intent)
+        }
         R.id.nav_profile -> { val intent = Intent(this, HomeScreen::class.java)
             startActivity(intent)
         }
