@@ -381,10 +381,8 @@ class CreateSportFixture : AppCompatActivity() {
         val isHomeGame = when {
             awayTeamName?.contains("Bosemansdam", ignoreCase = true) == true ||
                     awayTeamName?.contains("Boseman'sdam", ignoreCase = true) == true -> false
-
             venue?.contains("Bosemansdam High School", ignoreCase = true) == true ||
                     venue?.contains("Boseman'sdam High School", ignoreCase = true) == true -> true
-
             else -> false // If venue is not one of the specified, consider it an away game
         }
 
@@ -400,9 +398,10 @@ class CreateSportFixture : AppCompatActivity() {
             put("MATCH_DATE", selectedMatchDate)
             put("MATCH_TIME", selectedMatchTime)
             put("MATCH_DESCRIPTION", matchDescription ?: "") // Insert as empty string if null
-            put("USER_ID", userId) // Use the retrieved user ID
-            put("LEAGUE_ID", leagueId)
-            put("IS_HOME_GAME", isHomeGame) // Store whether it's a home game
+            put("USER_ID", userId ?: -1) // Use the retrieved user ID, default to -1 if null
+            put("LEAGUE_ID", leagueId ?: -1) // Default to -1 if leagueId is null
+            put("IS_HOME_GAME", if (isHomeGame) 1 else 0) // Store whether it's a home game
+            put("SET_TIME", selectedMatchTime) // Add this line to provide the SET_TIME value
         }
 
         val fixtureId = dbHelper.writableDatabase.insert("SPORT_FIXTURES", null, values)
@@ -411,15 +410,8 @@ class CreateSportFixture : AppCompatActivity() {
         } else {
             generatedFixtureId = fixtureId // Store the generated fixture ID
             fixtureID = generatedFixtureId // Update the static variable
-            Log.d(
-                "CreateSportFixture",
-                "Generated Fixture ID: $generatedFixtureId"
-            ) // Log the fixture ID
-            Toast.makeText(
-                this,
-                "You have successfully created the sports fixture",
-                Toast.LENGTH_LONG
-            ).show()
+            Log.d("CreateSportFixture", "Generated Fixture ID: $generatedFixtureId") // Log the fixture ID
+            Toast.makeText(this, "You have successfully created the sports fixture", Toast.LENGTH_LONG).show()
         }
 
         // Clear the input fields

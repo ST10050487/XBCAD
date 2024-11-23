@@ -19,7 +19,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 23;
+    private static final int DATABASE_VERSION = 24;
 
 
     // Constructor
@@ -183,7 +183,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
         db.execSQL(CREATE_TABLE_EVENTS);
 
-        // Create SPORT_FIXTURES table
+// Create SPORT_FIXTURES table
         String CREATE_TABLE_SPORT_FIXTURES = "CREATE TABLE SPORT_FIXTURES (" +
                 "FIXTURE_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "SPORT TEXT NOT NULL," +
@@ -196,8 +196,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "MATCH_LOCATION TEXT NOT NULL," +
                 "MATCH_DATE TEXT NOT NULL," +
                 "MATCH_TIME TEXT NOT NULL," +
-                "SET_TIME TEXT NOT NULL," +
-                "SET_DATE TEXT NOT NULL," +
+                "SET_TIME TEXT NOT NULL," +  // Add this line for the SET_TIME column
                 "MATCH_DESCRIPTION TEXT," +
                 "PICTURE BLOB," +
                 "USER_ID INTEGER NOT NULL," +
