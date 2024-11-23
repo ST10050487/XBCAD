@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 //import net.sqlcipher.database.SQLiteOpenHelper;
 import android.util.Log;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 19;
+    private static final int DATABASE_VERSION = 23;
 
 
     // Constructor
@@ -28,7 +30,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create USERS table
-        String CREATE_TABLE_USERS = "CREATE TABLE USERS (" +
+        String CREATE_TABLE_USERS = "CREATE TABLE IF NOT EXISTS USERS (" +
                 "USER_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "NAME TEXT NOT NULL," +
                 "SURNAME TEXT NOT NULL," +
@@ -129,10 +131,12 @@ public class DBHelper extends SQLiteOpenHelper {
                 "MAN_OF_THE_MATCH TEXT," +
                 "HOME_SCORE INTEGER," +
                 "AWAY_SCORE INTEGER," +
-                "FIXTURE_ID INTEGER NOT NULL," +
+                "FIXTURE_ID INTEGER NOT NULL," + // Ensure this line exists
                 "MATCH_STATUS TEXT NOT NULL," +
-                "FOREIGN KEY (TIME_STATUS_ID) REFERENCES TIME_STATUS(TIME_STATUS_ID)," +
-                "FOREIGN KEY (FIXTURE_ID) REFERENCES SPORT_FIXTURES(FIXTURE_ID))";
+                "MATCH_STATUS_ID INTEGER," +
+                "FOREIGN KEY (FIXTURE_ID) REFERENCES SPORT_FIXTURES(FIXTURE_ID)," + // Foreign key reference
+                "FOREIGN KEY (MATCH_STATUS_ID) REFERENCES MATCH_STATUS(MATCH_STATUS_ID)" +
+                ");";
         db.execSQL(CREATE_TABLE_TIMES);
 
         // Create SCHOOL_MERCH table
@@ -192,12 +196,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 "MATCH_LOCATION TEXT NOT NULL," +
                 "MATCH_DATE TEXT NOT NULL," +
                 "MATCH_TIME TEXT NOT NULL," +
+                "SET_TIME TEXT NOT NULL," +
+                "SET_DATE TEXT NOT NULL," +
                 "MATCH_DESCRIPTION TEXT," +
                 "PICTURE BLOB," +
                 "USER_ID INTEGER NOT NULL," +
                 "LEAGUE_ID INTEGER," +
                 "MATCH_STATUS_ID INTEGER," +
-                "IS_HOME_GAME INTEGER DEFAULT 0, " + // Add this line
+                "IS_HOME_GAME INTEGER DEFAULT 0, " +
                 "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID)," +
                 "FOREIGN KEY (LEAGUE_ID) REFERENCES HIGH_SCHOOL_LEAGUE(LEAGUE_ID)," +
                 "FOREIGN KEY (MATCH_STATUS_ID) REFERENCES MATCH_STATUS(MATCH_STATUS_ID))";
@@ -283,13 +289,21 @@ public class DBHelper extends SQLiteOpenHelper {
                 "('Second Half')," +
                 "('Match Over')," +
                 "('Cancelled')";
+        db.execSQL(CREATE_TABLE_USERS);
+
+        // Create SUSPICIOUS_ACTIVITY table
+        String CREATE_TABLE_SUSPICIOUS_ACTIVITY = "CREATE TABLE IF NOT EXISTS  SUSPICIOUS_ACTIVITY (" +
+                "ACTIVITY_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "USER_ID INTEGER," +
+                "ACTIVITY_DESCRIPTION TEXT," +
+                "TIMESTAMP INTEGER," +
+                "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
+        db.execSQL(CREATE_TABLE_SUSPICIOUS_ACTIVITY);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < 17) { // Assuming 17 is the version where IS_HOME_GAME is added
-            db.execSQL("ALTER TABLE SPORT_FIXTURES ADD COLUMN IS_HOME_GAME INTEGER DEFAULT 0");
-        }
+
         // Drop older tables if existed
         db.execSQL("DROP TABLE IF EXISTS USERS");
         db.execSQL("DROP TABLE IF EXISTS ROLES");
@@ -308,6 +322,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS FIXTURE_PLAYERS");
         db.execSQL("DROP TABLE IF EXISTS TIME_HIGHLIGHTS");
         db.execSQL("DROP TABLE IF EXISTS TIME_STATUS");
+        db.execSQL("DROP TABLE IF EXISTS SUSPICIOUS_ACTIVITY");
 
         // Recreate tables
         onCreate(db);
@@ -557,14 +572,15 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // TIMES
-    public void addTimes(String meetingTime, String busDepatureTime, String busReturnTime, String message, String matchStatus) {
+    public void addTimes(String meetingTime, String busDepartureTime, String busReturnTime, String message, int matchStatus, long fixtureID) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("MEETING_TIME", meetingTime);
-        values.put("BUS_DEPATURE_TIME", busDepatureTime);
+        values.put("BUS_DEPATURE_TIME", busDepartureTime);
         values.put("BUS_RETURN_TIME", busReturnTime);
         values.put("MESSAGE", message);
         values.put("MATCH_STATUS", matchStatus); // Keep this line
+        values.put("FIXTURE_ID", fixtureID); // Add the fixture ID to the ContentValues
         db.insert("TIMES", null, values);
     }
 
@@ -593,7 +609,7 @@ public class DBHelper extends SQLiteOpenHelper {
             TimesheetModel timesheet = new TimesheetModel(
                     cursor.getInt(cursor.getColumnIndexOrThrow("TIME_ID")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MATCH_STATUS")), // Use MATCH_STATUS
+                    cursor.getInt(cursor.getColumnIndexOrThrow("MATCH_STATUS")), // Use MATCH_STATUS as an integer
                     cursor.getString(cursor.getColumnIndexOrThrow("MEETING_TIME")),
                     cursor.getString(cursor.getColumnIndexOrThrow("BUS_DEPATURE_TIME")),
                     cursor.getString(cursor.getColumnIndexOrThrow("BUS_RETURN_TIME")),
@@ -772,6 +788,35 @@ public class DBHelper extends SQLiteOpenHelper {
         return fixid;
     }
 
+    // A method to get the match staus
+    public String getMatchStatus(int matchStatusId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String matchStatus = null;
+        String query = "SELECT MATCH_STATUS FROM MATCH_STATUS WHERE MATCH_STATUS_ID = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(matchStatusId)});
+
+        if (cursor.moveToFirst()) {
+            matchStatus = cursor.getString(cursor.getColumnIndexOrThrow("MATCH_STATUS"));
+        }
+        cursor.close();
+        return matchStatus;
+    }
+
+    public ScoresModel getScores(int fixtureId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT HOME_SCORE, AWAY_SCORE FROM TIMES WHERE FIXTURE_ID = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(fixtureId)});
+
+        ScoresModel scores = null;
+        if (cursor.moveToFirst()) {
+            int homeScore = cursor.getInt(cursor.getColumnIndexOrThrow("HOME_SCORE"));
+            int awayScore = cursor.getInt(cursor.getColumnIndexOrThrow("AWAY_SCORE"));
+            scores = new ScoresModel(homeScore, awayScore);
+        }
+        cursor.close();
+        return scores;
+    }
+
     public FixtureModel getFixtureDetails(int fixtureId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM SPORT_FIXTURES WHERE FIXTURE_ID = ?";
@@ -794,7 +839,9 @@ public class DBHelper extends SQLiteOpenHelper {
                     cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
                     cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1 // Add this line
+                    cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1,
+                    cursor.getInt(cursor.getColumnIndexOrThrow("MATCH_STATUS_ID"))
+
             );
             cursor.close();
             return fixture;
@@ -832,7 +879,8 @@ public class DBHelper extends SQLiteOpenHelper {
                         cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
                         cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
                         cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID")),
-                        cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1 // Add this line
+                        cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1,
+                        cursor.getInt(cursor.getColumnIndexOrThrow("MATCH_STATUS_ID"))
                 );
                 fixtures.add(fixture);
             } while (cursor.moveToNext());
@@ -1020,9 +1068,9 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    /*********************************/  /*********************************/  /*********************************/
+/*********************************/  /*********************************/  /*********************************/
     /*********************************/
-    // A method to add users to the database
+// A method to add users to the database
     public void addUsers(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
         // Add users to the database
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1151,24 +1199,30 @@ public class DBHelper extends SQLiteOpenHelper {
 
         try {
             // Query to check if user exists
-            cursor = db.rawQuery("SELECT USER_ID FROM USERS WHERE EMAIL=? AND PASSWORD=?", new String[]{email, password});
-
+            cursor = db.rawQuery("SELECT USER_ID, PASSWORD FROM USERS WHERE EMAIL=?", new String[]{email});
             // Checking if cursor is not null and move to first
             if (cursor != null && cursor.moveToFirst()) {
                 int userIdColumnIndex = cursor.getColumnIndex("USER_ID");
-                if (userIdColumnIndex != -1) {
+                int passwordColumnIndex = cursor.getColumnIndex("PASSWORD");
+                if (userIdColumnIndex != -1 && passwordColumnIndex != -1) {
                     // Getting the USER_ID
                     userId = cursor.getInt(userIdColumnIndex);
+                    String storedHashedPassword = cursor.getString(passwordColumnIndex);
+                    // Verify the password using bcrypt
+                    if (BCrypt.checkpw(password, storedHashedPassword)) {
+                        return userId;
+                    } else {
+                        return null; // Password does not match
+                    }
                 }
             }
         } finally {
-            // Closing cursor
             if (cursor != null) {
                 cursor.close();
             }
+            db.close();
         }
-        // Returning the USER_ID or null
-        return userId;
+        return null; // User not found
     }
 
     // Method to check if a user exists and retrieve ROLE_ID
@@ -1243,7 +1297,7 @@ public class DBHelper extends SQLiteOpenHelper {
             return false;
         }
     }
-    ////////////// DBHelper.java
+////////////// DBHelper.java
 
     public List<String> getAllLeagues() {
         List<String> leagues = new ArrayList<>();
@@ -1388,7 +1442,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.insert("SCHOOL_MERCH", null, values);
     }
 
-    //Umar Implementation
+//Umar Implementation
 
     // Method to get all fixtures
     public List<MatchDis> getUpcomingFixtures() {
@@ -1557,6 +1611,6 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("USER_ID", userId);
         return db.insert("EVENTS", null, values);
     }
-
-
 }
+
+

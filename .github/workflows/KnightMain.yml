@@ -1,0 +1,38 @@
+name: Knights CI
+
+on:
+  push:
+    branches: [ "Hannah-Dev2" ]
+  pull_request:
+    branches: [ "Hannah-Dev2" ]
+  # Uncomment the line below to enable manual triggering
+  # workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Grant execute permissions for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Knights.apk
+          path: app/build/outputs/apk/debug/app-debug.apk

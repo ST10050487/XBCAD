@@ -394,15 +394,6 @@
                 android:fontFamily="@font/inter_bold"
                 android:text="Save Changes" />
 
-            <Button
-                android:id="@+id/btnDelete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/maroon"
-                android:fontFamily="@font/inter_bold"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/_20sdp"
-                android:text="DELETE FIXTURE" />
 
 
         </LinearLayout>

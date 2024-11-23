@@ -465,9 +465,21 @@
             android:layout_marginTop="5dp"
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:background="@color/primaryColor" />
-
-
-
     </LinearLayout>
-
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/backgroundtheme"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/admin_nav_header"
+        app:itemIconSize="25sp"
+        app:itemIconTint="@color/white"
+        app:itemTextAppearance="@style/CustomNavigationViewItemText"
+        app:itemTextColor="@color/white"
+        app:menu="@menu/admin_nav_menu"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-179dp"
+        tools:layout_editor_absoluteY="0dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

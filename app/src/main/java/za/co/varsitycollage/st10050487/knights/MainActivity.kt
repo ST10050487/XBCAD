@@ -20,11 +20,10 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
         // Delay of 3 seconds (3000 milliseconds)
         Handler(Looper.getMainLooper()).postDelayed({
             // Navigate to StudentParentReg Activity after the delay
-            val intent = Intent(this, Login::class.java)
+            val intent = Intent(this, AdminHome::class.java)
             startActivity(intent)
             // Finishing MainActivity so that the user cannot go back to it
             finish()

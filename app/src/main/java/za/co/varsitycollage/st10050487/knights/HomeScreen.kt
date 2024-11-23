@@ -1,5 +1,6 @@
 package za.co.varsitycollage.st10050487.knights
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -45,16 +46,33 @@ class HomeScreen : AppCompatActivity() {
         toggle.syncState()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        navView.setNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.nav_home -> { /* Handle the Home action */ }
-                R.id.nav_events -> { /* Handle the Events action */ }
-                R.id.nav_profile -> { /* Handle the Profile action */ }
-                R.id.nav_logout -> { /* Handle the Logout action */ }
-            }
-            true
+navView.setNavigationItemSelectedListener {
+    when (it.itemId) {
+        R.id.nav_home -> {
+            val intent = Intent(this, HomeScreen::class.java)
+            startActivity(intent)
         }
+       R.id.nav_sport_fixtures -> {
+            val intent = Intent(this, DisplaySportsFixturesActivity::class.java)
+            startActivity(intent)
+        }
+        R.id.nav_events -> { val intent = Intent(this, UpcomingRecentEvents::class.java)
+            startActivity(intent)
+        }
+        R.id.nav_shop -> { val intent = Intent(this, ViewProduct::class.java)
+            startActivity(intent)
+        }
+        R.id.nav_profile -> { val intent = Intent(this, HomeScreen::class.java)
+            startActivity(intent)
+        }
+        R.id.nav_logout -> { val intent = Intent(this, Login::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            finish()
+        }
+    }
+    true
+}
 
         dbHelper = DBHelper(this)
         recyclerView = findViewById(R.id.events_recycler_view)
