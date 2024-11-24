@@ -17,6 +17,7 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import za.co.varsitycollage.st10050487.knights.CreateSportFixture.Companion.fixtureID
 import za.co.varsitycollage.st10050487.knights.databinding.ActivityEditFixtureBinding
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
@@ -33,10 +34,12 @@ class EditFixture : AppCompatActivity() {
     private var awayHolder: ByteArray? = null
     private val PICK_IMAGE_REQUEST = 1
     private val CAMERA_REQUEST = 2
+    private val GET_PLAYERS_REQUEST = 3
     private var isHomeLogo: Boolean = true
     private var fixtureId: Int = 0 // Variable to hold the fixture ID
     private var userId: Int = 1
     private var leagueId: Int = 0
+    private var playerList: ArrayList<PlayerProfileModel> = ArrayList()
 
     private val leagueIdMapping = mapOf(
         "WP League" to 1,
@@ -90,13 +93,14 @@ class EditFixture : AppCompatActivity() {
 
         binding.btnUpdate.setOnClickListener {
             if (validateInputs()) {
+                saveSelectedPlayersToDatabase()
                 updateFixtureData()
             }
         }
         binding.btnPlayers.setOnClickListener {
             val intent = Intent(this, GetPlayers::class.java)
             intent.putExtra("FIXTURE_ID", fixtureId) // Pass fixtureId
-            startActivity(intent)
+            startActivityForResult(intent, GET_PLAYERS_REQUEST)
         }
         binding.btnDelete.setOnClickListener {
             if (!dbHelper.checkIsAdmin(userId)) {
@@ -294,6 +298,12 @@ class EditFixture : AppCompatActivity() {
                     updatePicture(bitmap)
                 }
             }
+        } else if (requestCode == GET_PLAYERS_REQUEST && resultCode == Activity.RESULT_OK) {
+            val selectedPlayers =
+                data?.getParcelableArrayListExtra<PlayerProfileModel>("SELECTED_PLAYERS")
+            if (selectedPlayers != null) {
+                playerList = selectedPlayers
+            }
         }
     }
 
@@ -386,7 +396,11 @@ class EditFixture : AppCompatActivity() {
 
         timePickerDialog.show()
     }
-
+    private fun saveSelectedPlayersToDatabase() {
+        val selectedPlayerIds = playerList.map { it.playerId }
+        dbHelper.updateFixturePlayers(fixtureID.toInt(), selectedPlayerIds)
+        Toast.makeText(this, "Players saved successfully", Toast.LENGTH_SHORT).show()
+    }
     private fun validateInputs(): Boolean {
         val away = binding.txtAwayTeam.text.toString()
         val home = binding.txtHomeTeam.text.toString()

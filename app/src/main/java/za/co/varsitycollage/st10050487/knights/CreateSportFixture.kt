@@ -37,8 +37,9 @@ class CreateSportFixture : AppCompatActivity() {
     private lateinit var matchDescriptionEditText: EditText
     private lateinit var createFixtureButton: Button
     private lateinit var navigateToTimesheetButton: FloatingActionButton // Change to FloatingActionButton
-
+    private lateinit var uploadPlayerBtn: Button
     private val PICK_IMAGE_REQUEST = 1
+    private val GET_PLAYERS_REQUEST = 2
     private var selectedSport: String? = null
     private var selectedAgeGroup: String? = null
     private var selectedLeague: String? = null
@@ -52,6 +53,8 @@ class CreateSportFixture : AppCompatActivity() {
     private var awayTeamLogoUri: Uri? = null
     private var isHomeTeamLogo: Boolean = true
     private var userId: Int? = null // Declare a variable to hold the user ID
+    private var playerList: ArrayList<PlayerProfileModel> = ArrayList()
+
 
     private val leagueIdMapping = mapOf(
         "WP League" to 1,
@@ -96,6 +99,7 @@ class CreateSportFixture : AppCompatActivity() {
         matchDescriptionEditText = findViewById(R.id.Matchdescription)
         createFixtureButton = findViewById(R.id.create_fixtureBtn)
         navigateToTimesheetButton = findViewById(R.id.timesheet_fab) // Updated ID
+        uploadPlayerBtn = findViewById(R.id.uploadPlayerBtn)
 
         // Set onClickListener to the upload buttons
         uploadHomeTeamBtn.setOnClickListener {
@@ -118,6 +122,11 @@ class CreateSportFixture : AppCompatActivity() {
         // Set onClickListener to the navigate to timesheet button
         navigateToTimesheetButton.setOnClickListener {
             navigateToCreateTimesheet() // Call the method to navigate
+        }
+        uploadPlayerBtn.setOnClickListener {
+            val intent = Intent(this, GetPlayers::class.java)
+            intent.putExtra("FIXTURE_ID", generatedFixtureId) // Pass fixtureId
+            startActivityForResult(intent, GET_PLAYERS_REQUEST)
         }
 
         val sportSpinner: Spinner = findViewById(R.id.sport_dropdown)
@@ -197,8 +206,15 @@ class CreateSportFixture : AppCompatActivity() {
         matchDateEditText.setOnClickListener {
             showDatePicker()
         }
+
+
     }
 
+    private fun saveSelectedPlayersToDatabase() {
+        val selectedPlayerIds = playerList.map { it.playerId }
+        dbHelper.updateFixturePlayers(fixtureID.toInt(), selectedPlayerIds)
+        Toast.makeText(this, "Players saved successfully", Toast.LENGTH_SHORT).show()
+    }
     private fun validateInputs(): Boolean {
         if (homeTeamNameEditText.text.toString().trim().isEmpty()) {
             homeTeamNameEditText.error = "Home team name is required"
@@ -321,7 +337,12 @@ class CreateSportFixture : AppCompatActivity() {
                     awayTeamLogoUri = imageUri
                 }
             }
+        } else if (requestCode == GET_PLAYERS_REQUEST && resultCode == Activity.RESULT_OK) {
+        val selectedPlayers = data?.getParcelableArrayListExtra<PlayerProfileModel>("SELECTED_PLAYERS")
+        if (selectedPlayers != null) {
+           playerList = selectedPlayers
         }
+    }
     }
 
     private fun showTimePicker() {
@@ -406,6 +427,9 @@ class CreateSportFixture : AppCompatActivity() {
         }
 
         val fixtureId = dbHelper.writableDatabase.insert("SPORT_FIXTURES", null, values)
+        fixtureID = fixtureId // Update the static variable
+        saveSelectedPlayersToDatabase()
+
         if (fixtureId == -1L) {
             Toast.makeText(this, "Failed to create sports fixture", Toast.LENGTH_LONG).show()
         } else {
