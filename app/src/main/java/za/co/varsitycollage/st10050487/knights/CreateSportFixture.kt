@@ -402,6 +402,7 @@ class CreateSportFixture : AppCompatActivity() {
             put("LEAGUE_ID", leagueId ?: -1) // Default to -1 if leagueId is null
             put("IS_HOME_GAME", if (isHomeGame) 1 else 0) // Store whether it's a home game
             put("SET_TIME", selectedMatchTime) // Add this line to provide the SET_TIME value
+            put("SET_DATE", selectedMatchDate)
         }
 
         val fixtureId = dbHelper.writableDatabase.insert("SPORT_FIXTURES", null, values)
