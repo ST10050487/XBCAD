@@ -5,21 +5,19 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".EditTimesheet">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:background="@color/primaryColor"
         android:minHeight="99dp"
         android:theme="?attr/actionBarTheme"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.65999997">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/btnBack"
@@ -44,9 +42,8 @@
 
     <ScrollView
         android:id="@+id/scrollView2"
-        android:layout_width="match_parent"
-        android:layout_height="790dp"
-        android:maxHeight="790dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,15 +51,16 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
-            <!-- Team 1 -->
-            <!-- Input field for Home Team -->
+
+            <!-- Your existing layout code here -->
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10sdp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/inter_bold"
                 android:text="Timesheet for Match"
                 android:textAllCaps="true"
@@ -93,7 +91,6 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_16sdp" />
 
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -120,7 +117,7 @@
                     android:textColor="@color/lightGrey"
                     android:textSize="@dimen/_14sdp" />
             </com.google.android.material.textfield.TextInputLayout>
-            <!-- Input field for Away Team -->
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -132,7 +129,6 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_16sdp" />
 
-            <!-- Input field for Time -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -191,7 +187,6 @@
                     android:textSize="@dimen/_16sdp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -201,7 +196,6 @@
                 android:text="Bus Return Time"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_16sdp" />
-
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -222,8 +216,6 @@
                     android:textSize="@dimen/_16sdp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-
-            <!-- Input field for Results -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -255,12 +247,11 @@
                     android:id="@+id/spinnerMatchStatus"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
+                    android:drawableEnd="@drawable/ic_drop_down_icon"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:drawableEnd="@drawable/ic_drop_down_icon"/>
+                    android:paddingEnd="16dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Input field for Home Result -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -286,7 +277,7 @@
                     android:textColor="@color/lightGrey"
                     android:textSize="@dimen/_16sdp" />
             </com.google.android.material.textfield.TextInputLayout>
-            <!-- Input field for Away Result -->
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -338,7 +329,7 @@
                     android:textColor="@color/lightGrey"
                     android:textSize="@dimen/_16sdp" />
             </com.google.android.material.textfield.TextInputLayout>
-            <!-- Highlights -->
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -348,9 +339,6 @@
                 android:text="@string/highlights"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_16sdp" />
-
-            <!--Scroll fragment for images -->
-
 
             <Button
                 android:id="@+id/uploadBtn"
@@ -390,14 +378,11 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/_20sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
-                android:textAllCaps="true"
                 android:fontFamily="@font/inter_bold"
-                android:text="Save Changes" />
-
-
+                android:text="Save Changes"
+                android:textAllCaps="true" />
 
         </LinearLayout>
     </ScrollView>
 
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
