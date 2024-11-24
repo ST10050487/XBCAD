@@ -33,6 +33,7 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
     ): View? {
         val view = inflater.inflate(R.layout.fragment_upcoming_matches, container, false)
         val linearLayout = view.findViewById<LinearLayout>(R.id.linear_layout)
+        val emptyStateImage = view.findViewById<ImageView>(R.id.empty_state_image)
 
         val dbHelper = DBHelper(requireContext())
         val fixtures = dbHelper.getAllFixtures()
@@ -98,6 +99,8 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                 }
             }
         } else {
+
+            emptyStateImage.visibility = View.VISIBLE
             Log.e("UpcomingMatchesFragment", "No fixtures found in the database.")
         }
         return view
