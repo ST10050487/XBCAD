@@ -246,7 +246,8 @@ class EditTimesheet : AppCompatActivity() {
         val cursor = context.contentResolver.query(uri, null, null, null, null)
         cursor?.use {
             if (it.moveToFirst()) {
-                return it.getString(it.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME)) ?: "unknown"
+                return it.getString(it.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
+                    ?: "unknown"
             }
         }
         return "unknown"
