@@ -1597,6 +1597,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return playerList;
     }
 
+
+
     public long addEvent(String name, String date, String time, String location, double price, String description, byte[] picture, int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -1610,6 +1612,30 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("USER_ID", userId);
         return db.insert("EVENTS", null, values);
     }
+
+    public List<ProductModel> getAllProducts() {
+        List<ProductModel> products = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM SCHOOL_MERCH", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                ProductModel product = new ProductModel(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("PRODUCT_ID")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("NAME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("DESCRIPTION")),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow("PRICE")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("PHOTO"))
+                );
+                products.add(product);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return products;
+    }
 }
+
+
 
 

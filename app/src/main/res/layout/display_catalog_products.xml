@@ -19,7 +19,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="181dp">
+            android:layout_height="48dp">
 
             <!-- Blue gap (e.g., status bar area) -->
             <View
@@ -44,22 +44,24 @@
                 android:textColor="@android:color/white"
                 tools:ignore="RtlCompat" />
 
-            <ImageView
-                android:id="@+id/imageView5"
-                android:layout_width="wrap_content"
-                android:layout_height="132dp"
-                android:layout_gravity="bottom"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/home_image" />
-
             <!-- Back button on top of the image -->
         </FrameLayout>
+
+        <TextView
+            android:id="@+id/textView21"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BOSMANSDAM MERCHANDISE"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#8E004F"
+            android:background="#FFFFFF"
             android:elevation="4dp"
             android:gravity="center"
             android:padding="16dp"
@@ -71,25 +73,41 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
+                <Button
+                    android:id="@+id/buttonCreateItem"
+                    android:layout_width="221dp"
+                    android:layout_height="wrap_content"
+                    android:text="Create Item"
+                    android:background="@drawable/btn_primary"
+                    android:drawableEnd="@drawable/ic_plus"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/toolbarTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Bosmansdam Shop"
-                    android:textColor="@android:color/white"
-                    android:textSize="22sp"
+                    android:text="Search School Merchandise"
+                    android:textColor="@color/backgroundtheme"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/toolbarDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:gravity="center"
-                    android:text="02 August 2024"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="314dp"
+                    android:layout_height="match_parent"
+                    app:boxBackgroundColor="#FFFFFF">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:background="@drawable/rounded_border"
+                        android:drawableEnd="@drawable/ic_search_icon"
+                        android:hint="Search item, price ..." />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 
@@ -101,7 +119,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:orientation="vertical" >
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="507dp" />
+            </LinearLayout>
 
 
         </ScrollView>
