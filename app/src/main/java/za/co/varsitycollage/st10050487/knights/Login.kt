@@ -25,8 +25,8 @@ class Login : AppCompatActivity() {
     private var loginAttempts = 0
     private val MAX_ATTEMPTS = 5
     private var lockoutEndTime = 0L
-  // private val LOCKOUT_DURATION_MS = 30L * 1000 // 30 seconds
-   private val LOCKOUT_DURATION_MS = 300000L // 5 minutes
+    // private val LOCKOUT_DURATION_MS = 30L * 1000 // 30 seconds
+    private val LOCKOUT_DURATION_MS = 300000L // 5 minutes
 
     private lateinit var lockout: SecureAttempts
     private lateinit var googleSignIn: ImageView
@@ -54,7 +54,7 @@ class Login : AppCompatActivity() {
         loginButton = binding.LoginBtn
         regOp = binding.RegisterBtn
         googleSignIn = binding.btnGoogle
-      // Initializing the validation class
+        // Initializing the validation class
         valid = Validations()
 
         // Create a GoogleSignInOptions object with the default sign-in options
@@ -138,7 +138,7 @@ class Login : AppCompatActivity() {
                 loginAttempts = 0 // Reset attempts on successful login
                 val intent = when (roleId) {
                     1 -> Intent(this, AdminHome::class.java)
-                    2, 3 -> Intent(this, HomeActivity::class.java)
+                    2, 3 -> Intent(this, HomeScreen::class.java)
                     else -> null
                 }
 
