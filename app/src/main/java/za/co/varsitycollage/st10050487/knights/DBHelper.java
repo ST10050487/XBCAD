@@ -19,7 +19,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 24;
+    private static final int DATABASE_VERSION = 25;
 
 
     // Constructor
@@ -196,7 +196,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "MATCH_LOCATION TEXT NOT NULL," +
                 "MATCH_DATE TEXT NOT NULL," +
                 "MATCH_TIME TEXT NOT NULL," +
-                "SET_TIME TEXT NOT NULL," +  // Add this line for the SET_TIME column
+                "SET_TIME TEXT NOT NULL," +
+                "SET_DATE TEXT NOT NULL," +
                 "MATCH_DESCRIPTION TEXT," +
                 "PICTURE BLOB," +
                 "USER_ID INTEGER NOT NULL," +
