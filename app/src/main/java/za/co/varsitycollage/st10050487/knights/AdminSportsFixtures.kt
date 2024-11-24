@@ -12,6 +12,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
@@ -27,9 +28,11 @@ class AdminSportsFixtures : AppCompatActivity() {
         // Load the SportsFixturesHomeScreenFragment into the fragment_container
         LoadingUpcomingPastFixtures(savedInstanceState)
 
-
         // Initialize the search EditText
         searchEditText = findViewById(R.id.search_fixtures)
+
+        // Set up back button listener
+        setupBackButton()
 
         NavigationToFixtures()
 
@@ -37,6 +40,16 @@ class AdminSportsFixtures : AppCompatActivity() {
         setupSearchListener()
 
         FilterLogic()
+    }
+
+    private fun setupBackButton() {
+        val backButton = findViewById<LinearLayout>(R.id.back_btn)
+        backButton.setOnClickListener {
+            // Navigate to AdminHomePageActivity
+            val intent = Intent(this, AdminHome::class.java)
+            startActivity(intent)
+            finish() // Optionally call finish() if you want to remove this activity from the back stack
+        }
     }
 
     private fun NavigationToFixtures() {
@@ -61,7 +74,7 @@ class AdminSportsFixtures : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
                 // If the search query is empty, refresh to show all upcoming matches
                 if (s.isNullOrEmpty()) {
-                    refreshCurrentFragment() // Refresh without a search query
+                    refreshCurrentFragment()
                 }
             }
         })
