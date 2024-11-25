@@ -29,9 +29,9 @@ class CreateEvent : AppCompatActivity() {
     private lateinit var dbHelper: DBHelper
 
     // Buttons
-    private lateinit var backButton: Button
     private lateinit var uploadImageButton: Button
     private lateinit var createEventButton: Button
+    private lateinit var btnBack: androidx.appcompat.widget.Toolbar
 
     // Text Input Fields
     private lateinit var nameInput: TextInputEditText
@@ -78,7 +78,6 @@ class CreateEvent : AppCompatActivity() {
         // Buttons
         uploadImageButton = findViewById(R.id.btnUpload)
         createEventButton = findViewById(R.id.createBtn)
-        backButton = findViewById(R.id.backBtn)
 
         // Image View
         eventImage = findViewById(R.id.eventImg)
@@ -91,10 +90,15 @@ class CreateEvent : AppCompatActivity() {
         priceInput = findViewById(R.id.eventPrice)
         aboutInput = findViewById(R.id.eventAbout)
 
-        // SetUp Functionality for Components
-        backButton.setOnClickListener {
-            val intent = Intent(this, HomeScreen::class.java)
-            startActivity(intent)
+
+        // Correctly cast the Toolbar
+        btnBack = findViewById(R.id.btnToolbar)
+        setSupportActionBar(btnBack)
+        //supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        //supportActionBar?.setDisplayShowHomeEnabled(true)
+
+        btnBack.setNavigationOnClickListener {
+            onBackPressed()
         }
         uploadImageButton.setOnClickListener {
             openImagePicker()
@@ -110,42 +114,6 @@ class CreateEvent : AppCompatActivity() {
             showDatePicker()
         }
 
-        priceInput.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) {
-                val input = priceInput.text.toString()
-                if (input.isNotEmpty() && !input.matches("\\d*\\.?\\d*".toRegex())) {
-                    priceInput.error = "Please enter a valid price"
-                } else {
-                    priceInput.error = null // Clear error if input is valid
-                }
-            }
-        }
-
-        locationInput.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) { // Check only when losing focus
-                val input = locationInput.text.toString()
-                val locationPattern = "^[a-zA-Z\\s]+$"
-
-                if (input.isNotEmpty() && !input.matches(locationPattern.toRegex())) {
-                    locationInput.error = "Please enter a valid location"
-                } else {
-                    locationInput.error = null // Clear error if input is valid
-                }
-            }
-        }
-
-        nameInput.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) {
-                val input = nameInput.text.toString()
-                val locationPattern = "^[a-zA-Z\\s]+$"
-
-                if (input.isNotEmpty() && !input.matches(locationPattern.toRegex())) {
-                    nameInput.error = "Please enter a valid location"
-                } else {
-                    nameInput.error = null // Clear error if input is valid
-                }
-            }
-        }
     }
 
     // Store the data from the input fields
@@ -157,7 +125,6 @@ class CreateEvent : AppCompatActivity() {
         entryFee = priceInput.text.toString().toDouble()
         description = aboutInput.text.toString()
 
-        // You can now use these variables as needed
         Log.d("CreateEvent", "Event Name: $name")
         Log.d("CreateEvent", "Event Location: $place")
         Log.d("CreateEvent", "Event Time: $time")
@@ -166,9 +133,54 @@ class CreateEvent : AppCompatActivity() {
         Log.d("CreateEvent", "Event Description: $description")
         Log.d("CreateEvent", "Event Image URI: $eventImageUri")
     }
+    private fun validateInputs(): Boolean {
+        val name = nameInput.text.toString().trim()
+        val location = locationInput.text.toString().trim()
+        val time = timeInput.text.toString().trim()
+        val date = dateInput.text.toString().trim()
+        val price = priceInput.text.toString().trim()
+        val about = aboutInput.text.toString().trim()
 
+        if (name.isEmpty()) {
+            nameInput.error = "Event name is required"
+            return false
+        }
+
+        if (location.isEmpty()) {
+            locationInput.error = "Event location is required"
+            return false
+        }
+
+        if (time.isEmpty()) {
+            timeInput.error = "Event time is required"
+            return false
+        }
+
+        if (date.isEmpty()) {
+            dateInput.error = "Event date is required"
+            return false
+        }
+
+        if (price.isEmpty()) {
+            priceInput.error = "Event price is required"
+            return false
+        } else if (!price.matches("\\d*\\.?\\d*".toRegex())) {
+            priceInput.error = "Please enter a valid price"
+            return false
+        }
+
+        if (about.isEmpty()) {
+            aboutInput.error = "Event description is required"
+            return false
+        }
+
+        return true
+    }
     // Insert the event data into the database
-    private fun insertEventIntoDatabase(): Long {
+    private fun insertEventIntoDatabase() {
+        if (!validateInputs()) {
+            return
+        }
         val eventImageBlob = eventImageUri?.let { uri ->
             contentResolver.openInputStream(uri)?.use { inputStream ->
                 inputStream.readBytes()
@@ -188,22 +200,19 @@ class CreateEvent : AppCompatActivity() {
 
         if (eventId == -1L) {
             Toast.makeText(this, "Failed to create event", Toast.LENGTH_LONG).show()
+        } else {
+            Log.d("CreateEvent", "Generated Event ID: $eventId") // Log the event ID
+            Toast.makeText(this, "You have successfully created the event", Toast.LENGTH_LONG)
+                .show()
+
+            // Start EventDetailActivity and pass the event ID
+            val intent = Intent(this, EventDetailActivity::class.java).apply {
+                putExtra("EVENT_ID", eventId.toInt())
+            }
+            startActivity(intent)
+            finish()
         }
 
-        Log.d("CreateEvent", "Generated Event ID: $eventId") // Log the event ID
-        Toast.makeText(this, "You have successfully created the event", Toast.LENGTH_LONG).show()
-
-        // Clear the input fields
-        nameInput.text?.clear()
-        locationInput.text?.clear()
-        timeInput.text?.clear()
-        dateInput.text?.clear()
-        priceInput.text?.clear()
-        aboutInput.text?.clear()
-        eventImage.setImageURI(null)
-        eventImageUri = null
-
-        return eventId // Return the generated event ID
     }
 
     private fun openImagePicker() {

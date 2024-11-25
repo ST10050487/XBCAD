@@ -1,5 +1,7 @@
 package za.co.varsitycollage.st10050487.knights
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -32,8 +34,11 @@ class GetPlayers : AppCompatActivity() {
         binding.btnSelect.setOnClickListener {
             val fragment = supportFragmentManager.findFragmentById(R.id.players_card_container) as? PlayersListFragment
             if (fragment != null) {
-//                fragment.saveSelectedPlayers()
-                Toast.makeText(this, "Players saved successfully", Toast.LENGTH_SHORT).show()
+               // fragment.saveSelectedPlayers()
+                val selectedPlayers = fragment.getSelectedPlayers()
+                val resultIntent = Intent()
+                resultIntent.putParcelableArrayListExtra("SELECTED_PLAYERS", ArrayList(selectedPlayers))
+                setResult(Activity.RESULT_OK, resultIntent)
                 finish()
             } else {
                 Log.e("GetPlayers", "PlayersListFragment not found")
@@ -43,7 +48,7 @@ class GetPlayers : AppCompatActivity() {
         binding.btnCancel.setOnClickListener {
             val fragment = supportFragmentManager.findFragmentById(R.id.players_card_container) as? PlayersListFragment
             if (fragment != null) {
-//                fragment.clearSelection()
+                fragment.clearSelection()
                 Toast.makeText(this, "Selection cleared", Toast.LENGTH_SHORT).show()
             } else {
                 Log.e("GetPlayers", "PlayersListFragment not found")
