@@ -38,7 +38,6 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
         val dbHelper = DBHelper(requireContext())
         val fixtures = dbHelper.getAllFixtures()
 
-        // Inside the for loop in onCreateView
         if (fixtures.isNotEmpty()) {
             for (fixture in fixtures) {
                 if ((selectedSports.isEmpty() || selectedSports.contains(fixture.sport)) &&
@@ -67,6 +66,19 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                     } else {
                         null
                     }
+
+                    // Set the match status in fixture_date_box based on the fixture's match status value
+                    val matchStatusValue = fixture.matchStatusId // Assuming matchStatus is an Int
+                    val matchStatusText = when (matchStatusValue) {
+                        1 -> "First Half"
+                        2 -> "Half Time"
+                        3 -> "Second Half"
+                        4 -> "Match Over"
+                        5 -> "Cancelled"
+                        else -> "Unknown Status"
+                    }
+                    fixtureDateBox.text =
+                        matchStatusText // Set the match status text in fixture_date_box
 
                     FormattingDate(fixture, fixtureDate, fixtureDateBox)
 
@@ -99,7 +111,6 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                 }
             }
         } else {
-
             emptyStateImage.visibility = View.VISIBLE
             Log.e("UpcomingMatchesFragment", "No fixtures found in the database.")
         }
