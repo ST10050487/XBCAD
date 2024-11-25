@@ -82,7 +82,12 @@ class EditTimesheet : AppCompatActivity() {
         ImageUpload()
         setupTimePickers()
     }
-
+    private fun navigateToCreateTimesheet() {
+        // Allow navigation to the CreateTimesheet activity regardless of fixture ID
+        val intent = Intent(this, CreateTimesheet::class.java)
+        intent.putExtra("FIXTURE_ID", fixtureId) // Pass the fixture ID
+        startActivity(intent)
+    }
     private fun setupSpinner() {
         val spinner: Spinner = binding.spinnerMatchStatus
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, matchStatuses)
@@ -114,7 +119,8 @@ class EditTimesheet : AppCompatActivity() {
 
             loadHighlights(timesheet.timeId)
         } else {
-            Toast.makeText(this, "Failed to load timesheet", Toast.LENGTH_SHORT).show()
+            navigateToCreateTimesheet()
+           // Toast.makeText(this, "Failed to load timesheet", Toast.LENGTH_SHORT).show()
         }
     }
 
