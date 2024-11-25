@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 class PlayersListFragment : Fragment() {
 
     private lateinit var dbHelper: DBHelper
-//    private lateinit var playerAdapter: PlayerListAdaptor
+    private lateinit var playerAdapter: PlayerListAdapter
     private lateinit var recyclerView: RecyclerView
     private var fixtureId: Int = 0
 
@@ -38,29 +38,34 @@ class PlayersListFragment : Fragment() {
         // Create a combined list without duplicates, preferring fixturePlayers
         val combinedPlayers = (fixturePlayers + allPlayers).distinctBy { it.playerId }.toMutableList()
 
-//        playerAdapter = PlayerListAdaptor(
-//            combinedPlayers,
-//            { count -> (activity as? GetPlayers)?.updateSelectButton(count) }
-//        )
-//        recyclerView.adapter = playerAdapter
 
+        playerAdapter = PlayerListAdapter(
+            requireContext(),
+            combinedPlayers,
+            { count -> (activity as? GetPlayers)?.updateSelectButton(count) }
+        )
+        recyclerView.adapter = playerAdapter
         // Calculate the initial count of selected players
         val initialSelectedCount = combinedPlayers.count { it.selected }
         // Update the select button with the initial count
         (activity as? GetPlayers)?.updateSelectButton(initialSelectedCount)
     }
 
-//    fun clearSelection() {
-//        playerAdapter.clearSelection()
-//    }
+    fun clearSelection() {
+        playerAdapter.clearSelection()
+    }
 
-//    fun saveSelectedPlayers() {
-//        val selectedPlayers = playerAdapter.getSelectedPlayers()
-//        val selectedPlayerIds = selectedPlayers.map { it.playerId }
-//        val fixtureId = arguments?.getInt("FIXTURE_ID") ?: 0
-//        dbHelper.updateFixturePlayers(fixtureId, selectedPlayerIds)
-//        playerAdapter.clearSelection()
-//    }
+    fun getSelectedPlayers(): List<PlayerProfileModel> {
+        return playerAdapter.getSelectedPlayers()
+    }
+
+    fun saveSelectedPlayers() {
+        val selectedPlayers = playerAdapter.getSelectedPlayers()
+        val selectedPlayerIds = selectedPlayers.map { it.playerId }
+        val fixtureId = arguments?.getInt("FIXTURE_ID") ?: 0
+        dbHelper.updateFixturePlayers(fixtureId, selectedPlayerIds)
+        playerAdapter.clearSelection()
+    }
 
     companion object {
         private const val ARG_FIXTURE_ID = "FIXTURE_ID"
