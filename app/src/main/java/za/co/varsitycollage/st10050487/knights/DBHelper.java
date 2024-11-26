@@ -19,7 +19,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 25;
+    private static final int DATABASE_VERSION = 26;
 
 
     // Constructor
@@ -1516,6 +1516,14 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return fixtures;
+    }
+
+    // Method to update match status
+    public int updateMatchStatus(int fixtureId, int matchStatus) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("MATCH_STATUS_ID", matchStatus); // Use the correct column name
+        return db.update("SPORT_FIXTURES", contentValues, "FIXTURE_ID = ?", new String[]{String.valueOf(fixtureId)});
     }
 
 

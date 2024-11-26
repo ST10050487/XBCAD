@@ -31,14 +31,29 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_upcoming_matches, container, false)
-        val linearLayout = view.findViewById<LinearLayout>(R.id.linear_layout)
-        val emptyStateImage = view.findViewById<ImageView>(R.id.empty_state_image)
+        return inflater.inflate(R.layout.fragment_upcoming_matches, container, false)
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        refreshData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshData() // Refresh the data whenever the fragment comes into view
+    }
+
+    private fun refreshData() {
         val dbHelper = DBHelper(requireContext())
-        val fixtures = dbHelper.getAllFixtures()
+        val linearLayout = view?.findViewById<LinearLayout>(R.id.linear_layout)
+        val emptyStateImage = view?.findViewById<ImageView>(R.id.empty_state_image)
+        linearLayout?.removeAllViews() // Clear existing views
+
+        val fixtures = dbHelper.getAllFixtures() // Get updated fixtures
 
         if (fixtures.isNotEmpty()) {
+            emptyStateImage?.visibility = View.GONE
             for (fixture in fixtures) {
                 if ((selectedSports.isEmpty() || selectedSports.contains(fixture.sport)) &&
                     (searchQuery.isEmpty() || fixture.homeTeam.contains(
@@ -67,7 +82,6 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                         null
                     }
 
-                    // Set the match status in fixture_date_box based on the fixture's match status value
                     val matchStatusValue = fixture.matchStatusId // Assuming matchStatus is an Int
                     val matchStatusText = when (matchStatusValue) {
                         1 -> "First Half"
@@ -80,12 +94,20 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                     fixtureDateBox.text =
                         matchStatusText // Set the match status text in fixture_date_box
 
+                    // Update team1Name to include the match status
+                    team1Name.text = "${fixture.homeTeam} - $matchStatusText"
+
+                    // Log the current match status
+                    Log.d(
+                        "UpcomingMatchesFragment",
+                        "Current match status for fixture ID ${fixture.fixtureId}: $matchStatusText"
+                    )
+
                     FormattingDate(fixture, fixtureDate, fixtureDateBox)
 
                     fixture.homeLogo?.let {
                         team1Logo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
                     }
-                    team1Name.text = fixture.homeTeam
 
                     // Set the fixture time text with home/away game indication
                     fixtureTime.text = if (fixture.isHomeGame) {
@@ -107,14 +129,13 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                         startActivity(intent)
                     }
 
-                    linearLayout.addView(fixtureCard)
+                    linearLayout?.addView(fixtureCard)
                 }
             }
         } else {
-            emptyStateImage.visibility = View.VISIBLE
+            emptyStateImage?.visibility = View.VISIBLE
             Log.e("UpcomingMatchesFragment", "No fixtures found in the database.")
         }
-        return view
     }
 
     private fun FormattingDate(

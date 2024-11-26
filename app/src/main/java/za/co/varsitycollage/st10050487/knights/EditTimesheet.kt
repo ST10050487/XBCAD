@@ -154,10 +154,14 @@ class EditTimesheet : AppCompatActivity() {
             homeScore = homeScore,
             awayScore = awayScore,
             manOfTheMatch = if (manOfTheMatch.isNotBlank()) manOfTheMatch else null,
-            matchstatus = matchStatusValue
+            matchstatus = matchStatusValue // Update the match status in the timesheet
         )
 
         val rowsAffected = dbHelper.updateTimesheet(timesheet)
+
+        // Update the match status in the fixtures table as well
+        dbHelper.updateMatchStatus(fixtureId, matchStatusValue)
+
         if (rowsAffected > 0) {
             Toast.makeText(this, "Timesheet updated successfully", Toast.LENGTH_SHORT).show()
         } else {
