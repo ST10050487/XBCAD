@@ -82,6 +82,7 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                         null
                     }
 
+                    // Get the match status value
                     val matchStatusValue = fixture.matchStatusId // Assuming matchStatus is an Int
                     val matchStatusText = when (matchStatusValue) {
                         1 -> "First Half"
@@ -89,25 +90,31 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                         3 -> "Second Half"
                         4 -> "Match Over"
                         5 -> "Cancelled"
-                        else -> "Unknown Status"
+                        else -> null // No match status selected
                     }
-                    fixtureDateBox.text =
-                        matchStatusText // Set the match status text in fixture_date_box
 
-                    // Update team1Name to include the match status
-                    team1Name.text = "${fixture.homeTeam} - $matchStatusText"
+                    // Always format the fixture date
+                    FormattingDate(fixture, fixtureDate)
+
+                    // Update fixtureDateBox based on match status
+                    fixtureDateBox.text = matchStatusText ?: run {
+                        // If no match status is selected, show the formatted date
+                        val date = SimpleDateFormat("dd MMMM", Locale.getDefault()).format(
+                            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(fixture.matchDate)
+                        )
+                        date // This will show the normal date
+                    }
 
                     // Log the current match status
                     Log.d(
                         "UpcomingMatchesFragment",
-                        "Current match status for fixture ID ${fixture.fixtureId}: $matchStatusText"
+                        "Current match status for fixture ID ${fixture.fixtureId}: ${matchStatusText ?: "Normal Date"}"
                     )
-
-                    FormattingDate(fixture, fixtureDate, fixtureDateBox)
 
                     fixture.homeLogo?.let {
                         team1Logo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
                     }
+                    team1Name.text = fixture.homeTeam
 
                     // Set the fixture time text with home/away game indication
                     fixtureTime.text = if (fixture.isHomeGame) {
@@ -140,24 +147,19 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
 
     private fun FormattingDate(
         fixture: FixtureModel,
-        fixtureDate: TextView,
-        fixtureDateBox: TextView
+        fixtureDate: TextView
     ) {
         // Change input format to match the stored format
         val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         // Output format for fixtureDate
         val outputFormat = SimpleDateFormat("EEEE -- MMMM dd", Locale.getDefault())
-        // Output format for fixtureDateBox
-        val outputFormatBox = SimpleDateFormat("dd MMMM", Locale.getDefault())
 
         try {
             val date = inputFormat.parse(fixture.matchDate) // Parse the stored date
             fixtureDate.text = outputFormat.format(date) // For fixtureDate
-            fixtureDateBox.text = outputFormatBox.format(date) // For fixtureDateBox
         } catch (e: Exception) {
             Log.e("UpcomingMatchesFragment", "Error parsing date: ${e.message}")
             fixtureDate.text = fixture.matchDate // Fallback to original if parsing fails
-            fixtureDateBox.text = fixture.matchDate // Fallback for fixtureDateBox
         }
     }
 }
