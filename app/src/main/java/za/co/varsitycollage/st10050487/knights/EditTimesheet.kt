@@ -33,6 +33,7 @@ class EditTimesheet : AppCompatActivity() {
     private var fileNameList = mutableListOf<String>()
 
     private val matchStatuses = listOf(
+        "",  // Blank option
         "First Half",
         "Half Time",
         "Second Half",
@@ -41,6 +42,7 @@ class EditTimesheet : AppCompatActivity() {
     )
 
     private val matchStatusMap = mapOf(
+        "" to 0,  // Map blank option to 0 or any other value you want
         "First Half" to 1,
         "Half Time" to 2,
         "Second Half" to 3,
@@ -82,12 +84,14 @@ class EditTimesheet : AppCompatActivity() {
         ImageUpload()
         setupTimePickers()
     }
+
     private fun navigateToCreateTimesheet() {
         // Allow navigation to the CreateTimesheet activity regardless of fixture ID
         val intent = Intent(this, CreateTimesheet::class.java)
         intent.putExtra("FIXTURE_ID", fixtureId) // Pass the fixture ID
         startActivity(intent)
     }
+
     private fun setupSpinner() {
         val spinner: Spinner = binding.spinnerMatchStatus
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, matchStatuses)
@@ -120,7 +124,6 @@ class EditTimesheet : AppCompatActivity() {
             loadHighlights(timesheet.timeId)
         } else {
             navigateToCreateTimesheet()
-           // Toast.makeText(this, "Failed to load timesheet", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -138,8 +141,11 @@ class EditTimesheet : AppCompatActivity() {
         val busDepartureTime = binding.txtDepTime.text.toString()
         val busReturnTime = binding.txtReturnTime.text.toString()
         val message = binding.txtMsg.text.toString()
+
+        // Read the selected match status from the spinner
         val matchStatusText = binding.spinnerMatchStatus.selectedItem.toString()
         val matchStatusValue = matchStatusMap[matchStatusText] ?: 0
+
         val homeScore = binding.txtHomeResult.text.toString().toIntOrNull()
         val awayScore = binding.txtAwayResult.text.toString().toIntOrNull()
         val manOfTheMatch = binding.txtManOfTheMatch.text.toString()
