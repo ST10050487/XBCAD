@@ -30,24 +30,33 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <!-- Team 1 Logo -->
-            <ImageView
-                android:id="@+id/team1_logo"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="8dp"
-                android:contentDescription="Team 1 Logo" />
-
-            <!-- Team 1 Name -->
-            <TextView
-                android:id="@+id/team1_name"
+            <!-- Team 1 Layout -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
                 android:gravity="center"
-                android:maxLines="1"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:orientation="vertical">
+
+                <!-- Team 1 Logo -->
+                <ImageView
+                    android:id="@+id/team1_logo"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="0dp"
+                    android:contentDescription="Team 1 Logo" />
+
+                <!-- Team 1 Name -->
+                <TextView
+                    android:id="@+id/team1_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <!-- Home/Away Text and Date Box -->
             <LinearLayout
@@ -70,6 +79,18 @@
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
+                <!-- Score Text -->
+                <TextView
+                    android:id="@+id/score_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="22 : 19"
+                    android:textColor="@color/black"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    />
+
                 <TextView
                     android:id="@+id/fixture_date_box"
                     android:layout_width="wrap_content"
@@ -83,26 +104,34 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- Team 2 Logo -->
-            <ImageView
-                android:id="@+id/team2_logo"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="8dp"
-                android:contentDescription="Team 2 Logo" />
-
-            <!-- Team 2 Name -->
-            <TextView
-                android:id="@+id/team2_name"
+            <!-- Team 2 Layout -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
                 android:gravity="center"
-                android:maxLines="1"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
-        </LinearLayout>
+                android:orientation="vertical">
 
+                <!-- Team 2 Logo -->
+                <ImageView
+                    android:id="@+id/team2_logo"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="2dp"
+                    android:contentDescription="Team 2 Logo" />
+
+                <!-- Team 2 Name -->
+                <TextView
+                    android:id="@+id/team2_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
 
         <!-- Match Type and Age Group Combined (Dark Blue Background) -->
         <LinearLayout

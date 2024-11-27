@@ -146,6 +146,7 @@ class EditTimesheet : AppCompatActivity() {
         val matchStatusText = binding.spinnerMatchStatus.selectedItem.toString()
         val matchStatusValue = matchStatusMap[matchStatusText] ?: 0
 
+        // Capture home and away scores
         val homeScore = binding.txtHomeResult.text.toString().toIntOrNull()
         val awayScore = binding.txtAwayResult.text.toString().toIntOrNull()
         val manOfTheMatch = binding.txtManOfTheMatch.text.toString()
@@ -163,6 +164,7 @@ class EditTimesheet : AppCompatActivity() {
             matchstatus = matchStatusValue // Update the match status in the timesheet
         )
 
+        // Update the timesheet in the database
         val rowsAffected = dbHelper.updateTimesheet(timesheet)
 
         // Update the match status in the fixtures table as well

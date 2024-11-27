@@ -79,6 +79,18 @@
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
+                <!-- Score Text -->
+                <TextView
+                    android:id="@+id/score_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="22 : 19"
+                    android:textColor="@color/black"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    />
+
                 <TextView
                     android:id="@+id/fixture_date_box"
                     android:layout_width="wrap_content"
