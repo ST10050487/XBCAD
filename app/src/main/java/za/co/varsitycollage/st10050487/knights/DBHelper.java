@@ -387,6 +387,7 @@ public class DBHelper extends SQLiteOpenHelper {
         long result = db.insert("USERS", null, values);
         return result != -1;
     }
+
     //__Suspicious Activity Table CRUD_________________________________________________________________________________\\
     public void addSuspiciousActivity(int userId, String activityDescription, long timestamp) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1427,6 +1428,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return null;
     }
+
     public EventModel getEventById(int eventId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM EVENTS WHERE EVENT_ID = ?";
@@ -1669,5 +1671,4 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.insert("EVENTS", null, values);
     }
 }
-
 
