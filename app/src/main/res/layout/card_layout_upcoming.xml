@@ -168,15 +168,6 @@
                     android:textColor="@color/white" />
             </LinearLayout>
 
-            <!-- Edit Icon -->
-            <ImageView
-                android:id="@+id/event_edit"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="4dp"
-                android:contentDescription="Edit"
-                android:src="@drawable/ic_edit"
-                app:tint="@color/white" />
         </LinearLayout>
 
     </LinearLayout>
