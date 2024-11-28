@@ -1,5 +1,6 @@
 package za.co.varsitycollage.st10050487.knights
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -17,6 +18,7 @@ import java.util.*
 class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment() {
     private var selectedSports: List<String> = emptyList() // Store selected sports
     private var searchQuery: String = "" // Store search query
+    private val REQUEST_CODE_EDIT_FIXTURE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +46,17 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
         refreshData() // Refresh the data whenever the fragment comes into view
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_EDIT_FIXTURE && resultCode == Activity.RESULT_OK) {
+            val isMatchOver = data?.getBooleanExtra("isMatchOver", false) ?: false
+            if (isMatchOver) {
+                // Call refreshData to remove the fixture card
+                refreshData()
+            }
+        }
+    }
+
     private fun refreshData() {
         val dbHelper = DBHelper(requireContext())
         val linearLayout = view?.findViewById<LinearLayout>(R.id.linear_layout)
@@ -55,6 +68,11 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
         if (fixtures.isNotEmpty()) {
             emptyStateImage?.visibility = View.GONE
             for (fixture in fixtures) {
+                // Skip fixtures that are marked as "Match Over"
+                if (fixture.matchStatusId == 4) {
+                    continue // Skip this fixture
+                }
+
                 if ((selectedSports.isEmpty() || selectedSports.contains(fixture.sport)) &&
                     (searchQuery.isEmpty() || fixture.homeTeam.contains(
                         searchQuery,
@@ -144,7 +162,7 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                     eventEdit?.setOnClickListener {
                         val intent = Intent(requireContext(), EditFixture::class.java)
                         intent.putExtra("fixture_id", fixture.fixtureId)
-                        startActivity(intent)
+                        startActivityForResult(intent, REQUEST_CODE_EDIT_FIXTURE)
                     }
 
                     linearLayout?.addView(fixtureCard)

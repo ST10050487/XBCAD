@@ -170,8 +170,16 @@ class EditTimesheet : AppCompatActivity() {
         // Update the match status in the fixtures table as well
         dbHelper.updateMatchStatus(fixtureId, matchStatusValue)
 
+        // Check if the match status is "Match Over"
+        val isMatchOver = matchStatusValue == 4 // "Match Over" corresponds to value 4
+
         if (rowsAffected > 0) {
             Toast.makeText(this, "Timesheet updated successfully", Toast.LENGTH_SHORT).show()
+            // Return the result indicating if the match status is "Match Over"
+            val resultIntent = Intent()
+            resultIntent.putExtra("isMatchOver", isMatchOver)
+            setResult(RESULT_OK, resultIntent)
+            finish()
         } else {
             Toast.makeText(this, "Failed to update timesheet", Toast.LENGTH_SHORT).show()
         }
