@@ -1,5 +1,6 @@
 package za.co.varsitycollage.st10050487.knights
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -29,23 +30,11 @@ class pastMatchesFragment(private val isAdmin: Boolean = false) : Fragment() {
         val linearLayout = view?.findViewById<LinearLayout>(R.id.linear_layout)
         linearLayout?.removeAllViews() // Clear existing views
 
-        // Hardcoded past match data
-        val pastMatches = listOf(
-            Match(
-                date = "17 July 2024",
-                team1Logo = R.drawable.bosemansdamhig,
-                team1Name = "BOSMANSDAM",
-                team2Logo = R.drawable.egmeadhigh,
-                team2Name = "EGMEAD",
-                score = "22 : 19",
-                matchType = "Rugby",
-                ageGroup = "Under 17's",
-                matchDate = "17 July 2024"
-            ),
-        )
+        val dbHelper = DBHelper(requireContext())
+        val pastMatches = dbHelper.fetchPastFixtures() // Fetch past matches from the database
 
         if (pastMatches.isNotEmpty()) {
-            for (match in pastMatches) {
+            for (fixture in pastMatches) {
                 val matchCard = LayoutInflater.from(requireContext()).inflate(
                     if (isAdmin) R.layout.card_layout_admin_past else R.layout.card_layout_past,
                     linearLayout,
@@ -59,23 +48,47 @@ class pastMatchesFragment(private val isAdmin: Boolean = false) : Fragment() {
                 val scoreText = matchCard.findViewById<TextView>(R.id.score_text)
                 val matchType = matchCard.findViewById<TextView>(R.id.match_type)
                 val ageGroup = matchCard.findViewById<TextView>(R.id.age_group)
-                val matchDate = matchCard.findViewById<TextView>(R.id.match_date)
 
                 // Log null checks
                 Log.d(
                     "pastMatchesFragment",
-                    "Team 1 Name: ${team1Name != null}, Team 2 Name: ${team2Name != null}"
+                    "Team 1 Name: ${team1Name != null}, Team 2 Name: ${team2Name != null}, Score Text: ${scoreText != null}, " +
+                            "Match Type: ${matchType != null}, Age Group: ${ageGroup != null}"
                 )
 
                 // Set the data for the match card
-                team1Logo.setImageResource(match.team1Logo)
-                team1Name?.text = match.team1Name ?: "Unknown Team"
-                team2Logo.setImageResource(match.team2Logo)
-                team2Name?.text = match.team2Name ?: "Unknown Team"
-                scoreText?.text = match.score ?: "N/A"
-                matchType?.text = match.matchType ?: "N/A"
-                ageGroup?.text = match.ageGroup ?: "N/A"
-                matchDate?.text = match.matchDate ?: "N/A"
+                team1Logo.setImageBitmap(
+                    fixture.homeLogo?.let {
+                        BitmapFactory.decodeByteArray(
+                            fixture.homeLogo,
+                            0,
+                            it.size
+                        )
+                    }
+                )
+                team1Name.text = fixture.homeTeam ?: "Unknown Team"
+                team2Logo.setImageBitmap(
+                    fixture.awayLogo?.let {
+                        BitmapFactory.decodeByteArray(
+                            fixture.awayLogo,
+                            0,
+                            it.size
+                        )
+                    }
+                )
+                team2Name.text = fixture.awayTeam ?: "Unknown Team"
+
+                // Fetch scores from the TIMES table
+                val scores = dbHelper.getScores(fixture.fixtureId) // Get scores based on fixture ID
+                scoreText.text = if (scores != null) {
+                    "${scores.homeScore} : ${scores.awayScore}"
+                } else {
+                    "Score not available"
+                }
+
+                matchType.text = fixture.sport ?: "N/A"
+                ageGroup.text = fixture.ageGroup ?: "N/A"
+//                matchDate.text = fixture.matchDate ?: "N/A"
 
                 linearLayout?.addView(matchCard)
             }
