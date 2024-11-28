@@ -1,5 +1,6 @@
 package za.co.varsitycollage.st10050487.knights
 
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
@@ -48,6 +49,11 @@ class pastMatchesFragment(private val isAdmin: Boolean = false) : Fragment() {
                 val scoreText = matchCard.findViewById<TextView>(R.id.score_text)
                 val matchType = matchCard.findViewById<TextView>(R.id.match_type)
                 val ageGroup = matchCard.findViewById<TextView>(R.id.age_group)
+                val eventEdit: ImageView? = if (isAdmin) {
+                    matchCard.findViewById<ImageView>(R.id.event_edit)
+                } else {
+                    null
+                }
 
                 // Log null checks
                 Log.d(
@@ -88,7 +94,12 @@ class pastMatchesFragment(private val isAdmin: Boolean = false) : Fragment() {
 
                 matchType.text = fixture.sport ?: "N/A"
                 ageGroup.text = fixture.ageGroup ?: "N/A"
-//                matchDate.text = fixture.matchDate ?: "N/A"
+
+                eventEdit?.setOnClickListener {
+                    val intent = Intent(requireContext(), EditFixture::class.java)
+                    intent.putExtra("fixture_id", fixture.fixtureId)
+                    startActivity(intent)
+                }
 
                 linearLayout?.addView(matchCard)
             }
