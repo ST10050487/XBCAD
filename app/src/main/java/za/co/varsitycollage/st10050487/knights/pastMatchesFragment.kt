@@ -27,6 +27,11 @@ class pastMatchesFragment(private val isAdmin: Boolean = false) : Fragment() {
         refreshData()
     }
 
+    override fun onResume() {
+        super.onResume()
+        refreshData() // Refresh the data whenever the fragment comes into view
+    }
+
     private fun refreshData() {
         val linearLayout = view?.findViewById<LinearLayout>(R.id.linear_layout)
         linearLayout?.removeAllViews() // Clear existing views
@@ -63,25 +68,13 @@ class pastMatchesFragment(private val isAdmin: Boolean = false) : Fragment() {
                 )
 
                 // Set the data for the match card
-                team1Logo.setImageBitmap(
-                    fixture.homeLogo?.let {
-                        BitmapFactory.decodeByteArray(
-                            fixture.homeLogo,
-                            0,
-                            it.size
-                        )
-                    }
-                )
+                fixture.homeLogo?.let {
+                    team1Logo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
+                }
                 team1Name.text = fixture.homeTeam ?: "Unknown Team"
-                team2Logo.setImageBitmap(
-                    fixture.awayLogo?.let {
-                        BitmapFactory.decodeByteArray(
-                            fixture.awayLogo,
-                            0,
-                            it.size
-                        )
-                    }
-                )
+                fixture.awayLogo?.let {
+                    team2Logo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
+                }
                 team2Name.text = fixture.awayTeam ?: "Unknown Team"
 
                 // Fetch scores from the TIMES table
