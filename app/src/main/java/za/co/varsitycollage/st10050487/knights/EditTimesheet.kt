@@ -124,6 +124,7 @@ class EditTimesheet : AppCompatActivity() {
             loadHighlights(timesheet.timeId)
         } else {
             navigateToCreateTimesheet()
+            Toast.makeText(this, "Failed to load timesheet", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -141,12 +142,8 @@ class EditTimesheet : AppCompatActivity() {
         val busDepartureTime = binding.txtDepTime.text.toString()
         val busReturnTime = binding.txtReturnTime.text.toString()
         val message = binding.txtMsg.text.toString()
-
-        // Read the selected match status from the spinner
         val matchStatusText = binding.spinnerMatchStatus.selectedItem.toString()
         val matchStatusValue = matchStatusMap[matchStatusText] ?: 0
-
-        // Capture home and away scores
         val homeScore = binding.txtHomeResult.text.toString().toIntOrNull()
         val awayScore = binding.txtAwayResult.text.toString().toIntOrNull()
         val manOfTheMatch = binding.txtManOfTheMatch.text.toString()
@@ -161,25 +158,14 @@ class EditTimesheet : AppCompatActivity() {
             homeScore = homeScore,
             awayScore = awayScore,
             manOfTheMatch = if (manOfTheMatch.isNotBlank()) manOfTheMatch else null,
-            matchstatus = matchStatusValue // Update the match status in the timesheet
+            matchstatus = matchStatusValue // Store match status
         )
 
-        // Update the timesheet in the database
         val rowsAffected = dbHelper.updateTimesheet(timesheet)
-
-        // Update the match status in the fixtures table as well
-        dbHelper.updateMatchStatus(fixtureId, matchStatusValue)
-
-        // Check if the match status is "Match Over"
-        val isMatchOver = matchStatusValue == 4 // "Match Over" corresponds to value 4
-
         if (rowsAffected > 0) {
             Toast.makeText(this, "Timesheet updated successfully", Toast.LENGTH_SHORT).show()
-            // Return the result indicating if the match status is "Match Over"
-            val resultIntent = Intent()
-            resultIntent.putExtra("isMatchOver", isMatchOver)
-            setResult(RESULT_OK, resultIntent)
-            finish()
+            // Optionally, update the match status in the fixtures table
+            dbHelper.updateMatchStatus(fixtureId, matchStatusValue)
         } else {
             Toast.makeText(this, "Failed to update timesheet", Toast.LENGTH_SHORT).show()
         }

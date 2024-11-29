@@ -69,7 +69,10 @@ class CreateTimesheet : AppCompatActivity() {
                     }
 
                     if (byteArrayList.isNotEmpty()) {
-                        adapter.addItems(byteArrayList, fileNameList) // Pass both byte arrays and file names
+                        adapter.addItems(
+                            byteArrayList,
+                            fileNameList
+                        ) // Pass both byte arrays and file names
                     } else {
                         Toast.makeText(this, "No images selected", Toast.LENGTH_SHORT).show()
                     }
