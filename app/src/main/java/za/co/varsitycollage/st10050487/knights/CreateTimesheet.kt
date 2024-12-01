@@ -13,6 +13,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.textfield.TextInputEditText
 import za.co.varsitycollage.st10050487.knights.databinding.ActivityCreateTimesheetBinding
 import java.io.ByteArrayOutputStream
 import java.util.*
@@ -51,6 +52,9 @@ class CreateTimesheet : AppCompatActivity() {
         setupBackButton()
         setupSpinner()
         setupSaveButton(fixtureId) // Pass the fixture ID to the save button setup
+
+        // Set up time pickers
+        setupTimePickers()
     }
 
     private fun ImageUpload() {
@@ -181,5 +185,36 @@ class CreateTimesheet : AppCompatActivity() {
         } else {
             Toast.makeText(this, "Failed to save timesheet", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun setupTimePickers() {
+        // Set up click listener for meeting time
+        binding.txtMeetTime.setOnClickListener {
+            showTimePickerDialog(binding.txtMeetTime)
+        }
+
+        // Set up click listener for bus departure time
+        binding.txtDepTime.setOnClickListener {
+            showTimePickerDialog(binding.txtDepTime)
+        }
+
+        // Set up click listener for bus arrival time
+        binding.txtArrTime.setOnClickListener {
+            showTimePickerDialog(binding.txtArrTime)
+        }
+    }
+
+    private fun showTimePickerDialog(editText: TextInputEditText) {
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = calendar.get(Calendar.MINUTE)
+
+        val timePickerDialog = TimePickerDialog(this, { _, selectedHour, selectedMinute ->
+            // Format the time and set it to the EditText
+            val formattedTime = String.format("%02d:%02d", selectedHour, selectedMinute)
+            editText.setText(formattedTime)
+        }, hour, minute, true)
+
+        timePickerDialog.show()
     }
 }
