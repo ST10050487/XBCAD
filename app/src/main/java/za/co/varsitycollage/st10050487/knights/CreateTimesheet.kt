@@ -29,7 +29,7 @@ class CreateTimesheet : AppCompatActivity() {
         binding = ActivityCreateTimesheetBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-// Initialize the RecyclerView and its adapter
+        // Initialize the RecyclerView and its adapter
         adapter = MultipleImageAdapter(imageByteArrayList)
         binding.rvHighlights.layoutManager = LinearLayoutManager(this)
         binding.rvHighlights.adapter = adapter
@@ -163,7 +163,7 @@ class CreateTimesheet : AppCompatActivity() {
         val matchStatusValue = matchStatusMap[matchStatusText] ?: 0
 
         val dbHelper = DBHelper(this)
-        dbHelper.addTimes(
+        val isSaved = dbHelper.addTimes(
             meetingTime,
             busDepartureTime,
             busReturnTime,
@@ -172,6 +172,14 @@ class CreateTimesheet : AppCompatActivity() {
             fixtureId // Use the fixture ID passed from the intent
         )
 
-        Toast.makeText(this, "Timesheet saved successfully", Toast.LENGTH_SHORT).show()
+        if (isSaved) {
+            Toast.makeText(this, "Timesheet saved successfully", Toast.LENGTH_SHORT).show()
+            // Navigate back to AdminSportsFixture activity
+            val intent = Intent(this, AdminSportsFixtures::class.java)
+            startActivity(intent)
+            finish() // Optional: Call finish() if you want to remove this activity from the back stack
+        } else {
+            Toast.makeText(this, "Failed to save timesheet", Toast.LENGTH_SHORT).show()
+        }
     }
 }

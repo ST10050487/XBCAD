@@ -587,16 +587,21 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // TIMES
-    public void addTimes(String meetingTime, String busDepartureTime, String busReturnTime, String message, int matchStatus, long fixtureID) {
+    public boolean addTimes(String meetingTime, String busDepartureTime, String busReturnTime, String message, int matchStatus, long fixtureID) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("MEETING_TIME", meetingTime);
         values.put("BUS_DEPATURE_TIME", busDepartureTime);
         values.put("BUS_RETURN_TIME", busReturnTime);
         values.put("MESSAGE", message);
-        values.put("MATCH_STATUS", matchStatus); // Keep this line
-        values.put("FIXTURE_ID", fixtureID); // Add the fixture ID to the ContentValues
-        db.insert("TIMES", null, values);
+        values.put("MATCH_STATUS", matchStatus);
+        values.put("FIXTURE_ID", fixtureID);
+
+        // Insert the new row, returning the primary key value of the new row
+        long result = db.insert("TIMES", null, values);
+
+        // Check if the insert was successful
+        return result != -1; // If result is -1, the insert failed
     }
 
     public void addDummyTimesEntry(int fixtureId) {
@@ -1601,7 +1606,6 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         return fixtures;
     }
-
 
 
     public List<PlayerProfileView> getAllPlayerProfiles() {
