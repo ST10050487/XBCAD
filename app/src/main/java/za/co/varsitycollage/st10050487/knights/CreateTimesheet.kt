@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -28,16 +29,28 @@ class CreateTimesheet : AppCompatActivity() {
         binding = ActivityCreateTimesheetBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Initialize the RecyclerView and its adapter
+// Initialize the RecyclerView and its adapter
         adapter = MultipleImageAdapter(imageByteArrayList)
         binding.rvHighlights.layoutManager = LinearLayoutManager(this)
         binding.rvHighlights.adapter = adapter
+
+        // Retrieve the fixture ID from SharedPreferences
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val fixtureId = sharedPreferences.getLong("FIXTURE_ID", -1L)
+
+        // Check if the fixture ID is valid
+        if (fixtureId == -1L) {
+            Toast.makeText(this, "You need to create a sports fixture first", Toast.LENGTH_SHORT)
+                .show()
+            finish()
+            return
+        }
 
         // Setup image upload
         ImageUpload()
         setupBackButton()
         setupSpinner()
-        setupSaveButton()
+        setupSaveButton(fixtureId) // Pass the fixture ID to the save button setup
     }
 
     private fun ImageUpload() {
@@ -127,21 +140,10 @@ class CreateTimesheet : AppCompatActivity() {
         spinner.adapter = adapter
     }
 
-    private fun setupSaveButton() {
+    private fun setupSaveButton(fixtureId: Long) {
         binding.btnSave.setOnClickListener {
-            val fixtureId = CreateSportFixture.fixtureID
-            if (fixtureId == -1L) {
-                Toast.makeText(
-                    this,
-                    "You need to create a sports fixture first",
-                    Toast.LENGTH_SHORT
-                ).show()
-                val intent = Intent(this, CreateSportFixture::class.java)
-                startActivity(intent)
-                finish()
-            } else {
-                saveTimesheet(fixtureId)
-            }
+            // Now you can directly use the fixtureId that was passed
+            saveTimesheet(fixtureId)
         }
     }
 
@@ -167,7 +169,7 @@ class CreateTimesheet : AppCompatActivity() {
             busReturnTime,
             message,
             matchStatusValue,
-            fixtureId
+            fixtureId // Use the fixture ID passed from the intent
         )
 
         Toast.makeText(this, "Timesheet saved successfully", Toast.LENGTH_SHORT).show()
