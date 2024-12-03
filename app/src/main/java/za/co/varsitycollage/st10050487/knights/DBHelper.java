@@ -19,7 +19,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 25;
+    private static final int DATABASE_VERSION = 27;
 
 
     // Constructor
@@ -184,6 +184,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_EVENTS);
 
 // Create SPORT_FIXTURES table
+// Create SPORT_FIXTURES table
         String CREATE_TABLE_SPORT_FIXTURES = "CREATE TABLE SPORT_FIXTURES (" +
                 "FIXTURE_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "SPORT TEXT NOT NULL," +
@@ -203,7 +204,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "USER_ID INTEGER NOT NULL," +
                 "LEAGUE_ID INTEGER," +
                 "MATCH_STATUS_ID INTEGER," +
-                "IS_HOME_GAME INTEGER DEFAULT 0, " +
+                "IS_HOME_GAME INTEGER DEFAULT 0," +
+                "IS_PAST INTEGER DEFAULT 0, " + // Add this line
                 "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID)," +
                 "FOREIGN KEY (LEAGUE_ID) REFERENCES HIGH_SCHOOL_LEAGUE(LEAGUE_ID)," +
                 "FOREIGN KEY (MATCH_STATUS_ID) REFERENCES MATCH_STATUS(MATCH_STATUS_ID))";
@@ -387,6 +389,7 @@ public class DBHelper extends SQLiteOpenHelper {
         long result = db.insert("USERS", null, values);
         return result != -1;
     }
+
     //__Suspicious Activity Table CRUD_________________________________________________________________________________\\
     public void addSuspiciousActivity(int userId, String activityDescription, long timestamp) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -584,16 +587,21 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // TIMES
-    public void addTimes(String meetingTime, String busDepartureTime, String busReturnTime, String message, int matchStatus, long fixtureID) {
+    public boolean addTimes(String meetingTime, String busDepartureTime, String busReturnTime, String message, int matchStatus, long fixtureID) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("MEETING_TIME", meetingTime);
         values.put("BUS_DEPATURE_TIME", busDepartureTime);
         values.put("BUS_RETURN_TIME", busReturnTime);
         values.put("MESSAGE", message);
-        values.put("MATCH_STATUS", matchStatus); // Keep this line
-        values.put("FIXTURE_ID", fixtureID); // Add the fixture ID to the ContentValues
-        db.insert("TIMES", null, values);
+        values.put("MATCH_STATUS", matchStatus);
+        values.put("FIXTURE_ID", fixtureID);
+
+        // Insert the new row, returning the primary key value of the new row
+        long result = db.insert("TIMES", null, values);
+
+        // Check if the insert was successful
+        return result != -1; // If result is -1, the insert failed
     }
 
     public void addDummyTimesEntry(int fixtureId) {
@@ -899,6 +907,14 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         return fixtures;
+    }
+
+    //Vicky Implemented
+    public void markFixtureAsPast(int fixtureId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("IS_PAST", 1); // Mark as past
+        db.update("SPORT_FIXTURES", values, "FIXTURE_ID = ?", new String[]{String.valueOf(fixtureId)});
     }
 
     public void addPlayerToFixture(int fixtureId, int playerId) {
@@ -1427,6 +1443,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return null;
     }
+
     public EventModel getEventById(int eventId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM EVENTS WHERE EVENT_ID = ?";
@@ -1518,6 +1535,19 @@ public class DBHelper extends SQLiteOpenHelper {
         return fixtures;
     }
 
+    // Method to update match status
+    public int updateMatchStatus(int fixtureId, int matchStatus) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("MATCH_STATUS_ID", matchStatus); // Update the match status
+
+        // If the match status is "Match Over", mark the fixture as past
+        if (matchStatus == 4) { // Assuming 4 corresponds to "Match Over"
+            markFixtureAsPast(fixtureId);
+        }
+
+        return db.update("SPORT_FIXTURES", contentValues, "FIXTURE_ID = ?", new String[]{String.valueOf(fixtureId)});
+    }
 
     // Method to get all past fixtures
     public List<MatchDis> getPastFixtures() {
@@ -1543,6 +1573,40 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         return fixtures;
     }
+
+    public List<FixtureModel> fetchPastFixtures() {
+        List<FixtureModel> fixtures = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM SPORT_FIXTURES WHERE IS_PAST = 1", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                FixtureModel fixture = new FixtureModel(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("FIXTURE_ID")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("SPORT")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("HOME_TEAM")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("AWAY_TEAM")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("AGE_GROUP")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("LEAGUE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("MATCH_LOCATION")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DATE")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("MATCH_TIME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("MATCH_DESCRIPTION")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("HOME_LOGO")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("AWAY_LOGO")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("PICTURE")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("LEAGUE_ID")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("IS_HOME_GAME")) == 1,
+                        cursor.getInt(cursor.getColumnIndexOrThrow("MATCH_STATUS_ID"))
+                );
+                fixtures.add(fixture);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return fixtures;
+    }
+
 
     public List<PlayerProfileView> getAllPlayerProfiles() {
         List<PlayerProfileView> playerProfiles = new ArrayList<>();
@@ -1661,5 +1725,4 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.insert("EVENTS", null, values);
     }
 }
-
 

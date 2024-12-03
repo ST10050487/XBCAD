@@ -61,7 +61,7 @@
                 android:layout_marginRight="@dimen/_20sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
                 android:fontFamily="@font/inter_bold"
-                android:text="Timesheet for Match"
+                android:text="Create Timesheet for Match"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_20sdp" />
