@@ -62,7 +62,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/inter_bold"
-                android:text="Timesheet for Match"
+                android:text="Edit Timesheet for Match"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sdp" />

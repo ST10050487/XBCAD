@@ -33,6 +33,7 @@ class EditTimesheet : AppCompatActivity() {
     private var fileNameList = mutableListOf<String>()
 
     private val matchStatuses = listOf(
+        "",  // Blank option
         "First Half",
         "Half Time",
         "Second Half",
@@ -41,6 +42,7 @@ class EditTimesheet : AppCompatActivity() {
     )
 
     private val matchStatusMap = mapOf(
+        "" to 0,  // Map blank option to 0 or any other value you want
         "First Half" to 1,
         "Half Time" to 2,
         "Second Half" to 3,
@@ -82,12 +84,14 @@ class EditTimesheet : AppCompatActivity() {
         ImageUpload()
         setupTimePickers()
     }
+
     private fun navigateToCreateTimesheet() {
         // Allow navigation to the CreateTimesheet activity regardless of fixture ID
         val intent = Intent(this, CreateTimesheet::class.java)
         intent.putExtra("FIXTURE_ID", fixtureId) // Pass the fixture ID
         startActivity(intent)
     }
+
     private fun setupSpinner() {
         val spinner: Spinner = binding.spinnerMatchStatus
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, matchStatuses)
@@ -120,7 +124,7 @@ class EditTimesheet : AppCompatActivity() {
             loadHighlights(timesheet.timeId)
         } else {
             navigateToCreateTimesheet()
-           // Toast.makeText(this, "Failed to load timesheet", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Failed to load timesheet", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -154,12 +158,14 @@ class EditTimesheet : AppCompatActivity() {
             homeScore = homeScore,
             awayScore = awayScore,
             manOfTheMatch = if (manOfTheMatch.isNotBlank()) manOfTheMatch else null,
-            matchstatus = matchStatusValue
+            matchstatus = matchStatusValue // Store match status
         )
 
         val rowsAffected = dbHelper.updateTimesheet(timesheet)
         if (rowsAffected > 0) {
             Toast.makeText(this, "Timesheet updated successfully", Toast.LENGTH_SHORT).show()
+            // Optionally, update the match status in the fixtures table
+            dbHelper.updateMatchStatus(fixtureId, matchStatusValue)
         } else {
             Toast.makeText(this, "Failed to update timesheet", Toast.LENGTH_SHORT).show()
         }
