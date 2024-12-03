@@ -11,7 +11,7 @@ class MatchesPagerAdapter(activity: FragmentActivity, private val isAdmin: Boole
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> upcomingMatchesFragment(isAdmin) // Pass the isAdmin flag
-            1 -> pastMatchesFragment()
+            1 -> pastMatchesFragment(isAdmin) // Pass the isAdmin flag to pastMatchesFragment
             else -> throw IllegalStateException("Unexpected position $position")
         }
     }

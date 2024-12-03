@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -130,13 +131,26 @@ class EditFixture : AppCompatActivity() {
         // Find the FAB and set the OnClickListener
         val fabAdd = findViewById<FloatingActionButton>(R.id.fab_add)
         fabAdd.setOnClickListener {
-            // Log the fixtureId to check its value
             Log.d("EditFixture", "Fixture ID: $fixtureId")
-            // Navigate to EditTimesheet activity and pass the fixtureId
-            val intent = Intent(this, EditTimesheet::class.java)
-            // Change this line
-            intent.putExtra("FIXTURE_ID", fixtureId) // Pass the fixtureId
-            startActivity(intent)
+
+            // Check if a timesheet already exists for the given fixture ID
+            val existingTimesheet = dbHelper.getTimesDetails(fixtureId)
+
+            if (existingTimesheet != null) {
+                // If a timesheet exists, navigate to EditTimesheet
+                val intent = Intent(this, EditTimesheet::class.java)
+                intent.putExtra("FIXTURE_ID", fixtureId) // Pass the fixture ID
+                startActivity(intent)
+            } else {
+                // If no timesheet exists, save the fixture ID in SharedPreferences and navigate to CreateTimesheet
+                val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putLong("FIXTURE_ID", fixtureId.toLong())
+                editor.apply()
+
+                val intent = Intent(this, CreateTimesheet::class.java)
+                startActivity(intent)
+            }
         }
     }
 
@@ -155,7 +169,7 @@ class EditFixture : AppCompatActivity() {
         val description = binding.txtDescrip.text.toString()
         val venue = binding.txtVenue.text.toString()
         val time = binding.txtTime.text.toString()
-        val date = binding.txtDate.text.toString() // Ensure this is in 'yyyy-MM-dd' format
+        val date = binding.txtDate.toString() // Ensure this is in 'yyyy-MM-dd' format
         val sport = binding.spinnerSport.selectedItem.toString()
         val ageGroup = binding.spinnerAgeGroup.selectedItem.toString()
         val league = binding.spinnerLeague.selectedItem.toString()
@@ -396,11 +410,13 @@ class EditFixture : AppCompatActivity() {
 
         timePickerDialog.show()
     }
+
     private fun saveSelectedPlayersToDatabase() {
         val selectedPlayerIds = playerList.map { it.playerId }
         dbHelper.updateFixturePlayers(fixtureID.toInt(), selectedPlayerIds)
         Toast.makeText(this, "Players saved successfully", Toast.LENGTH_SHORT).show()
     }
+
     private fun validateInputs(): Boolean {
         val away = binding.txtAwayTeam.text.toString()
         val home = binding.txtHomeTeam.text.toString()
