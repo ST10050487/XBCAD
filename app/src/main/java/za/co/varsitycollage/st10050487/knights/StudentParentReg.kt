@@ -228,7 +228,10 @@ class StudentParentReg : AppCompatActivity() {
                 val hashedPassword = hashPassword(password)
 
                 // Determine roleId based on email domain
+               // val roleId = if (email.endsWith("@bmdhs.co.za")) 2 else 3
+                // Test for admin email
                 val roleId = if (email.endsWith("@bmdhs.co.za")) 2 else if (email.endsWith("@admin.com")) 1 else 3
+
 
                 // Insert data into SQLite database with hashed password
                 dbHelper.addUsers(firstName, lastName, dateOfBirth, email, hashedPassword, roleId)

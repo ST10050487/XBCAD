@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -17,6 +18,7 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import za.co.varsitycollage.st10050487.knights.CreateSportFixture.Companion.fixtureID
 import za.co.varsitycollage.st10050487.knights.databinding.ActivityEditFixtureBinding
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
@@ -33,10 +35,12 @@ class EditFixture : AppCompatActivity() {
     private var awayHolder: ByteArray? = null
     private val PICK_IMAGE_REQUEST = 1
     private val CAMERA_REQUEST = 2
+    private val GET_PLAYERS_REQUEST = 3
     private var isHomeLogo: Boolean = true
     private var fixtureId: Int = 0 // Variable to hold the fixture ID
     private var userId: Int = 1
     private var leagueId: Int = 0
+    private var playerList: ArrayList<PlayerProfileModel> = ArrayList()
 
     private val leagueIdMapping = mapOf(
         "WP League" to 1,
@@ -90,13 +94,14 @@ class EditFixture : AppCompatActivity() {
 
         binding.btnUpdate.setOnClickListener {
             if (validateInputs()) {
+                saveSelectedPlayersToDatabase()
                 updateFixtureData()
             }
         }
         binding.btnPlayers.setOnClickListener {
             val intent = Intent(this, GetPlayers::class.java)
             intent.putExtra("FIXTURE_ID", fixtureId) // Pass fixtureId
-            startActivity(intent)
+            startActivityForResult(intent, GET_PLAYERS_REQUEST)
         }
         binding.btnDelete.setOnClickListener {
             if (!dbHelper.checkIsAdmin(userId)) {
@@ -126,13 +131,26 @@ class EditFixture : AppCompatActivity() {
         // Find the FAB and set the OnClickListener
         val fabAdd = findViewById<FloatingActionButton>(R.id.fab_add)
         fabAdd.setOnClickListener {
-            // Log the fixtureId to check its value
             Log.d("EditFixture", "Fixture ID: $fixtureId")
-            // Navigate to EditTimesheet activity and pass the fixtureId
-            val intent = Intent(this, EditTimesheet::class.java)
-            // Change this line
-            intent.putExtra("FIXTURE_ID", fixtureId) // Pass the fixtureId
-            startActivity(intent)
+
+            // Check if a timesheet already exists for the given fixture ID
+            val existingTimesheet = dbHelper.getTimesDetails(fixtureId)
+
+            if (existingTimesheet != null) {
+                // If a timesheet exists, navigate to EditTimesheet
+                val intent = Intent(this, EditTimesheet::class.java)
+                intent.putExtra("FIXTURE_ID", fixtureId) // Pass the fixture ID
+                startActivity(intent)
+            } else {
+                // If no timesheet exists, save the fixture ID in SharedPreferences and navigate to CreateTimesheet
+                val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putLong("FIXTURE_ID", fixtureId.toLong())
+                editor.apply()
+
+                val intent = Intent(this, CreateTimesheet::class.java)
+                startActivity(intent)
+            }
         }
     }
 
@@ -151,7 +169,7 @@ class EditFixture : AppCompatActivity() {
         val description = binding.txtDescrip.text.toString()
         val venue = binding.txtVenue.text.toString()
         val time = binding.txtTime.text.toString()
-        val date = binding.txtDate.text.toString() // Ensure this is in 'yyyy-MM-dd' format
+        val date = binding.txtDate.toString() // Ensure this is in 'yyyy-MM-dd' format
         val sport = binding.spinnerSport.selectedItem.toString()
         val ageGroup = binding.spinnerAgeGroup.selectedItem.toString()
         val league = binding.spinnerLeague.selectedItem.toString()
@@ -294,6 +312,12 @@ class EditFixture : AppCompatActivity() {
                     updatePicture(bitmap)
                 }
             }
+        } else if (requestCode == GET_PLAYERS_REQUEST && resultCode == Activity.RESULT_OK) {
+            val selectedPlayers =
+                data?.getParcelableArrayListExtra<PlayerProfileModel>("SELECTED_PLAYERS")
+            if (selectedPlayers != null) {
+                playerList = selectedPlayers
+            }
         }
     }
 
@@ -385,6 +409,12 @@ class EditFixture : AppCompatActivity() {
         }, hour, minute, true) // true for 24-hour format
 
         timePickerDialog.show()
+    }
+
+    private fun saveSelectedPlayersToDatabase() {
+        val selectedPlayerIds = playerList.map { it.playerId }
+        dbHelper.updateFixturePlayers(fixtureID.toInt(), selectedPlayerIds)
+        Toast.makeText(this, "Players saved successfully", Toast.LENGTH_SHORT).show()
     }
 
     private fun validateInputs(): Boolean {
