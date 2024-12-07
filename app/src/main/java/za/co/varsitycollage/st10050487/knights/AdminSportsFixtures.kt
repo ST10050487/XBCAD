@@ -119,10 +119,16 @@ class AdminSportsFixtures : AppCompatActivity() {
     }
 
     private fun refreshCurrentFragment(searchQuery: String = "") {
-        val fragment = upcomingMatchesFragment(isAdmin = true).apply {
-            arguments = Bundle().apply {
-                putStringArrayList("selectedSports", ArrayList(selectedSports))
-                putString("searchQuery", searchQuery) // Pass the search query
+        val fragment = if (searchQuery.isEmpty()) {
+            // Load the SportsFixturesHomeScreenFragment when there is no search query
+            SportsFixturesHomeScreenFragment(isAdmin = true)
+        } else {
+            // Load the upcomingMatchesFragment with the search query
+            upcomingMatchesFragment(isAdmin = true).apply {
+                arguments = Bundle().apply {
+                    putStringArrayList("selectedSports", ArrayList(selectedSports))
+                    putString("searchQuery", searchQuery) // Pass the search query
+                }
             }
         }
 
