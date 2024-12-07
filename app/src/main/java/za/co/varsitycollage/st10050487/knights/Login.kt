@@ -137,22 +137,21 @@ class Login : AppCompatActivity() {
                 val roleId = dbHelper.getRoleId(userId)
                 loginAttempts = 0 // Reset attempts on successful login
                 val intent = when (roleId) {
-                    1 -> Intent(this, AdminHome::class.java)
-                    2, 3 -> Intent(this, HomeScreen::class.java)
+                    1, 2, 3 -> Intent(this, AdminHome::class.java)
+                    4, 5 -> Intent(this, HomeScreen::class.java)
                     else -> null
                 }
 
                 if (intent != null) {
-                    // Passing the USER_ID to the respective Activity
-                    intent.putExtra("USER_ID", userId)
+                    // Passing the ROLE_ID to the respective Activity
+                    intent.putExtra("ROLE_ID", roleId)
                     startActivity(intent)
                     // Finishing the login activity once the user is logged in
                     finish()
                 } else {
                     Toast.makeText(this, "Invalid role", Toast.LENGTH_SHORT).show()
                 }
-            } else
-            {
+            } else {
                 if (loginAttempts >= MAX_ATTEMPTS) {
                     lockoutEndTime = System.currentTimeMillis() + LOCKOUT_DURATION_MS
                     Toast.makeText(
@@ -161,8 +160,7 @@ class Login : AppCompatActivity() {
                         Toast.LENGTH_LONG
                     ).show()
                     saveSuspiciousActivity(email, "Too many failed login attempts")
-                }
-                else {
+                } else {
                     loginAttempts++
                     // User does not exist or incorrect password
                     Toast.makeText(
@@ -170,9 +168,7 @@ class Login : AppCompatActivity() {
                         ("Invalid credentials. Attempt $loginAttempts").toString() + " of " + MAX_ATTEMPTS,
                         Toast.LENGTH_SHORT
                     ).show()
-                    //Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show()
                 }
-
             }
         }
     }

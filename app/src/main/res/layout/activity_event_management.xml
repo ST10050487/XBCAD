@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,118 +6,139 @@
     android:layout_height="match_parent"
     tools:context=".EventManagement">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/primaryColor"
-        app:navigationIcon="@drawable/back_btn"
-        app:title="@string/school_events"
-        app:titleTextColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:background="@color/yellow"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-
-    <!--Layout for Logo and Message-->
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
-
-        <Button
-            android:id="@+id/btnCreateEvent"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-            android:layout_width="215dp"
-            android:layout_height="58dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginHorizontal="30dp"
-            android:backgroundTint="@color/primaryColor"
-            android:fontFamily="@font/inter_bold"
-            android:text="Create Event"
-            android:textColor="@color/white"
-            app:icon="@drawable/ic_plus"
-            app:iconGravity="end"
-            app:iconTint="@color/white" />
-
-    </LinearLayout>
-
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="696dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-        <FrameLayout
-            android:id="@+id/event_card_container"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profilePicture"
-            app:layout_constraintVertical_bias="0.0" />
-    </ScrollView>
+            android:layout_height="match_parent">
 
-<LinearLayout
-    android:id="@+id/selectLayout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    android:layout_marginBottom="@dimen/_10sdp"
-    android:visibility="gone"
-   >
-    <Button
-        android:id="@+id/btnCancel"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-        android:layout_width="55dp"
-        android:layout_height="58dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginRight="10dp"
-        android:backgroundTint="@color/primaryColor"
-        android:fontFamily="@font/inter_bold"
-        android:textColor="@color/white"
-        app:icon="@drawable/ic_cancel"
-        app:iconGravity="end"
-        app:iconTint="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
-    <Button
-        android:id="@+id/btnDelete"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-        android:layout_width="215dp"
-        android:layout_height="58dp"
-        android:layout_gravity="center_horizontal"
-        android:backgroundTint="@color/maroon"
-        android:fontFamily="@font/inter_bold"
-        android:textColor="@color/white"
-        app:icon="@drawable/ic_delete"
-        app:iconGravity="end"
-        app:iconTint="@color/white"
-        />
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/primaryColor"
+                app:navigationIcon="@drawable/back_btn"
+                app:title="@string/school_events"
+                app:titleTextColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="@color/yellow"
+                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+                <Button
+                    android:id="@+id/btnCreateEvent"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                    android:layout_width="215dp"
+                    android:layout_height="58dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginHorizontal="30dp"
+                    android:backgroundTint="@color/primaryColor"
+                    android:fontFamily="@font/inter_bold"
+                    android:text="Create Event"
+                    android:textColor="@color/white"
+                    app:icon="@drawable/ic_plus"
+                    app:iconGravity="end"
+                    app:iconTint="@color/white" />
+
+            </LinearLayout>
+
+            <ScrollView
+                android:id="@+id/scrollView"
+                android:layout_width="417dp"
+                android:layout_height="501dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+                <FrameLayout
+                    android:id="@+id/event_card_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="@+id/btn_addEvent"
+                    app:layout_constraintTop_toBottomOf="@+id/profilePicture"
+                    app:layout_constraintVertical_bias="0.0" />
+            </ScrollView>
+
+            <LinearLayout
+                android:id="@+id/selectLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:visibility="gone">
+                <Button
+                    android:id="@+id/btnCancel"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                    android:layout_width="55dp"
+                    android:layout_height="58dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginRight="10dp"
+                    android:backgroundTint="@color/primaryColor"
+                    android:fontFamily="@font/inter_bold"
+                    android:textColor="@color/white"
+                    app:icon="@drawable/ic_cancel"
+                    app:iconGravity="end"
+                    app:iconTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+                <Button
+                    android:id="@+id/btnDelete"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                    android:layout_width="215dp"
+                    android:layout_height="58dp"
+                    android:layout_gravity="center_horizontal"
+                    android:backgroundTint="@color/maroon"
+                    android:fontFamily="@font/inter_bold"
+                    android:textColor="@color/white"
+                    app:icon="@drawable/ic_delete"
+                    app:iconGravity="end"
+                    app:iconTint="@color/white" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@color/backgroundtheme"
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/admin_nav_header"
+            app:itemIconSize="25sp"
+            app:itemIconTint="@color/white"
+            app:itemTextAppearance="@style/CustomNavigationViewItemText"
+            app:itemTextColor="@color/white"
+            app:menu="@menu/admin_nav_menu"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="-179dp"
+            tools:layout_editor_absoluteY="0dp" />
+    </androidx.drawerlayout.widget.DrawerLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
