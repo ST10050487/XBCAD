@@ -10,6 +10,9 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <application
         android:allowBackup="true"
@@ -92,11 +95,19 @@
         <activity android:name=".AdminUpcomingEvents" />
         <activity android:name=".AdminSportsFixtures" />
         <activity android:name=".DisplaySportsFixturesActivity"/>
+        <activity android:name=".DisplayCatalogProducts"/>
         <activity
             android:name=".StudentParentReg"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".SuccessReg" />
         <activity android:name=".EventDetailActivity" />
+        <service
+            android:name=".EventMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <meta-data
             android:name="preloaded_fonts"
