@@ -42,10 +42,24 @@ android {
     lint {
         baseline = file("lint-baseline.xml")
     }
+    buildToolsVersion = "34.0.0"
+
+    // Add the packaging block to resolve META-INF conflicts
+    packaging {
+        resources {
+            excludes += setOf(
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt",
+                "mozilla/public-suffix-list.txt"
+            )
+        }
+    }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.appcompat)
@@ -61,16 +75,18 @@ dependencies {
     implementation(libs.firebase.database.ktx)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.messaging)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    //Responsive Design for the Images/views
+    // Responsive Design for the Images/views
     implementation("com.intuit.sdp:sdp-android:1.1.1")
 
     implementation("com.google.android.material:material:1.9.0")
 
-    //Resposive Design for the text view
+    // Responsive Design for the text view
     implementation("com.intuit.ssp:ssp-android:1.1.1")
 
     // Updated Kotlin runtime dependency with actual version number
@@ -79,14 +95,13 @@ dependencies {
     // BCrypt dependency for password hashing
     implementation("org.mindrot:jbcrypt:0.4")
 
-    //implement the dependency com.intuit.sdp:sdp-android:1.1.1
+    // Implement the dependency com.intuit.sdp:sdp-android:1.1.1
     implementation("com.intuit.sdp:sdp-android:1.1.1")
 
-    //Implementing the de.hdodenhof:circleimageview:3.1.0
+    // Implementing the de.hdodenhof:circleimageview:3.1.0
     implementation(libs.circleimageview)
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
-    implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("de.hdodenhof:circleimageview:3.1.0")
 
     // Add the Security Crypto library dependency
@@ -96,13 +111,13 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.2.0")
 
     implementation("com.google.firebase:firebase-crashlytics:19.2.1")
-
-
-
     implementation("com.google.firebase:firebase-analytics:22.1.2")
     implementation("net.zetetic:android-database-sqlcipher:4.5.4")
     implementation("androidx.sqlite:sqlite:2.4.0")
     implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation("com.google.firebase:firebase-messaging:24.1.0")
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.16.0")
 }
-apply(plugin ="com.google.gms.google-services")
+
+apply(plugin = "com.google.gms.google-services")
 apply(plugin = "com.google.firebase.crashlytics")
