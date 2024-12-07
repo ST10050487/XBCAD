@@ -30,6 +30,15 @@ class HomeScreen : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_home_screen)
 
+        // Retrieve the ROLE_ID from the intent
+        val roleId = intent.getIntExtra("ROLE_ID", -1)
+        if (roleId == -1) {
+            Log.e("HomeScreen", "ROLE_ID not found in intent")
+            // Handle the case where the ROLE_ID is not found
+        } else {
+            Log.d("HomeScreen", "ROLE_ID: $roleId")
+        }
+
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
         val navView = findViewById<NavigationView>(R.id.nav_view)
 

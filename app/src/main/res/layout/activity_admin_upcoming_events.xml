@@ -7,7 +7,7 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/primaryColor"
         android:minHeight="?attr/actionBarSize"
@@ -35,12 +35,12 @@
                     android:layout_height="wrap_content"
                     android:text="@string/back_btn"
                     android:textColor="@color/white"
-                    android:textSize="16dp"
+                    android:textSize="16sp"
                     android:layout_gravity="center_vertical"/>
             </LinearLayout>
             <TextView
                 android:paddingVertical="4dp"
-                android:layout_width="272dp"
+                android:layout_width="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_height="wrap_content"
                 android:textAllCaps="true"
@@ -48,18 +48,19 @@
                 android:layout_gravity="center"
                 android:text="@string/school_events"
                 android:textColor="@color/white"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
     <View
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="8dp"
         android:background="@color/yellow"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- "Create Event" Button -->
     <Button
         android:id="@+id/create_event_button"
@@ -91,7 +92,7 @@
 
         <EditText
             android:id="@+id/search_bar"
-            android:layout_width="331dp"
+            android:layout_width="0dp"
             android:layout_height="49dp"
             android:layout_marginTop="12dp"
             android:background="@drawable/rounded_search_background"

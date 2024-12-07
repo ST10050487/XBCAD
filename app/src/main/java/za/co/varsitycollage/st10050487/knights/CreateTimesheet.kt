@@ -167,7 +167,7 @@ class CreateTimesheet : AppCompatActivity() {
         val matchStatusValue = matchStatusMap[matchStatusText] ?: 0
 
         val dbHelper = DBHelper(this)
-        val isSaved = dbHelper.addTimes(
+        val isSaved: Boolean = dbHelper.addTimes(
             meetingTime,
             busDepartureTime,
             busReturnTime,
