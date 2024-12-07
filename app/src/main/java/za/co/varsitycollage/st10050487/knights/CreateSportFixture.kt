@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -54,7 +55,6 @@ class CreateSportFixture : AppCompatActivity() {
     private var isHomeTeamLogo: Boolean = true
     private var userId: Int? = null // Declare a variable to hold the user ID
     private var playerList: ArrayList<PlayerProfileModel> = ArrayList()
-
 
     private val leagueIdMapping = mapOf(
         "WP League" to 1,
@@ -206,8 +206,6 @@ class CreateSportFixture : AppCompatActivity() {
         matchDateEditText.setOnClickListener {
             showDatePicker()
         }
-
-
     }
 
     private fun saveSelectedPlayersToDatabase() {
@@ -215,6 +213,7 @@ class CreateSportFixture : AppCompatActivity() {
         dbHelper.updateFixturePlayers(fixtureID.toInt(), selectedPlayerIds)
         Toast.makeText(this, "Players saved successfully", Toast.LENGTH_SHORT).show()
     }
+
     private fun validateInputs(): Boolean {
         if (homeTeamNameEditText.text.toString().trim().isEmpty()) {
             homeTeamNameEditText.error = "Home team name is required"
@@ -338,11 +337,12 @@ class CreateSportFixture : AppCompatActivity() {
                 }
             }
         } else if (requestCode == GET_PLAYERS_REQUEST && resultCode == Activity.RESULT_OK) {
-        val selectedPlayers = data?.getParcelableArrayListExtra<PlayerProfileModel>("SELECTED_PLAYERS")
-        if (selectedPlayers != null) {
-           playerList = selectedPlayers
+            val selectedPlayers =
+                data?.getParcelableArrayListExtra<PlayerProfileModel>("SELECTED_PLAYERS")
+            if (selectedPlayers != null) {
+                playerList = selectedPlayers
+            }
         }
-    }
     }
 
     private fun showTimePicker() {
@@ -373,16 +373,6 @@ class CreateSportFixture : AppCompatActivity() {
         matchDescription = matchDescriptionEditText.text.toString()
         selectedMatchTime = matchTimeEditText.text.toString()
         selectedMatchDate = matchDateEditText.text.toString()
-
-        // You can now use these variables as needed
-        Log.d("CreateSportFixture", "Home Team Name: $homeTeamName")
-        Log.d("CreateSportFixture", "Away Team Name: $awayTeamName")
-        Log.d("CreateSportFixture", "Venue: $venue")
-        Log.d("CreateSportFixture", "Match Description: $matchDescription")
-        Log.d("CreateSportFixture", "Match Time: $selectedMatchTime")
-        Log.d("CreateSportFixture", "Match Date: $selectedMatchDate")
-        Log.d("CreateSportFixture", "Home Team Logo URI: $homeTeamLogoUri")
-        Log.d("CreateSportFixture", "Away Team Logo URI: $awayTeamLogoUri")
     }
 
     private fun insertFixtureIntoDatabase(): Long {
@@ -402,8 +392,10 @@ class CreateSportFixture : AppCompatActivity() {
         val isHomeGame = when {
             awayTeamName?.contains("Bosemansdam", ignoreCase = true) == true ||
                     awayTeamName?.contains("Boseman'sdam", ignoreCase = true) == true -> false
+
             venue?.contains("Bosemansdam High School", ignoreCase = true) == true ||
                     venue?.contains("Boseman'sdam High School", ignoreCase = true) == true -> true
+
             else -> false // If venue is not one of the specified, consider it an away game
         }
 
@@ -428,15 +420,28 @@ class CreateSportFixture : AppCompatActivity() {
 
         val fixtureId = dbHelper.writableDatabase.insert("SPORT_FIXTURES", null, values)
         fixtureID = fixtureId // Update the static variable
+        generatedFixtureId = fixtureId // Store the generated fixture ID
+
+        // Store the generated fixture ID in SharedPreferences
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putLong("FIXTURE_ID", generatedFixtureId)
+        editor.apply()
+
         saveSelectedPlayersToDatabase()
 
         if (fixtureId == -1L) {
             Toast.makeText(this, "Failed to create sports fixture", Toast.LENGTH_LONG).show()
         } else {
-            generatedFixtureId = fixtureId // Store the generated fixture ID
-            fixtureID = generatedFixtureId // Update the static variable
-            Log.d("CreateSportFixture", "Generated Fixture ID: $generatedFixtureId") // Log the fixture ID
-            Toast.makeText(this, "You have successfully created the sports fixture", Toast.LENGTH_LONG).show()
+            Log.d(
+                "CreateSportFixture",
+                "Generated Fixture ID: $generatedFixtureId"
+            ) // Log the fixture ID
+            Toast.makeText(
+                this,
+                "You have successfully created the sports fixture",
+                Toast.LENGTH_LONG
+            ).show()
         }
 
         // Clear the input fields

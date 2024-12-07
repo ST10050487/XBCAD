@@ -71,6 +71,7 @@ class EditFixture : AppCompatActivity() {
 
         // Retrieve the fixture ID from the intent
         fixtureId = intent.getIntExtra("fixture_id", -1) // Default value of -1
+        Log.d("EditFixture", "Retrieved Fixture ID: $fixtureId")
 
         // Load the fixture data using the fixture ID
         if (fixtureId != -1) {
@@ -133,19 +134,21 @@ class EditFixture : AppCompatActivity() {
         fabAdd.setOnClickListener {
             Log.d("EditFixture", "Fixture ID: $fixtureId")
 
-            // Check if a timesheet already exists for the given fixture ID
-            val existingTimesheet = dbHelper.getTimesDetails(fixtureId)
+            // Check if a timesheet already exists for the original fixture ID
+            val existingTimesheet =
+                dbHelper.getTimesDetails(fixtureId) // Use the original fixture ID
+            Log.d("EditFixture", "Existing Timesheet: $existingTimesheet")
 
             if (existingTimesheet != null) {
                 // If a timesheet exists, navigate to EditTimesheet
                 val intent = Intent(this, EditTimesheet::class.java)
-                intent.putExtra("FIXTURE_ID", fixtureId) // Pass the fixture ID
+                intent.putExtra("FIXTURE_ID", fixtureId) // Pass the original fixture ID
                 startActivity(intent)
             } else {
                 // If no timesheet exists, save the fixture ID in SharedPreferences and navigate to CreateTimesheet
                 val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
                 val editor = sharedPreferences.edit()
-                editor.putLong("FIXTURE_ID", fixtureId.toLong())
+                editor.putLong("FIXTURE_ID", fixtureId.toLong()) // Use the original fixture ID
                 editor.apply()
 
                 val intent = Intent(this, CreateTimesheet::class.java)
