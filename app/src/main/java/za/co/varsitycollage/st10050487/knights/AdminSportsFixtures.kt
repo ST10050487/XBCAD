@@ -7,23 +7,22 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 
 class AdminSportsFixtures : AppCompatActivity() {
     private val selectedSports = mutableListOf<String>() // Store selected sports
 
     private lateinit var searchEditText: EditText // Declare the search EditText
+    private lateinit var selectedSportsLayout: LinearLayout // Declare the LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin_sports_fixtures)
+
+        // Initialize the LinearLayout
+        selectedSportsLayout = findViewById(R.id.selected_sports_layout)
 
         // Load the SportsFixturesHomeScreenFragment into the fragment_container
         LoadingUpcomingPastFixtures(savedInstanceState)
@@ -158,6 +157,7 @@ class AdminSportsFixtures : AppCompatActivity() {
         okButton.setOnClickListener {
             // Clear previous selections
             selectedSports.clear()
+            selectedSportsLayout.removeAllViews() // Clear previous views
 
             // Collect selected sports
             if (soccerCheckBox.isChecked) selectedSports.add("Soccer")
@@ -170,16 +170,68 @@ class AdminSportsFixtures : AppCompatActivity() {
             if (athleticsCheckBox.isChecked) selectedSports.add("Athletics")
             if (swimmingCheckBox.isChecked) selectedSports.add("Swimming")
 
-            // Show a toast or update UI with selected items
-            Toast.makeText(this, "Selected: ${selectedSports.joinToString()}", Toast.LENGTH_SHORT)
-                .show()
+            // Update the LinearLayout with selected sports
+            for (sport in selectedSports) {
+                val sportView = createSportView(sport)
+                selectedSportsLayout.addView(sportView)
+            }
 
-            // Now refresh the fragment and pass the selected sports
+            // Refresh the fragment and pass the selected sports
             refreshCurrentFragment()
 
             sportDialog.dismiss()  // Close the dropdown dialog
         }
 
         sportDialog.show()  // Display the dropdown dialog
+    }
+
+    private fun createSportView(sport: String): View {
+        val sportLayout = LinearLayout(this)
+        sportLayout.orientation = LinearLayout.HORIZONTAL
+        sportLayout.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+
+        val sportTextView = TextView(this).apply {
+            text = sport
+            textSize = 16f
+            setTextColor(getColor(R.color.black))
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        val removeIcon = ImageView(this).apply {
+            setImageResource(R.drawable.ic_cross) // Replace with your cross icon
+            layoutParams = LinearLayout.LayoutParams(
+                20.dpToPx(), // Convert dp to pixels
+                20.dpToPx()  // Convert dp to pixels
+            )
+            setOnClickListener {
+                selectedSports.remove(sport) // Remove sport from the list
+                selectedSportsLayout.removeView(sportLayout)
+            }
+        }
+
+        sportLayout.addView(sportTextView)
+        sportLayout.addView(removeIcon)
+
+        return sportLayout
+    }
+
+    // Extension function to convert dp to pixels
+    private fun Int.dpToPx(): Int {
+        val density = resources.displayMetrics.density
+        return (this * density).toInt()
+    }
+
+    private fun clearSelectedSports() {
+        selectedSports.clear()  // Clear the selected sports list
+        selectedSportsLayout.removeAllViews()  // Remove all views from the layout
+
+        // Refresh the fragment to show all matches
+        refreshCurrentFragment()
     }
 }
