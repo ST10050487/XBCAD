@@ -22,8 +22,12 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Retrieve selected sports from SharedPreferences
+        selectedSports = getSelectedSportsFromPreferences()
+        Log.d("upcomingMatchesFragment", "Selected Sports: $selectedSports")
+
         arguments?.let {
-            selectedSports = it.getStringArrayList("selectedSports") ?: emptyList()
             searchQuery = it.getString("searchQuery", "")
         }
     }
@@ -43,6 +47,8 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
 
     override fun onResume() {
         super.onResume()
+        // Refresh the selected sports from SharedPreferences
+        selectedSports = getSelectedSportsFromPreferences()
         refreshData() // Refresh the data whenever the fragment comes into view
     }
 
@@ -55,6 +61,12 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                 refreshData()
             }
         }
+    }
+
+    private fun getSelectedSportsFromPreferences(): List<String> {
+        val sharedPreferences =
+            requireActivity().getSharedPreferences("SportsPreferences", Activity.MODE_PRIVATE)
+        return sharedPreferences.getStringSet("selectedSports", emptySet())?.toList() ?: emptyList()
     }
 
     private fun refreshData() {

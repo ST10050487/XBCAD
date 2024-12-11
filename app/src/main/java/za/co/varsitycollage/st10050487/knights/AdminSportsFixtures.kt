@@ -21,6 +21,9 @@ class AdminSportsFixtures : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin_sports_fixtures)
 
+        // Clear SharedPreferences to reset selected sports
+        clearSelectedSportsFromPreferences()
+
         // Initialize the LinearLayout
         selectedSportsLayout = findViewById(R.id.selected_sports_layout)
 
@@ -39,6 +42,13 @@ class AdminSportsFixtures : AppCompatActivity() {
         setupSearchListener()
 
         FilterLogic()
+    }
+
+    private fun clearSelectedSportsFromPreferences() {
+        val sharedPreferences = getSharedPreferences("SportsPreferences", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.remove("selectedSports") // Clear the selected sports
+        editor.apply()
     }
 
     private fun setupBackButton() {
@@ -125,7 +135,7 @@ class AdminSportsFixtures : AppCompatActivity() {
             // Load the upcomingMatchesFragment with the search query
             upcomingMatchesFragment(isAdmin = true).apply {
                 arguments = Bundle().apply {
-                    putStringArrayList("selectedSports", ArrayList(selectedSports))
+                    putStringArrayList("selectedSports", getSelectedSportsFromPreferences())
                     putString("searchQuery", searchQuery) // Pass the search query
                 }
             }
@@ -134,6 +144,11 @@ class AdminSportsFixtures : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .commit()
+    }
+
+    private fun getSelectedSportsFromPreferences(): ArrayList<String> {
+        val sharedPreferences = getSharedPreferences("SportsPreferences", MODE_PRIVATE)
+        return ArrayList(sharedPreferences.getStringSet("selectedSports", emptySet()) ?: emptySet())
     }
 
     private fun showSportDropdown(parentDialog: Dialog) {
@@ -170,6 +185,9 @@ class AdminSportsFixtures : AppCompatActivity() {
             if (athleticsCheckBox.isChecked) selectedSports.add("Athletics")
             if (swimmingCheckBox.isChecked) selectedSports.add("Swimming")
 
+            // Save selected sports to SharedPreferences
+            saveSelectedSportsToPreferences(selectedSports)
+
             // Update the LinearLayout with selected sports
             for (sport in selectedSports) {
                 val sportView = createSportView(sport)
@@ -183,6 +201,13 @@ class AdminSportsFixtures : AppCompatActivity() {
         }
 
         sportDialog.show()  // Display the dropdown dialog
+    }
+
+    private fun saveSelectedSportsToPreferences(selectedSports: List<String>) {
+        val sharedPreferences = getSharedPreferences("SportsPreferences", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putStringSet("selectedSports", selectedSports.toSet()) // Save as a Set
+        editor.apply()
     }
 
     private fun createSportView(sport: String): View {
@@ -212,6 +237,12 @@ class AdminSportsFixtures : AppCompatActivity() {
             setOnClickListener {
                 selectedSports.remove(sport) // Remove sport from the list
                 selectedSportsLayout.removeView(sportLayout)
+
+                // Save the updated selected sports to SharedPreferences
+                saveSelectedSportsToPreferences(selectedSports)
+
+                // Refresh the upcomingMatchesFragment
+                refreshCurrentFragment() // This will refresh the fragment with updated selected sports
             }
         }
 
