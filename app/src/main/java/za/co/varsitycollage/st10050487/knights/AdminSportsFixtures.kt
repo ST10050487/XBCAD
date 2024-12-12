@@ -28,7 +28,7 @@ class AdminSportsFixtures : AppCompatActivity() {
         selectedSportsLayout = findViewById(R.id.selected_sports_layout)
 
         // Load the SportsFixturesHomeScreenFragment into the fragment_container
-        LoadingUpcomingPastFixtures(savedInstanceState)
+        loadingUpcomingPastFixtures(savedInstanceState)
 
         // Initialize the search EditText
         searchEditText = findViewById(R.id.search_fixtures)
@@ -36,12 +36,12 @@ class AdminSportsFixtures : AppCompatActivity() {
         // Set up back button listener
         setupBackButton()
 
-        NavigationToFixtures()
+        navigationToFixtures()
 
         // Set up search listener
         setupSearchListener()
 
-        FilterLogic()
+        filterLogic()
     }
 
     private fun clearSelectedSportsFromPreferences() {
@@ -61,7 +61,7 @@ class AdminSportsFixtures : AppCompatActivity() {
         }
     }
 
-    private fun NavigationToFixtures() {
+    private fun navigationToFixtures() {
         // Set up the create fixture button listener
         val createFixtureButton = findViewById<Button>(R.id.uploadBtn)
         createFixtureButton.setOnClickListener {
@@ -89,7 +89,7 @@ class AdminSportsFixtures : AppCompatActivity() {
         })
     }
 
-    private fun LoadingUpcomingPastFixtures(savedInstanceState: Bundle?) {
+    private fun loadingUpcomingPastFixtures(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
             val fragment = SportsFixturesHomeScreenFragment(isAdmin = true) // Pass true for admin
             supportFragmentManager.beginTransaction()
@@ -98,7 +98,7 @@ class AdminSportsFixtures : AppCompatActivity() {
         }
     }
 
-    private fun FilterLogic() {
+    private fun filterLogic() {
         // Filter icon logic
         val filterIcon = findViewById<ImageView>(R.id.filter_icon)
         filterIcon.setOnClickListener {
@@ -112,7 +112,14 @@ class AdminSportsFixtures : AppCompatActivity() {
             // Set up sport arrow click to show dropdown
             val sportArrow = dialog.findViewById<ImageView>(R.id.sport_arrow)
             sportArrow.setOnClickListener {
-                showSportDropdown(dialog)
+                showSportDropdown()
+            }
+
+            // Set up age group arrow click listener
+            val ageGroupArrow =
+                dialog.findViewById<ImageView>(R.id.age_group_arrow) // Find it in the dialog
+            ageGroupArrow.setOnClickListener {
+                showAgeGroupDropdown() // Pass the dialog to the method
             }
 
             // Show Results button logic
@@ -151,7 +158,7 @@ class AdminSportsFixtures : AppCompatActivity() {
         return ArrayList(sharedPreferences.getStringSet("selectedSports", emptySet()) ?: emptySet())
     }
 
-    private fun showSportDropdown(parentDialog: Dialog) {
+    private fun showSportDropdown() {
         val sportDialog = Dialog(this)
         sportDialog.setContentView(R.layout.sport_dropdown)
         sportDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -258,11 +265,55 @@ class AdminSportsFixtures : AppCompatActivity() {
         return (this * density).toInt()
     }
 
-    private fun clearSelectedSports() {
-        selectedSports.clear()  // Clear the selected sports list
-        selectedSportsLayout.removeAllViews()  // Remove all views from the layout
+      private fun showAgeGroupDropdown() {
+        val ageGroupDialog = Dialog(this)
+        ageGroupDialog.setContentView(R.layout.agegroup_dropdown) // Use your age group layout
+        ageGroupDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        // Refresh the fragment to show all matches
-        refreshCurrentFragment()
+        // Reference each CheckBox
+        val boysUnder15CheckBox = ageGroupDialog.findViewById<CheckBox>(R.id.checkbox_boys_under_15)
+        val girlsUnder15CheckBox =
+            ageGroupDialog.findViewById<CheckBox>(R.id.checkbox_girls_under_15)
+        val boysUnder16CheckBox = ageGroupDialog.findViewById<CheckBox>(R.id.checkbox_boys_under_16)
+        val girlsUnder16CheckBox =
+            ageGroupDialog.findViewById<CheckBox>(R.id.checkbox_girls_under_16)
+        val boysUnder17CheckBox = ageGroupDialog.findViewById<CheckBox>(R.id.checkbox_boys_under_17)
+        val girlsUnder17CheckBox =
+            ageGroupDialog.findViewById<CheckBox>(R.id.checkbox_girls_under_17)
+        val boysUnder18CheckBox = ageGroupDialog.findViewById<CheckBox>(R.id.checkbox_boys_under_18)
+        val girlsUnder18CheckBox =
+            ageGroupDialog.findViewById<CheckBox>(R.id.checkbox_girls_under_18)
+
+        // Handle OK button
+        val okButton = ageGroupDialog.findViewById<Button>(R.id.button_age_group_ok)
+        okButton.setOnClickListener {
+            // Logic to collect selected age groups
+            val selectedAgeGroups = mutableListOf<String>()
+            if (boysUnder15CheckBox.isChecked) selectedAgeGroups.add("Boys Under 15")
+            if (girlsUnder15CheckBox.isChecked) selectedAgeGroups.add("Girls Under 15")
+            if (boysUnder16CheckBox.isChecked) selectedAgeGroups.add("Boys Under 16")
+            if (girlsUnder16CheckBox.isChecked) selectedAgeGroups.add("Girls Under 16")
+            if (boysUnder17CheckBox.isChecked) selectedAgeGroups.add("Boys Under 17")
+            if (girlsUnder17CheckBox.isChecked) selectedAgeGroups.add("Girls Under 17")
+            if (boysUnder18CheckBox.isChecked) selectedAgeGroups.add("Boys Under 18")
+            if (girlsUnder18CheckBox.isChecked) selectedAgeGroups.add("Girls Under 18")
+
+            // Save selected age groups to SharedPreferences or handle them as needed
+            saveSelectedAgeGroupsToPreferences(selectedAgeGroups)
+
+            // Optionally refresh the fragment or update UI
+            refreshCurrentFragment()
+
+            ageGroupDialog.dismiss()  // Close the dropdown dialog
+        }
+
+        ageGroupDialog.show()  // Display the dropdown dialog
+    }
+
+    private fun saveSelectedAgeGroupsToPreferences(selectedAgeGroups: List<String>) {
+        val sharedPreferences = getSharedPreferences("SportsPreferences", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putStringSet("selectedAgeGroups", selectedAgeGroups.toSet()) // Save as a Set
+        editor.apply()
     }
 }
