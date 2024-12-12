@@ -13,19 +13,23 @@ import androidx.appcompat.app.AppCompatActivity
 
 class AdminSportsFixtures : AppCompatActivity() {
     private val selectedSports = mutableListOf<String>() // Store selected sports
+    private val selectedAgeGroups = mutableListOf<String>() // Store selected age groups
 
     private lateinit var searchEditText: EditText // Declare the search EditText
-    private lateinit var selectedSportsLayout: LinearLayout // Declare the LinearLayout
+    private lateinit var selectedSportsLayout: LinearLayout // Declare the LinearLayout for sports
+    private lateinit var selectedAgeGroupsLayout: LinearLayout // Declare the LinearLayout for age groups
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin_sports_fixtures)
 
-        // Clear SharedPreferences to reset selected sports
+        // Clear SharedPreferences to reset selected sports and age groups
         clearSelectedSportsFromPreferences()
+        clearSelectedAgeGroupsFromPreferences()
 
-        // Initialize the LinearLayout
+        // Initialize the LinearLayouts
         selectedSportsLayout = findViewById(R.id.selected_sports_layout)
+        selectedAgeGroupsLayout = findViewById(R.id.selected_age_groups_layout)
 
         // Load the SportsFixturesHomeScreenFragment into the fragment_container
         loadingUpcomingPastFixtures(savedInstanceState)
@@ -48,6 +52,13 @@ class AdminSportsFixtures : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("SportsPreferences", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.remove("selectedSports") // Clear the selected sports
+        editor.apply()
+    }
+
+    private fun clearSelectedAgeGroupsFromPreferences() {
+        val sharedPreferences = getSharedPreferences("SportsPreferences", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.remove("selectedAgeGroups") // Clear the selected age groups
         editor.apply()
     }
 
@@ -116,10 +127,9 @@ class AdminSportsFixtures : AppCompatActivity() {
             }
 
             // Set up age group arrow click listener
-            val ageGroupArrow =
-                dialog.findViewById<ImageView>(R.id.age_group_arrow) // Find it in the dialog
+            val ageGroupArrow = dialog.findViewById<ImageView>(R.id.age_group_arrow)
             ageGroupArrow.setOnClickListener {
-                showAgeGroupDropdown() // Pass the dialog to the method
+                showAgeGroupDropdown()
             }
 
             // Show Results button logic
@@ -132,30 +142,6 @@ class AdminSportsFixtures : AppCompatActivity() {
 
             dialog.show()
         }
-    }
-
-    private fun refreshCurrentFragment(searchQuery: String = "") {
-        val fragment = if (searchQuery.isEmpty()) {
-            // Load the SportsFixturesHomeScreenFragment when there is no search query
-            SportsFixturesHomeScreenFragment(isAdmin = true)
-        } else {
-            // Load the upcomingMatchesFragment with the search query
-            upcomingMatchesFragment(isAdmin = true).apply {
-                arguments = Bundle().apply {
-                    putStringArrayList("selectedSports", getSelectedSportsFromPreferences())
-                    putString("searchQuery", searchQuery) // Pass the search query
-                }
-            }
-        }
-
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
-    }
-
-    private fun getSelectedSportsFromPreferences(): ArrayList<String> {
-        val sharedPreferences = getSharedPreferences("SportsPreferences", MODE_PRIVATE)
-        return ArrayList(sharedPreferences.getStringSet("selectedSports", emptySet()) ?: emptySet())
     }
 
     private fun showSportDropdown() {
@@ -265,7 +251,7 @@ class AdminSportsFixtures : AppCompatActivity() {
         return (this * density).toInt()
     }
 
-      private fun showAgeGroupDropdown() {
+    private fun showAgeGroupDropdown() {
         val ageGroupDialog = Dialog(this)
         ageGroupDialog.setContentView(R.layout.agegroup_dropdown) // Use your age group layout
         ageGroupDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -288,7 +274,7 @@ class AdminSportsFixtures : AppCompatActivity() {
         val okButton = ageGroupDialog.findViewById<Button>(R.id.button_age_group_ok)
         okButton.setOnClickListener {
             // Logic to collect selected age groups
-            val selectedAgeGroups = mutableListOf<String>()
+            selectedAgeGroups.clear()
             if (boysUnder15CheckBox.isChecked) selectedAgeGroups.add("Boys Under 15")
             if (girlsUnder15CheckBox.isChecked) selectedAgeGroups.add("Girls Under 15")
             if (boysUnder16CheckBox.isChecked) selectedAgeGroups.add("Boys Under 16")
@@ -298,10 +284,17 @@ class AdminSportsFixtures : AppCompatActivity() {
             if (boysUnder18CheckBox.isChecked) selectedAgeGroups.add("Boys Under 18")
             if (girlsUnder18CheckBox.isChecked) selectedAgeGroups.add("Girls Under 18")
 
-            // Save selected age groups to SharedPreferences or handle them as needed
+            // Save selected age groups to SharedPreferences
             saveSelectedAgeGroupsToPreferences(selectedAgeGroups)
 
-            // Optionally refresh the fragment or update UI
+            // Update the LinearLayout with selected age groups
+            selectedAgeGroupsLayout.removeAllViews() // Clear previous views
+            for (ageGroup in selectedAgeGroups) {
+                val ageGroupView = createAgeGroupView(ageGroup)
+                selectedAgeGroupsLayout.addView(ageGroupView)
+            }
+
+            // Refresh the fragment
             refreshCurrentFragment()
 
             ageGroupDialog.dismiss()  // Close the dropdown dialog
@@ -310,10 +303,76 @@ class AdminSportsFixtures : AppCompatActivity() {
         ageGroupDialog.show()  // Display the dropdown dialog
     }
 
+    private fun createAgeGroupView(ageGroup: String): View {
+        val ageGroupLayout = LinearLayout(this)
+        ageGroupLayout.orientation = LinearLayout.HORIZONTAL
+        ageGroupLayout.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+
+        val ageGroupTextView = TextView(this).apply {
+            text = ageGroup
+            textSize = 16f
+            setTextColor(getColor(R.color.black))
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        val removeIcon = ImageView(this).apply {
+            setImageResource(R.drawable.ic_cross) // Replace with your cross icon
+            layoutParams = LinearLayout.LayoutParams(
+                20.dpToPx(), // Convert dp to pixels
+                20.dpToPx()  // Convert dp to pixels
+            )
+            setOnClickListener {
+                selectedAgeGroups.remove(ageGroup) // Remove age group from the list
+                selectedAgeGroupsLayout.removeView(ageGroupLayout)
+
+                // Save the updated selected age groups to SharedPreferences
+                saveSelectedAgeGroupsToPreferences(selectedAgeGroups)
+
+                // Refresh the upcomingMatchesFragment
+                refreshCurrentFragment() // This will refresh the fragment with updated selected age groups
+            }
+        }
+
+        ageGroupLayout.addView(ageGroupTextView)
+        ageGroupLayout.addView(removeIcon)
+
+        return ageGroupLayout
+    }
+
     private fun saveSelectedAgeGroupsToPreferences(selectedAgeGroups: List<String>) {
         val sharedPreferences = getSharedPreferences("SportsPreferences", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putStringSet("selectedAgeGroups", selectedAgeGroups.toSet()) // Save as a Set
         editor.apply()
+    }
+
+    private fun refreshCurrentFragment(searchQuery: String = "") {
+        val fragment = if (searchQuery.isEmpty()) {
+            // Load the SportsFixturesHomeScreenFragment when there is no search query
+            SportsFixturesHomeScreenFragment(isAdmin = true)
+        } else {
+            // Load the upcomingMatchesFragment with the search query
+            upcomingMatchesFragment(isAdmin = true).apply {
+                arguments = Bundle().apply {
+                    putStringArrayList("selectedSports", getSelectedSportsFromPreferences())
+                    putString("searchQuery", searchQuery) // Pass the search query
+                }
+            }
+        }
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
+    }
+
+    private fun getSelectedSportsFromPreferences(): ArrayList<String> {
+        val sharedPreferences = getSharedPreferences("SportsPreferences", MODE_PRIVATE)
+        return ArrayList(sharedPreferences.getStringSet("selectedSports", emptySet()) ?: emptySet())
     }
 }

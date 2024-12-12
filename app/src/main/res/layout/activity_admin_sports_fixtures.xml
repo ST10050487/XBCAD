@@ -162,8 +162,18 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_fixtures_layout"></LinearLayout>
+        app:layout_constraintTop_toBottomOf="@id/search_fixtures_layout" />
 
+    <!-- LinearLayout to hold the selected age groups -->
+    <LinearLayout
+        android:id="@+id/selected_age_groups_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/selected_sports_layout" />
     <!-- Add this FrameLayout inside your ConstraintLayout, below the existing LinearLayout for tabs -->
     <FrameLayout
         android:id="@+id/fragment_container"
@@ -172,6 +182,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/selected_sports_layout" />
+        app:layout_constraintTop_toBottomOf="@id/selected_age_groups_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
