@@ -172,11 +172,11 @@ class EditFixture : AppCompatActivity() {
         val description = binding.txtDescrip.text.toString()
         val venue = binding.txtVenue.text.toString()
         val time = binding.txtTime.text.toString()
-        val date = binding.txtDate.toString() // Ensure this is in 'yyyy-MM-dd' format
+        val date = binding.txtDate.text.toString() // Corrected this line
         val sport = binding.spinnerSport.selectedItem.toString()
         val ageGroup = binding.spinnerAgeGroup.selectedItem.toString()
         val league = binding.spinnerLeague.selectedItem.toString()
-        val status = 1;
+        val status = 1
         // Get the league ID using the mapping
         val leagueId = leagueIdMapping[league]
             ?: throw IllegalArgumentException("League ID not found for league: $league")
