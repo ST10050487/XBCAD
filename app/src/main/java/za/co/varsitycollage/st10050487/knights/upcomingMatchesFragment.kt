@@ -137,17 +137,23 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                         else -> null
                     }
 
+                    // Log the match date for debugging
+                    Log.d("UpcomingMatchesFragment", "Match Date: ${fixture.matchDate}")
+
+
                     // Always format the fixture date
                     FormattingDate(fixture, fixtureDate)
 
                     // Update fixtureDateBox based on match status
                     fixtureDateBox.text = matchStatusText ?: run {
-                        val date = SimpleDateFormat("dd MMMM", Locale.getDefault()).format(
-                            SimpleDateFormat(
-                                "yyyy-MM-dd",
-                                Locale.getDefault()
-                            ).parse(fixture.matchDate)
-                        )
+                        val date = SimpleDateFormat(
+                            "yyyy-MM-dd",
+                            Locale.getDefault()
+                        ).parse(fixture.matchDate)?.let {
+                            SimpleDateFormat("dd MMMM", Locale.getDefault()).format(
+                                it
+                            )
+                        }
                         date
                     }
 
