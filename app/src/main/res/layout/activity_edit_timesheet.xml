@@ -325,7 +325,7 @@
                     android:id="@+id/txtManOfTheMatch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
+                    android:inputType="text"
                     android:textColor="@color/lightGrey"
                     android:textSize="@dimen/_16sdp" />
             </com.google.android.material.textfield.TextInputLayout>
