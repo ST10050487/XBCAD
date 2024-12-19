@@ -138,38 +138,41 @@ class EditTimesheet : AppCompatActivity() {
     }
 
     private fun updateTimesheetData() {
-    val meetTime = binding.txtMeetTime.text.toString()
-    val busDepartureTime = binding.txtDepTime.text.toString()
-    val busReturnTime = binding.txtReturnTime.text.toString()
-    val message = binding.txtMsg.text.toString()
-    val matchStatusText = binding.spinnerMatchStatus.selectedItem.toString()
-    val matchStatusValue = matchStatusMap[matchStatusText] ?: 0
-    val homeScore = binding.txtHomeResult.text.toString().toIntOrNull()
-    val awayScore = binding.txtAwayResult.text.toString().toIntOrNull()
-    val manOfTheMatch = binding.txtManOfTheMatch.text.toString()
+        val meetTime = binding.txtMeetTime.text.toString()
+        val busDepartureTime = binding.txtDepTime.text.toString()
+        val busReturnTime = binding.txtReturnTime.text.toString()
+        val message = binding.txtMsg.text.toString()
+        val matchStatusText = binding.spinnerMatchStatus.selectedItem.toString()
+        val matchStatusValue = matchStatusMap[matchStatusText] ?: 0
+        val homeScore = binding.txtHomeResult.text.toString().toIntOrNull()
+        val awayScore = binding.txtAwayResult.text.toString().toIntOrNull()
+        val manOfTheMatch = binding.txtManOfTheMatch.text.toString()
 
-    val timesheet = TimesheetModel(
-        timeId = timesheetID,
-        fixtureId = fixtureId,
-        meetTime = if (meetTime.isNotBlank()) meetTime else null,
-        busDepartureTime = if (busDepartureTime.isNotBlank()) busDepartureTime else null,
-        busReturnTime = if (busReturnTime.isNotBlank()) busReturnTime else null,
-        message = if (message.isNotBlank()) message else null,
-        homeScore = homeScore,
-        awayScore = awayScore,
-        manOfTheMatch = if (manOfTheMatch.isNotBlank()) manOfTheMatch else null,
-        matchstatus = matchStatusValue // Store match status
-    )
+        val timesheet = TimesheetModel(
+            timeId = timesheetID,
+            fixtureId = fixtureId,
+            meetTime = if (meetTime.isNotBlank()) meetTime else null,
+            busDepartureTime = if (busDepartureTime.isNotBlank()) busDepartureTime else null,
+            busReturnTime = if (busReturnTime.isNotBlank()) busReturnTime else null,
+            message = if (message.isNotBlank()) message else null,
+            homeScore = homeScore,
+            awayScore = awayScore,
+            manOfTheMatch = if (manOfTheMatch.isNotBlank()) manOfTheMatch else null,
+            matchstatus = matchStatusValue // Store match status
+        )
 
-    val rowsAffected = dbHelper.updateTimesheet(timesheet)
-    if (rowsAffected > 0) {
-        Toast.makeText(this, "Timesheet updated successfully", Toast.LENGTH_SHORT).show()
-        // Optionally, update the match status in the fixtures table
-        dbHelper.updateTimeStatus(fixtureId, matchStatusValue.toString())
-    } else {
-        Toast.makeText(this, "Failed to update timesheet", Toast.LENGTH_SHORT).show()
+        val rowsAffected = dbHelper.updateTimesheet(timesheet)
+        if (rowsAffected > 0) {
+            Toast.makeText(this, "Timesheet updated successfully", Toast.LENGTH_SHORT).show()
+
+            // Navigate to AdminSportsFixtures
+            val intent = Intent(this, AdminSportsFixtures::class.java)
+            startActivity(intent)
+            finish() // Optional: finish the current activity
+        } else {
+            Toast.makeText(this, "Failed to update timesheet", Toast.LENGTH_SHORT).show()
+        }
     }
-}
 
     private fun setSpinner(spinner: Spinner, items: List<String>, value: String) {
         val index = items.indexOf(value)

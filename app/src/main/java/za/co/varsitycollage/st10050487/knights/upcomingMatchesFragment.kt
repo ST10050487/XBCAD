@@ -17,13 +17,20 @@ import java.util.*
 
 class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment() {
     private var selectedSports: List<String> = emptyList() // Store selected sports
+    private var selectedAgeGroups: List<String> = emptyList() // Store selected age groups
     private var searchQuery: String = "" // Store search query
     private val REQUEST_CODE_EDIT_FIXTURE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Retrieve selected sports and age groups from SharedPreferences
+        selectedSports = getSelectedSportsFromPreferences()
+        selectedAgeGroups = getSelectedAgeGroupsFromPreferences() // New line
+        Log.d("upcomingMatchesFragment", "Selected Sports: $selectedSports")
+        Log.d("upcomingMatchesFragment", "Selected Age Groups: $selectedAgeGroups") // New line
+
         arguments?.let {
-            selectedSports = it.getStringArrayList("selectedSports") ?: emptyList()
             searchQuery = it.getString("searchQuery", "")
         }
     }
@@ -43,6 +50,9 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
 
     override fun onResume() {
         super.onResume()
+        // Refresh the selected sports and age groups from SharedPreferences
+        selectedSports = getSelectedSportsFromPreferences()
+        selectedAgeGroups = getSelectedAgeGroupsFromPreferences() // New line
         refreshData() // Refresh the data whenever the fragment comes into view
     }
 
@@ -55,6 +65,19 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                 refreshData()
             }
         }
+    }
+
+    private fun getSelectedSportsFromPreferences(): List<String> {
+        val sharedPreferences =
+            requireActivity().getSharedPreferences("SportsPreferences", Activity.MODE_PRIVATE)
+        return sharedPreferences.getStringSet("selectedSports", emptySet())?.toList() ?: emptyList()
+    }
+
+    private fun getSelectedAgeGroupsFromPreferences(): List<String> {
+        val sharedPreferences =
+            requireActivity().getSharedPreferences("SportsPreferences", Activity.MODE_PRIVATE)
+        return sharedPreferences.getStringSet("selectedAgeGroups", emptySet())?.toList()
+            ?: emptyList()
     }
 
     private fun refreshData() {
@@ -73,7 +96,9 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                     continue // Skip this fixture
                 }
 
+                // Check if the fixture matches the selected sports and age groups
                 if ((selectedSports.isEmpty() || selectedSports.contains(fixture.sport)) &&
+                    (selectedAgeGroups.isEmpty() || selectedAgeGroups.contains(fixture.ageGroup)) && // New line
                     (searchQuery.isEmpty() || fixture.homeTeam.contains(
                         searchQuery,
                         true
@@ -112,17 +137,23 @@ class upcomingMatchesFragment(private val isAdmin: Boolean = false) : Fragment()
                         else -> null
                     }
 
+                    // Log the match date for debugging
+                    Log.d("UpcomingMatchesFragment", "Match Date: ${fixture.matchDate}")
+
+
                     // Always format the fixture date
                     FormattingDate(fixture, fixtureDate)
 
                     // Update fixtureDateBox based on match status
                     fixtureDateBox.text = matchStatusText ?: run {
-                        val date = SimpleDateFormat("dd MMMM", Locale.getDefault()).format(
-                            SimpleDateFormat(
-                                "yyyy-MM-dd",
-                                Locale.getDefault()
-                            ).parse(fixture.matchDate)
-                        )
+                        val date = SimpleDateFormat(
+                            "yyyy-MM-dd",
+                            Locale.getDefault()
+                        ).parse(fixture.matchDate)?.let {
+                            SimpleDateFormat("dd MMMM", Locale.getDefault()).format(
+                                it
+                            )
+                        }
                         date
                     }
 

@@ -1,9 +1,10 @@
 package za.co.varsitycollage.st10050487.knights
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 
 class AdminUpcomingEvents : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,5 +21,15 @@ class AdminUpcomingEvents : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .add(fragmentContainer.id, eventListFragment)
             .commit()
+
+        // Find the Create Event button
+        val createEventButton = findViewById<Button>(R.id.create_event_button)
+
+        // Set an OnClickListener on the button
+        createEventButton.setOnClickListener {
+            // Start the Create Event Activity
+            val intent = Intent(this, CreateEvent::class.java)
+            startActivity(intent)
+        }
     }
 }
