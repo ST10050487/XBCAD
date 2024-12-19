@@ -96,6 +96,7 @@
         <activity android:name=".AdminSportsFixtures" />
         <activity android:name=".DisplaySportsFixturesActivity"/>
         <activity android:name=".DisplayCatalogProducts"/>
+        <activity android:name=".ViewAllPlayerProfiles"/>
         <activity
             android:name=".StudentParentReg"
             android:windowSoftInputMode="adjustPan" />
