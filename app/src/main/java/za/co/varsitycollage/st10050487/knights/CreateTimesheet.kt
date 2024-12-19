@@ -167,16 +167,20 @@ class CreateTimesheet : AppCompatActivity() {
         val matchStatusValue = matchStatusMap[matchStatusText] ?: 0
 
         val dbHelper = DBHelper(this)
-        val isSaved: Boolean = dbHelper.addTimes(
+        val isSaved = dbHelper.addTimes(
             meetingTime,
             busDepartureTime,
             busReturnTime,
             message,
             matchStatusValue,
-            fixtureId // Use the fixture ID passed from the intent
+            fixtureId // Use the fixture ID passed from SharedPreferences
         )
 
         if (isSaved) {
+            Log.d(
+                "CreateTimesheet",
+                "Timesheet saved successfully: meetingTime=$meetingTime, busDepartureTime=$busDepartureTime, busReturnTime=$busReturnTime, message=$message, matchStatusValue=$matchStatusValue, fixtureId=$fixtureId"
+            )
             Toast.makeText(this, "Timesheet saved successfully", Toast.LENGTH_SHORT).show()
             // Navigate back to AdminSportsFixture activity
             val intent = Intent(this, AdminSportsFixtures::class.java)
