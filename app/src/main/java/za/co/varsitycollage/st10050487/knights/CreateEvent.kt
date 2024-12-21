@@ -10,22 +10,16 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.*
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.messaging.FirebaseMessaging
 import java.util.*
 
 class CreateEvent : AppCompatActivity() {
 
-    private var roleId: Int = -1
-    private var userPrivileges: String? = null
-    private lateinit var toggle: ActionBarDrawerToggle
     // Database Helper
     private lateinit var dbHelper: DBHelper
 
@@ -48,101 +42,106 @@ class CreateEvent : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_event)
 
-        // Retrieve the ROLE_ID and user privileges from the intent
-        roleId = intent.getIntExtra("ROLE_ID", -1)
-        userPrivileges = intent.getStringExtra("USER_PRIVILEGES")
-
-        if (roleId == -1) {
-            Log.e("HomeScreen", "ROLE_ID not found in intent")
-            // Handle the case where the ROLE_ID is not found
-        } else {
-            Log.d("HomeScreen", "ROLE_ID: $roleId")
-        }
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // Initialize drawerLayout and navView
-        val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
-        val navView = findViewById<NavigationView>(R.id.nav_view)
+        dbHelper = DBHelper(this)
 
-        toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
+        // Initialize UI components
+        uploadImageButton = findViewById(R.id.btnUpload)
+        createEventButton = findViewById(R.id.createBtn)
+        btnBack = findViewById(R.id.btnToolbar)
+        nameInput = findViewById(R.id.eventName)
+        locationInput = findViewById(R.id.eventLocation)
+        timeInput = findViewById(R.id.eventTime)
+        dateInput = findViewById(R.id.eventDate)
+        priceInput = findViewById(R.id.eventPrice)
+        aboutInput = findViewById(R.id.eventAbout)
+        eventImage = findViewById(R.id.eventImg)
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setSupportActionBar(btnBack)
+        btnBack.setNavigationOnClickListener { onBackPressed() }
 
-        // Setup NavigationView and load the header image
-        //setupNavigationView(navView)
-        navView.setNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.nav_home -> {
-                    val intent = Intent(this, AdminHome::class.java)
-                    intent.putExtra("ROLE_ID", roleId)
-                    startActivity(intent)
-                }
-                R.id.nav_sport_management -> {
-                    if (roleId == 1 || roleId == 2 || userPrivileges?.contains("SPORT_MANAGEMENT") == true) {
-                        val intent = Intent(this, AdminSportsFixtures::class.java)
-                        intent.putExtra("ROLE_ID", roleId)
-                        startActivity(intent)
-                    } else {
-                        showToast("Access denied to Sport Management")
-                        Log.e("AdminHome", "Access denied to Sport Management")
-                    }
-                }
-                R.id.nav_event_management -> {
-                    if (roleId == 1 || roleId == 3 || userPrivileges?.contains("EVENT_MANAGEMENT") == true) {
-                        val intent = Intent(this, EventManagement::class.java)
-                        intent.putExtra("ROLE_ID", roleId)
-                        startActivity(intent)
-                    } else {
-                        showToast("Access denied to Event Management")
-                        Log.e("AdminHome", "Access denied to Event Management")
-                    }
-                }
-                R.id.nav_shop -> {
-                    if (roleId == 1 || userPrivileges?.contains("SHOP") == true) {
-                        val intent = Intent(this, DisplayCatalogProducts::class.java)
-                        intent.putExtra("ROLE_ID", roleId)
-                        startActivity(intent)
-                    } else {
-                        showToast("Access denied to Shop")
-                        Log.e("AdminHome", "Access denied to Shop")
-                    }
-                }
-                R.id.nav_profile -> {
-                    if (roleId == 1 || roleId == 2 || userPrivileges?.contains("GENERATE_REPORTS") == true) {
-                        val intent = Intent(this, PlayerProfileView::class.java)
-                        intent.putExtra("ROLE_ID", roleId)
-                        startActivity(intent)
-                    } else {
-                        showToast("Access denied to Player Profile")
-                        Log.e("AdminHome", "Access denied to Player Profile")
-                    }
-                }
-                R.id.nav_player_profiles -> {
-                    if (roleId == 1 || roleId == 2 || userPrivileges?.contains("PLAYER_PROFILES") == true) {
-                        val intent = Intent(this, ViewAllPlayerProfiles::class.java)
-                        intent.putExtra("ROLE_ID", roleId)
-                        startActivity(intent)
-                    } else {
-                        showToast("Access denied to Player Profile")
-                        Log.e("AdminHome", "Access denied to Player Profiles")
-                    }
-                }
-                R.id.nav_logout -> {
-                    val intent = Intent(this, Login::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
-                    finish()
-                }
-            }
-            true
+        uploadImageButton.setOnClickListener { openImagePicker() }
+        createEventButton.setOnClickListener { validateAndCreateEvent() }
+        timeInput.setOnClickListener { showTimePicker() }
+        dateInput.setOnClickListener { showDatePicker() }
+    }
+
+    private fun validateAndCreateEvent() {
+        if (!validateInputs()) return
+
+        val eventId = insertEventIntoDatabase()
+        if (eventId != -1L) {
+            sendNotificationToUser()
         }
+    }
+
+    private fun validateInputs(): Boolean {
+        var isValid = true
+
+        if (nameInput.text.isNullOrBlank()) {
+            nameInput.error = "Event name is required"
+            isValid = false
+        }
+        if (locationInput.text.isNullOrBlank()) {
+            locationInput.error = "Event location is required"
+            isValid = false
+        }
+        if (timeInput.text.isNullOrBlank()) {
+            timeInput.error = "Event time is required"
+            isValid = false
+        }
+        if (dateInput.text.isNullOrBlank()) {
+            dateInput.error = "Event date is required"
+            isValid = false
+        }
+        val priceText = priceInput.text.toString().trim()
+        if (priceText.isEmpty()) {
+            priceInput.error = "Event price is required"
+            isValid = false
+        } else if (!priceText.matches("\\d*\\.?\\d*".toRegex())) {
+            priceInput.error = "Please enter a valid price"
+            isValid = false
+        }
+        if (aboutInput.text.isNullOrBlank()) {
+            aboutInput.error = "Event description is required"
+            isValid = false
+        }
+
+        return isValid
+    }
+
+    private fun insertEventIntoDatabase(): Long {
+        val eventImageBlob = eventImageUri?.let { uri ->
+            contentResolver.openInputStream(uri)?.use { it.readBytes() }
+        }
+
+        val name = nameInput.text.toString().trim()
+        val place = locationInput.text.toString().trim()
+        val time = timeInput.text.toString().trim()
+        val date = dateInput.text.toString().trim()
+        val entryFee = priceInput.text.toString().trim().toDouble()
+        val description = aboutInput.text.toString().trim()
+
+        val eventId = dbHelper.addEvent(
+            name, date, time, place, entryFee, description, eventImageBlob, -1
+        )
+
+        if (eventId == -1L) {
+            Toast.makeText(this, "Failed to create event", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, "Event created successfully!", Toast.LENGTH_LONG).show()
+            val intent = Intent(this, EventDetailActivity::class.java)
+            intent.putExtra("EVENT_ID", eventId.toInt())
+            startActivity(intent)
+            finish()
+        }
+
+        return eventId
     }
 
     private fun openImagePicker() {
@@ -189,19 +188,5 @@ class CreateEvent : AppCompatActivity() {
                 Log.d("CreateEvent", "Notification sent to user with token: $userToken")
             }
         })
-    }
-
-    private fun showToast(message: String) {
-        val inflater = layoutInflater
-        val layout = inflater.inflate(R.layout.custom_toast, findViewById(R.id.custom_toast_container))
-
-        val text: TextView = layout.findViewById(R.id.toast_text)
-        text.text = message
-
-        with(Toast(applicationContext)) {
-            duration = Toast.LENGTH_SHORT
-            view = layout
-            show()
-        }
     }
 }

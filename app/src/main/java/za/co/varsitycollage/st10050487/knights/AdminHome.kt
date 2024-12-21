@@ -103,7 +103,7 @@ class AdminHome : AppCompatActivity() {
         }
         R.id.nav_player_profiles -> {
             if (roleId == 1 || roleId == 2 || userPrivileges?.contains("PLAYER_PROFILES") == true) {
-                val intent = Intent(this, ViewAllPlayerProfiles::class.java)
+                val intent = Intent(this, PlayerProfile::class.java)
                 intent.putExtra("ROLE_ID", roleId)
                 startActivity(intent)
             } else {
