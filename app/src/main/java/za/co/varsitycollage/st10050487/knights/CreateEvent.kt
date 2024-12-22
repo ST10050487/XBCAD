@@ -5,6 +5,8 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -152,11 +154,53 @@ class CreateEvent : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
-            data?.data?.let {
-                eventImageUri = it
-                eventImage.setImageURI(it)
+            data?.data?.let { uri ->
+                eventImageUri = uri
+                // Decode and set the bitmap
+                val bitmap =
+                    decodeSampledBitmapFromUri(uri, 200, 200) // Set desired width and height
+                eventImage.setImageBitmap(bitmap)
             }
         }
+    }
+
+    private fun decodeSampledBitmapFromUri(uri: Uri, reqWidth: Int, reqHeight: Int): Bitmap? {
+        val inputStream = contentResolver.openInputStream(uri)
+        val options = BitmapFactory.Options().apply {
+            inJustDecodeBounds = true
+        }
+        BitmapFactory.decodeStream(inputStream, null, options)
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight)
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false
+        inputStream?.close() // Close the previous stream
+        val newInputStream = contentResolver.openInputStream(uri)
+        return BitmapFactory.decodeStream(newInputStream, null, options)
+    }
+
+    private fun calculateInSampleSize(
+        options: BitmapFactory.Options,
+        reqWidth: Int,
+        reqHeight: Int
+    ): Int {
+        val height = options.outHeight
+        val width = options.outWidth
+        var inSampleSize = 1
+
+        if (height > reqHeight || width > reqWidth) {
+            val halfHeight: Int = height / 2
+            val halfWidth: Int = width / 2
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+                inSampleSize *= 2
+            }
+        }
+        return inSampleSize
     }
 
     private fun showTimePicker() {
@@ -168,9 +212,15 @@ class CreateEvent : AppCompatActivity() {
 
     private fun showDatePicker() {
         val calendar = Calendar.getInstance()
-        DatePickerDialog(this, { _, year, month, dayOfMonth ->
-            dateInput.setText(String.format("%02d-%02d-%04d", dayOfMonth, month + 1, year))
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
+        DatePickerDialog(
+            this,
+            { _, year, month, dayOfMonth ->
+                dateInput.setText(String.format("%02d-%02d-%04d", dayOfMonth, month + 1, year))
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).show()
     }
 
     private fun sendNotificationToUser() {
@@ -183,7 +233,8 @@ class CreateEvent : AppCompatActivity() {
             val userToken = task.result
             if (userToken != null) {
                 val title = "New Event Created"
-                val body = "Event: ${nameInput.text}\nLocation: ${locationInput.text}\nDate: ${dateInput.text}\nTime: ${timeInput.text}"
+                val body =
+                    "Event: ${nameInput.text}\nLocation: ${locationInput.text}\nDate: ${dateInput.text}\nTime: ${timeInput.text}"
                 EventMessagingService().sendMessage(userToken, title, body)
                 Log.d("CreateEvent", "Notification sent to user with token: $userToken")
             }
