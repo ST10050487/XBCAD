@@ -39,6 +39,12 @@ class AdminHome : AppCompatActivity() {
 
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
         val navView = findViewById<NavigationView>(R.id.nav_view)
+        val btnShop = findViewById<LinearLayout>(R.id.btn_shop)
+        val btnSport = findViewById<LinearLayout>(R.id.btn_sport)
+        val btnEvents = findViewById<LinearLayout>(R.id.btn_events)
+        val btnPlayer = findViewById<LinearLayout>(R.id.btn_players)
+        val btnAddFixture = findViewById<LinearLayout>(R.id.btn_addFixture)
+        val btnAddEvent = findViewById<LinearLayout>(R.id.btn_addEvent)
 
         ViewCompat.setOnApplyWindowInsetsListener(drawerLayout) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -54,34 +60,9 @@ class AdminHome : AppCompatActivity() {
 
         // Setup NavigationView and load the header image
         setupNavigationView(navView)
-        navView.setNavigationItemSelectedListener {
-    when (it.itemId) {
-        R.id.nav_home -> {
-            val intent = Intent(this, AdminHome::class.java)
-            intent.putExtra("ROLE_ID", roleId)
-            startActivity(intent)
-        }
-        R.id.nav_sport_management -> {
-            if (roleId == 1 || roleId == 2 || userPrivileges?.contains("SPORT_MANAGEMENT") == true) {
-                val intent = Intent(this, AdminSportsFixtures::class.java)
-                intent.putExtra("ROLE_ID", roleId)
-                startActivity(intent)
-            } else {
-                showToast("Access denied to Sport Management")
-                Log.e("AdminHome", "Access denied to Sport Management")
-            }
-        }
-        R.id.nav_event_management -> {
-            if (roleId == 1 || roleId == 3 || userPrivileges?.contains("EVENT_MANAGEMENT") == true) {
-                val intent = Intent(this, EventManagement::class.java)
-                intent.putExtra("ROLE_ID", roleId)
-                startActivity(intent)
-            } else {
-                showToast("Access denied to Event Management")
-                Log.e("AdminHome", "Access denied to Event Management")
-            }
-        }
-        R.id.nav_shop -> {
+
+        roleId = 1
+        btnShop.setOnClickListener {
             if (roleId == 1 || userPrivileges?.contains("SHOP") == true) {
                 val intent = Intent(this, DisplayCatalogProducts::class.java)
                 intent.putExtra("ROLE_ID", roleId)
@@ -91,35 +72,124 @@ class AdminHome : AppCompatActivity() {
                 Log.e("AdminHome", "Access denied to Shop")
             }
         }
-        R.id.nav_profile -> {
-            if (roleId == 1 || roleId == 2 || userPrivileges?.contains("GENERATE_REPORTS") == true) {
-                val intent = Intent(this, PlayerProfileView::class.java)
+        btnSport.setOnClickListener{
+            if(roleId == 1 || userPrivileges?.contains("SPORT_MANAGEMENT") == true){
+                val intent = Intent(this, AdminSportsFixtures::class.java)
                 intent.putExtra("ROLE_ID", roleId)
                 startActivity(intent)
             } else {
-                showToast("Access denied to Player Profile")
-                Log.e("AdminHome", "Access denied to Player Profile")
+                showToast("Access denied to Sport Management")
+                Log.e("AdminHome", "Access denied to Sport Management")
             }
         }
-        R.id.nav_player_profiles -> {
-            if (roleId == 1 || roleId == 2 || userPrivileges?.contains("PLAYER_PROFILES") == true) {
-                val intent = Intent(this, ViewAllPlayerProfiles::class.java)
+        btnEvents.setOnClickListener{
+            if(roleId == 1 || userPrivileges?.contains("EVENT_MANAGEMENET") == true){
+                val intent = Intent(this, EventManagement::class.java)
                 intent.putExtra("ROLE_ID", roleId)
                 startActivity(intent)
-            } else {
-                showToast("Access denied to Player Profile")
+            }else
+            {
+                showToast("Access denied to Event Management")
+                Log.e("AdminHome", "Access denied to Event Management")
+            }
+        }
+        btnPlayer.setOnClickListener{
+            if(roleId == 1 || userPrivileges?.contains("PLAYER_PROFILES") == true){
+                val intent = Intent(this, ViewAllPlayerProfiles:: class.java)
+                intent.putExtra("ROLE_ID", roleId)
+                startActivity(intent)
+            }else
+            {
+                showToast("Access denied to Player Profiles")
                 Log.e("AdminHome", "Access denied to Player Profiles")
             }
         }
-        R.id.nav_logout -> {
-            val intent = Intent(this, Login::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
-            finish()
+        btnAddFixture.setOnClickListener {
+            if (roleId == 1 || userPrivileges?.contains("SPORT_MANAGEMENT") == true) {
+                val intent = Intent(this, CreateSportFixture::class.java)
+                intent.putExtra("ROLE_ID", roleId)
+                startActivity(intent)
+            } else {
+                showToast("Access denied to Add Fixture")
+                Log.e("AdminHome", "Access denied to Add Fixture")
+            }
         }
-    }
-    true
-}
+        btnAddEvent.setOnClickListener {
+            if (roleId == 1 || userPrivileges?.contains("EVENT_MANAGEMENT") == true) {
+                val intent = Intent(this, CreateEvent::class.java)
+                intent.putExtra("ROLE_ID", roleId)
+                startActivity(intent)
+            } else {
+                showToast("Access denied to Add Event")
+                Log.e("AdminHome", "Access denied to Add Event")
+            }
+        }
+        navView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.nav_home -> {
+                    val intent = Intent(this, AdminHome::class.java)
+                    intent.putExtra("ROLE_ID", roleId)
+                    startActivity(intent)
+                }
+                R.id.nav_sport_management -> {
+                    if (roleId == 1 || roleId == 2 || userPrivileges?.contains("SPORT_MANAGEMENT") == true) {
+                        val intent = Intent(this, AdminSportsFixtures::class.java)
+                        intent.putExtra("ROLE_ID", roleId)
+                        startActivity(intent)
+                    } else {
+                        showToast("Access denied to Sport Management")
+                        Log.e("AdminHome", "Access denied to Sport Management")
+                    }
+                }
+                R.id.nav_event_management -> {
+                    if (roleId == 1 || roleId == 3 || userPrivileges?.contains("EVENT_MANAGEMENT") == true) {
+                        val intent = Intent(this, EventManagement::class.java)
+                        intent.putExtra("ROLE_ID", roleId)
+                        startActivity(intent)
+                    } else {
+                        showToast("Access denied to Event Management")
+                        Log.e("AdminHome", "Access denied to Event Management")
+                    }
+                }
+                R.id.nav_shop -> {
+                    if (roleId == 1 || userPrivileges?.contains("SHOP") == true) {
+                        val intent = Intent(this, DisplayCatalogProducts::class.java)
+                        intent.putExtra("ROLE_ID", roleId)
+                        startActivity(intent)
+                    } else {
+                        showToast("Access denied to Shop")
+                        Log.e("AdminHome", "Access denied to Shop")
+                    }
+                }
+                R.id.nav_profile -> {
+                    if (roleId == 1 || roleId == 2 || userPrivileges?.contains("GENERATE_REPORTS") == true) {
+                        val intent = Intent(this, PlayerProfileView::class.java)
+                        intent.putExtra("ROLE_ID", roleId)
+                        startActivity(intent)
+                    } else {
+                        showToast("Access denied to Player Profile")
+                        Log.e("AdminHome", "Access denied to Player Profile")
+                    }
+                }
+                R.id.nav_player_profiles -> {
+                    if (roleId == 1 || roleId == 2 || userPrivileges?.contains("PLAYER_PROFILES") == true) {
+                        val intent = Intent(this, ViewAllPlayerProfiles::class.java)
+                        intent.putExtra("ROLE_ID", roleId)
+                        startActivity(intent)
+                    } else {
+                        showToast("Access denied to Player Profile")
+                        Log.e("AdminHome", "Access denied to Player Profiles")
+                    }
+                }
+                R.id.nav_logout -> {
+                    val intent = Intent(this, Login::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                    finish()
+                }
+            }
+            true
+        }
     }
 
     private fun setupNavigationView(navView: NavigationView) {
