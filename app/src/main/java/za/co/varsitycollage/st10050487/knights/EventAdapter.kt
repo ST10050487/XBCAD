@@ -47,13 +47,13 @@ class EventAdapter(
         event.eventPicture?.let { imageBytes ->
             val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
             holder.eventImage.setImageBitmap(bitmap)
-        } // Set a default image if none is provided
+        }
 
         // Set up the edit button click listener
         holder.itemView.findViewById<Button>(R.id.btnEdit).setOnClickListener {
             val intent = Intent(holder.itemView.context, ModifyEvent::class.java)
-            intent.putExtra("EVENT_ID", event.eventId)
-            holder.itemView.context.startActivity(intent)
+            intent.putExtra("EVENT_ID", event.eventId) // Pass the event ID to ModifyEvent
+            holder.itemView.context.startActivity(intent) // Start the ModifyEvent activity
         }
 
         // Set up the item click listener
