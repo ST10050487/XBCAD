@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.LinearLayout // Import LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 
 class AdminUpcomingEvents : AppCompatActivity() {
@@ -42,6 +43,15 @@ class AdminUpcomingEvents : AppCompatActivity() {
 
         // Set up the search functionality
         setupSearchFunctionality(eventListFragment)
+
+        // Set up the back button functionality
+        val backButton = findViewById<LinearLayout>(R.id.back_btn) // Find the back button layout
+        backButton.setOnClickListener {
+            // Start the AdminEvents activity
+            val intent = Intent(this, AdminHome::class.java)
+            startActivity(intent)
+            finish() // Optional: Call finish() if you want to close this activity
+        }
     }
 
     private fun setupSearchFunctionality(eventListFragment: AdminEventListFragment) {
