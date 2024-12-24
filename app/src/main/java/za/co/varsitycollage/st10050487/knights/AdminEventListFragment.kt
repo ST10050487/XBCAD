@@ -1,6 +1,8 @@
 package za.co.varsitycollage.st10050487.knights
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +15,7 @@ class AdminEventListFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var eventAdapter: EventAdapter
     private lateinit var dbHelper: DBHelper
+    private var allEvents: List<EventModel> = listOf() // Store all events
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,20 +36,23 @@ class AdminEventListFragment : Fragment() {
 
     private fun setupRecyclerView() {
         // Retrieve events from the database
-        val events = dbHelper.getAllEvents() // Ensure this method returns a List<EventModel>
-
-        // Initialize the adapter
-        eventAdapter =
-            EventAdapter(events.toMutableList(), {}, {}) // Pass empty lambdas for delete options
+        allEvents = dbHelper.getAllEvents() // Store all events
+        eventAdapter = EventAdapter(allEvents.toMutableList(), {}, {}) // Initialize with all events
 
         // Set the layout manager and adapter for the RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = eventAdapter
     }
 
-    override fun onResume() {
-        super.onResume()
-        // Refresh the RecyclerView data if needed
-        setupRecyclerView()
+    fun filterEvents(query: String) {
+        val filteredEvents = if (query.isEmpty()) {
+            allEvents // Show all events if the query is empty
+        } else {
+            allEvents.filter { event ->
+                event.eventName?.contains(query, ignoreCase = true)
+                    ?: false // Handle nullable eventName
+            }
+        }
+        eventAdapter.updateEvents(filteredEvents.toMutableList()) // Update the adapter with filtered events
     }
 }

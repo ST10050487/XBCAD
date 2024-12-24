@@ -2,11 +2,16 @@ package za.co.varsitycollage.st10050487.knights
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Button
+import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 
 class AdminUpcomingEvents : AppCompatActivity() {
+    private lateinit var searchBar: EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin_upcoming_events)
@@ -31,5 +36,24 @@ class AdminUpcomingEvents : AppCompatActivity() {
             val intent = Intent(this, CreateEvent::class.java)
             startActivity(intent)
         }
+
+        // Initialize the Search Bar
+        searchBar = findViewById(R.id.search_bar)
+
+        // Set up the search functionality
+        setupSearchFunctionality(eventListFragment)
+    }
+
+    private fun setupSearchFunctionality(eventListFragment: AdminEventListFragment) {
+        searchBar.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Pass the search query to the fragment
+                eventListFragment.filterEvents(s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
     }
 }

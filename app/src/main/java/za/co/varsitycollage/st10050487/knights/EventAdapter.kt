@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class EventAdapter(
-    private val events: MutableList<EventModel>,
+    private var events: MutableList<EventModel>,
     private val showDeleteMenu: (Boolean) -> Unit,
     private val updateDeleteButton: (Int) -> Unit
 ) : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
@@ -105,6 +105,11 @@ class EventAdapter(
         } else {
             "$date $time"
         }
+    }
+
+    fun updateEvents(newEvents: MutableList<EventModel>) {
+        events = newEvents
+        notifyDataSetChanged() // Notify the adapter to refresh the view
     }
 
     private fun selectEvent(holder: EventViewHolder, event: EventModel) {
