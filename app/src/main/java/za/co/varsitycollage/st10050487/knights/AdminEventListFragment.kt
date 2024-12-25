@@ -55,4 +55,10 @@ class AdminEventListFragment : Fragment() {
         }
         eventAdapter.updateEvents(filteredEvents.toMutableList()) // Update the adapter with filtered events
     }
+
+    fun refreshEventList() {
+        // Retrieve events from the database again
+        allEvents = dbHelper.getAllEvents() // Get the latest events
+        eventAdapter.updateEvents(allEvents.toMutableList()) // Update the adapter with the latest events
+    }
 }

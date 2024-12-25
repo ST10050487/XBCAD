@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -96,14 +97,29 @@ class EventAdapter(
     }
 
     private fun formatEventDate(date: String, time: String): String {
-        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-        val outputDateFormat = SimpleDateFormat("EEE, MMM dd · hh.mm a", Locale.getDefault())
+        // Combine date and time into a single string
         val dateTimeString = "$date $time"
-        val parsedDate = inputDateFormat.parse(dateTimeString)
-        return if (parsedDate != null) {
-            outputDateFormat.format(parsedDate)
-        } else {
-            "$date $time"
+
+        // Define the input date format based on the expected input format
+        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+        // Define the output date format for display
+        val outputDateFormat = SimpleDateFormat("EEEE, dd MMM yyyy", Locale.getDefault())
+
+        return try {
+            // Parse the combined date and time string
+            val parsedDate = inputDateFormat.parse(dateTimeString)
+            // Format the parsed date into the desired output format
+            if (parsedDate != null) {
+                outputDateFormat.format(parsedDate)
+            } else {
+                "Invalid date" // Fallback if parsing fails
+            }
+        } catch (e: ParseException) {
+            e.printStackTrace()
+            "Invalid date" // Return a user-friendly message if parsing fails
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "Invalid date" // Catch any other exceptions and return a user-friendly message
         }
     }
 

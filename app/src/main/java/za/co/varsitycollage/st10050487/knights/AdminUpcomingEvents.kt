@@ -66,4 +66,12 @@ class AdminUpcomingEvents : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
     }
+
+    override fun onResume() {
+        super.onResume()
+        // Refresh the event list when the activity resumes
+        val eventListFragment =
+            supportFragmentManager.findFragmentById(R.id.fragment_container) as? AdminEventListFragment
+        eventListFragment?.refreshEventList()
+    }
 }
