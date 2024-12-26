@@ -16,6 +16,7 @@ import android.text.InputFilter
 import android.text.Spanned
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -81,6 +82,11 @@ class ModifyEvent : AppCompatActivity() {
         updateButton.setOnClickListener {
             Log.d("ModifyEvent", "Update button clicked")
             updateEventDetails()
+        }
+
+        // Set up delete button click listener
+        findViewById<ImageButton>(R.id.deleteButton).setOnClickListener {
+            showDeleteConfirmationDialog()
         }
     }
 
@@ -322,6 +328,35 @@ class ModifyEvent : AppCompatActivity() {
             }
         } else {
             Log.e("ModifyEvent", "Invalid event ID")
+        }
+    }
+
+    private fun showDeleteConfirmationDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Delete Event")
+        builder.setMessage("Are you sure you want to delete this event?")
+        builder.setPositiveButton("Yes") { _, _ ->
+            deleteEvent()
+        }
+        builder.setNegativeButton("No", null)
+        builder.show()
+    }
+
+    private fun deleteEvent() {
+        val eventId = intent.getIntExtra("EVENT_ID", -1)
+        if (eventId != -1) {
+            // Create a list with the event to delete
+            val eventToDelete = dbHelper.getEventDetails(eventId)
+            if (eventToDelete != null) {
+                val eventsToDelete = listOf(eventToDelete) // Create a list with the event
+                dbHelper.deleteEvents(eventsToDelete) // Call the deleteEvents method
+                Toast.makeText(this, "Event deleted successfully", Toast.LENGTH_SHORT).show()
+                finish() // Close the activity after deletion
+            } else {
+                Toast.makeText(this, "Event not found", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "Invalid event ID", Toast.LENGTH_SHORT).show()
         }
     }
 
