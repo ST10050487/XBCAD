@@ -25,6 +25,9 @@
         android:theme="@style/Theme.Knights"
         tools:targetApi="31">
         <activity
+            android:name=".User"
+            android:exported="false" />
+        <activity
             android:name=".DisplaySchoolPlayers"
             android:exported="false" />
         <activity
@@ -86,7 +89,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DisplayMatch"/>
+        <activity android:name=".DisplayMatch" />
         <activity android:name=".GetStarted" />
         <activity android:name=".Login" />
         <activity android:name=".HomeActivity" />
@@ -94,14 +97,15 @@
         <activity android:name=".UpdatePlayerProfile" />
         <activity android:name=".AdminUpcomingEvents" />
         <activity android:name=".AdminSportsFixtures" />
-        <activity android:name=".DisplaySportsFixturesActivity"/>
-        <activity android:name=".DisplayCatalogProducts"/>
-        <activity android:name=".ViewAllPlayerProfiles"/>
+        <activity android:name=".DisplaySportsFixturesActivity" />
+        <activity android:name=".DisplayCatalogProducts" />
+        <activity android:name=".ViewAllPlayerProfiles" />
         <activity
             android:name=".StudentParentReg"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".SuccessReg" />
         <activity android:name=".EventDetailActivity" />
+
         <service
             android:name=".EventMessagingService"
             android:exported="true">

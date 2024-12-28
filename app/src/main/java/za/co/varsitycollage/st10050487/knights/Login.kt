@@ -15,7 +15,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.database
 import za.co.varsitycollage.st10050487.knights.databinding.ActivityLoginBinding
 
-
 class Login : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var regOp: Button
@@ -66,14 +65,12 @@ class Login : AppCompatActivity() {
         // Create a GoogleSignInClient object with the GoogleSignInOptions object
         gsc = GoogleSignIn.getClient(this, gso)
 
-
         //Set an onClickListener for the Google Sign-In button
         googleSignIn.setOnClickListener {
             // Handle Google Sign-In logic here
             Toast.makeText(this, "Google Sign-In Clicked", Toast.LENGTH_SHORT).show()
             //      signIn();
         }
-
 
         // Set click listener for the Register button
         regOp.setOnClickListener {
@@ -84,7 +81,6 @@ class Login : AppCompatActivity() {
 
         // Set click listener for the Login button
         loginButton.setOnClickListener {
-
             getUserInput()
             //loginUser()
         }
@@ -137,14 +133,15 @@ class Login : AppCompatActivity() {
                 val roleId = dbHelper.getRoleId(userId)
                 loginAttempts = 0 // Reset attempts on successful login
                 val intent = when (roleId) {
-                    1, 2, 3 -> Intent(this, AdminHome::class.java)
-                    4, 5 -> Intent(this, HomeScreen::class.java)
+                    1, 2, 3 -> Intent(this, User::class.java)
+                    4, 5 -> Intent(this, User::class.java)
                     else -> null
                 }
 
                 if (intent != null) {
-                    // Passing the ROLE_ID to the respective Activity
+                    // Passing the ROLE_ID and USER_ID to the respective Activity
                     intent.putExtra("ROLE_ID", roleId)
+                    intent.putExtra("USER_ID", userId)
                     startActivity(intent)
                     // Finishing the login activity once the user is logged in
                     finish()
@@ -173,170 +170,20 @@ class Login : AppCompatActivity() {
         }
     }
 
-
     private fun saveSuspiciousActivity(email: String, activityDescription: String) {
         val dbHelper = DBHelper(this)
-        val userId =
-            dbHelper.getUserIdByEmail(email)
+        val userId = dbHelper.getUserIdByEmail(email)
         if (userId != null) {
             val timestamp = System.currentTimeMillis()
             dbHelper.addSuspiciousActivity(userId, activityDescription, timestamp)
-        }
-        else
-        {
+        } else {
             val timestamp = System.currentTimeMillis()
             dbHelper.addSuspiciousActivity(email, activityDescription, timestamp)
         }
     }
+
     private fun isLockedOut(): Boolean {
         val currentTime = System.currentTimeMillis()
         return currentTime < lockoutEndTime
     }
-
-//    override fun onPause() {
-//        super.onPause()
-//        lockout.saveInt("loginAttempts", loginAttempts)
-//        lockout.saveLong("lockoutEndTime", lockoutEndTime)
-//    }
-//
-//    override fun onResume() {
-//        super.onResume()
-//        loginAttempts = lockout.getInt("loginAttempts", 0)
-//        lockoutEndTime = lockout.getLong("lockoutEndTime", 0)
-//    }
-
-//    private fun loginUser() {
-//        // if the user inputs are valid
-//        if (Validation()) {
-//            val email = emailEditText.text.toString().trim()
-//            val password = passwordEditText.text.toString().trim()
-//            // Authenticate the user
-//            authenticateUser(email, password) { isAuthenticated ->
-//                // If the user is authenticated, get the user data
-//                if (isAuthenticated) {
-//                    val user = auth.currentUser
-//                    user?.let {
-//                        val uid = user.uid
-//
-//                        database.reference.child("users").child(uid).get()
-//                            .addOnSuccessListener { dataSnapshot ->
-//                                val intent = Intent(
-//                                    this,
-//                                    SuccessReg::class.java
-//                                )//intent.putExtra("USER_FIRST_NAME", firstName)
-//
-//                                startActivity(intent)
-//                                finish()
-//                            }.addOnFailureListener {
-//                                Toast.makeText(
-//                                    this,
-//                                    "Failed to retrieve user data",
-//                                    Toast.LENGTH_SHORT
-//                                )
-//                                    .show()
-//                            }
-//                    }
-//                    val intent = Intent(this, SuccessReg::class.java)
-//                    startActivity(intent)
-//                }
-//                // If the user is not authenticated, show a toast message
-//                else {
-//                    //      Logger.logSuspiciousActivity("Invalid login attempt for email: $email")
-//
-//                    Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        }
-//    }
-//
-//    //Method to handle the Google Sign-In logic
-//    private fun signIn() {
-//        val signInIntent = gsc.signInIntent
-//        startActivityForResult(signInIntent, RC_SIGN_IN)
-//    }
-//
-//    //Method to Handle the Result of the Sign-In Attempt
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//
-//        // Check if the request code matches the sign-in request code
-//        if (requestCode == RC_SIGN_IN) {
-//            // Retrieve the sign-in task from the intent data
-//            val task: Task<GoogleSignInAccount> =
-//                GoogleSignIn.getSignedInAccountFromIntent(data)
-//
-//            try {
-//                // Attempt to get the GoogleSignInAccount from the task
-//                val account: GoogleSignInAccount = task.getResult(ApiException::class.java)
-//                // If successful, authenticate with the obtained ID token
-//                auth(account.idToken!!)
-//            } catch (e: ApiException) {
-//
-//                // If an exception occurs, show a toast message indicating sign-in failure
-//                Toast.makeText(this, "Google Sign-In Failed", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//    }
-//
-//    //Method to Authenticate the User with Email and Password
-//    private fun authenticateUser(email: String, password: String, callback: (Boolean) -> Unit) {
-//        // Authenticate the user with the provided email and password
-//        auth.signInWithEmailAndPassword(email, password)
-//            .addOnCompleteListener(this) { task ->
-//                // If the task is successful, show a toast message indicating authentication success
-//                if (task.isSuccessful) {
-//                    callback(true)
-//                    Toast.makeText(this, "Authentication successful.", Toast.LENGTH_SHORT)
-//                        .show()
-//                }
-//                // If the task is not successful, show a toast message indicating authentication failure
-//                else {
-//
-//                    callback(false)
-//                    Toast.makeText(
-//                        this,
-//                        "Authentication failed: ${task.exception?.message}",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//            }
-//    }
-//
-//    //Method to Authenticate the User for SSO Login/Registration
-//    private fun auth(idToken: String) {
-//        // Create a credential using the ID token
-//        val credential: AuthCredential = GoogleAuthProvider.getCredential(idToken, null)
-//        // Sign in with the credential
-//        auth.signInWithCredential(credential)
-//            .addOnCompleteListener(this) { task ->
-//                if (task.isSuccessful) {
-//                    // If sign-in is successful, get the current user
-//                    val user = auth.currentUser
-//                    if (user != null) {
-//
-//                        // Check if the user is registered in the database
-//                        database.reference.child("users").child(user.uid).get()
-//                            .addOnSuccessListener {
-//
-//                                if (it.exists()) {
-//                                    // If the user is registered, navigate to SuccessActivity
-//                                    val intent = Intent(this, HomeActivity::class.java)
-//                                    startActivity(intent)
-//                                    finish()
-//                                } else if (!it.exists()) {
-//                                    // Navigate to Complete Registration activity
-//                                    val intent =
-//                                        Intent(baseContext, HomeActivity::class.java)
-//                                    startActivity(intent)
-//                                    finish();
-//                                }
-//                            }
-//                    }
-//                } else {
-//
-//                      }
-//            }
-//    }
-
-
 }
