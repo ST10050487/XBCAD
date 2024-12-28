@@ -230,7 +230,7 @@ class StudentParentReg : AppCompatActivity() {
                 // Determine roleId based on email domain
                 val roleId = if (email.endsWith("@bmdhs.co.za")) 4 else 5
                 // Test for admin email
-                //val roleId = if (email.endsWith("@bmdhs.co.za")) 2 else if (email.endsWith("@admin.com")) 1 else 3
+                //val roleId = 1 if (email.endsWith("@bmdhs.co.za")) 2 else if (email.endsWith("@admin.com")) 1 else 3
 
 
                 // Insert data into SQLite database with hashed password
@@ -249,32 +249,6 @@ class StudentParentReg : AppCompatActivity() {
                 val intent = Intent(this, SuccessReg::class.java)
                 startActivity(intent)
 
-//                // Create user account with email and password
-//                auth.createUserWithEmailAndPassword(email, password)
-//                    .addOnCompleteListener(this) { task ->
-//                        //
-//                        if (task.isSuccessful) {
-//                            // Handle registration logic here
-//                            Toast.makeText(
-//                                baseContext,
-//                                "Registration Successful",
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//                            // Navigate to onboarding activity
-//                            val intent = Intent(baseContext, SuccessReg::class.java)
-//                            intent.putExtra("FIRST_NAME", firstNameField.text.toString())
-//                            intent.putExtra("SURNAME", lastNameField.text.toString())
-//                            startActivity(intent)
-//                            finish();
-//                        } else {
-//                            // If sign-in fails, display a message to the user.
-//                            Toast.makeText(
-//                                baseContext,
-//                                "Authentication failed: ${task.exception?.message}",
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//                        }
-//                    }
             }
         }
 
@@ -343,84 +317,6 @@ class StudentParentReg : AppCompatActivity() {
         return BCrypt.hashpw(password, BCrypt.gensalt())
     }
 
-//    private fun Validation() {
-//        regButton.setOnClickListener {
-//            val firstName = firstNameField.text.toString()
-//            val lastName = lastNameField.text.toString()
-//            val dateOfBirth = dateField.text.toString()
-//            val password = passwordField.text.toString()
-//            val confirmPassword = confirmPasswordField.text.toString()
-//            val email = emailField.text.toString()
-//
-//            var isValid = true
-//
-//            if (firstName.isEmpty()) {
-//                firstNameField.error = "First Name is required"
-//                isValid = false
-//            }
-//
-//            if (lastName.isEmpty()) {
-//                lastNameField.error = "Last Name is required"
-//                isValid = false
-//            }
-//
-//            if (dateOfBirth.isEmpty()) {
-//                dateField.error = "Date of Birth is required"
-//                isValid = false
-//            }
-//
-//            if (email.isEmpty()) {
-//                emailField.error = "Email is required"
-//                isValid = false
-//            }
-//
-//            if (password.isEmpty()) {
-//                passwordField.error = "Password is required"
-//                isValid = false
-//            } else if (!isValidPassword(password)) {
-//                passwordField.error =
-//                    "Password must be at least 8 characters, include one special character, one number, and one capital letter"
-//                isValid = false
-//            }
-//
-//            if (confirmPassword.isEmpty()) {
-//                confirmPasswordField.error = "Confirm Password is required"
-//                isValid = false
-//            } else if (password != confirmPassword) {
-//                confirmPasswordField.error = "Passwords do not match"
-//                isValid = false
-//            }
-//
-//            if (!checkBox.isChecked) {
-//                Toast.makeText(this, "You must agree to the terms", Toast.LENGTH_SHORT).show()
-//                isValid = false
-//            }
-//
-//            if (isValid) {
-//                // Hash the password before storing it
-//                val hashedPassword = hashPassword(password)
-//
-//                // Determine roleId based on email domain
-//                val roleId = if (email.endsWith("@bmdhs.co.za")) 2 else 3
-//
-//                // Insert data into SQLite database with hashed password
-//                dbHelper.addUsers(firstName, lastName, dateOfBirth, email, hashedPassword, roleId)
-//                Toast.makeText(this, "User Registered Successfully", Toast.LENGTH_SHORT).show()
-//                clearFields(
-//                    firstNameField,
-//                    lastNameField,
-//                    dateField,
-//                    passwordField,
-//                    confirmPasswordField,
-//                    emailField,
-//                    checkBox
-//                )
-//                // Navigate to SuccessReg Activity
-//                val intent = Intent(this, SuccessReg::class.java)
-//                startActivity(intent)
-//            }
-//        }
-//    }
 
     private fun isValidPassword(password: String): Boolean {
         val passwordPattern =
