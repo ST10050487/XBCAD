@@ -1,9 +1,6 @@
 package za.co.varsitycollage.st10050487.knights;
 
-import android.app.Service;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.IBinder;
 import android.util.Log;
 
 import com.google.auth.oauth2.GoogleCredentials;
@@ -15,16 +12,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class EventMessagingService extends Service {
+public class EventMessagingService {
 
     private static final String TAG = "EventMessagingService";
     private static final String FCM_API_URL = "https://fcm.googleapis.com/v1/projects/xbcad-ab0f9/messages:send";
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        // We don't provide binding, so return null
-        return null;
-    }
 
     public void sendMessage(String token, String title, String body) {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
