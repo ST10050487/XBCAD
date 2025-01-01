@@ -4,8 +4,8 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -67,21 +67,30 @@ class HomeScreen : AppCompatActivity() {
                     val intent = Intent(this, HomeScreen::class.java)
                     startActivity(intent)
                 }
+
                 R.id.nav_sport_fixtures -> {
                     val intent = Intent(this, DisplaySportsFixturesActivity::class.java)
                     startActivity(intent)
                 }
-                R.id.nav_events -> { val intent = Intent(this, UpcomingRecentEvents::class.java)
+
+                R.id.nav_events -> {
+                    val intent = Intent(this, UpcomingRecentEvents::class.java)
                     startActivity(intent)
                 }
-                R.id.nav_shop -> { val intent = Intent(this, ViewProduct::class.java)
+
+                R.id.nav_shop -> {
+                    val intent = Intent(this, ViewProduct::class.java)
                     startActivity(intent)
                 }
-                R.id.nav_profile -> { val intent = Intent(this, User::class.java)
+
+                R.id.nav_profile -> {
+                    val intent = Intent(this, User::class.java)
                     intent.putExtra("USER_ID", userId)
                     startActivity(intent)
                 }
-                R.id.nav_logout -> { val intent = Intent(this, Login::class.java)
+
+                R.id.nav_logout -> {
+                    val intent = Intent(this, Login::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                     startActivity(intent)
                     finish()
@@ -92,7 +101,8 @@ class HomeScreen : AppCompatActivity() {
 
         dbHelper = DBHelper(this)
         recyclerView = findViewById(R.id.events_recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
         val eventList = dbHelper.getAllEvents()
         if (eventList.isNotEmpty()) {
@@ -119,6 +129,15 @@ class HomeScreen : AppCompatActivity() {
 
         // Fetch and display user details
         displayUserDetails()
+
+        // Set OnClickListener for profile section in the navigation header
+        val headerView = navView.getHeaderView(0)
+        val profileSection = headerView.findViewById<LinearLayout>(R.id.profile_section)
+        profileSection.setOnClickListener {
+            val intent = Intent(this, User::class.java)
+            intent.putExtra("USER_ID", userId)
+            startActivity(intent)
+        }
     }
 
     override fun onResume() {
