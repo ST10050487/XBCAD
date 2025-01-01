@@ -197,10 +197,11 @@ class UpdateUser : AppCompatActivity() {
     }
 
     private fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
-        val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-        return stream.toByteArray()
-    }
+    val resizedBitmap = Bitmap.createScaledBitmap(bitmap, 300, 300, true) // Resize the image
+    val stream = ByteArrayOutputStream()
+    resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream) // Compress the image to 50% quality
+    return stream.toByteArray()
+}
 
     // A method to show DatePickerDialog
     private fun showDatePickerDialog() {
