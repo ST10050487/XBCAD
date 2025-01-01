@@ -38,6 +38,10 @@ class User : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        displayUserDetails(userId)
+    }
     private fun displayUserDetails(userId: Int) {
         val dbHelper = DBHelper(this)
         val user = dbHelper.getUser(userId)

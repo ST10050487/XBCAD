@@ -133,8 +133,8 @@ class Login : AppCompatActivity() {
                 val roleId = dbHelper.getRoleId(userId)
                 loginAttempts = 0 // Reset attempts on successful login
                 val intent = when (roleId) {
-                    1, 2, 3 -> Intent(this, User::class.java)
-                    4, 5 -> Intent(this, User::class.java)
+                    1, 2, 3 -> Intent(this, AdminHome::class.java)
+                    4, 5 -> Intent(this, HomeScreen::class.java)
                     else -> null
                 }
 
