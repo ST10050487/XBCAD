@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
+import android.opengl.GLES20
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         // Delay of 3 seconds (3000 milliseconds)
         Handler(Looper.getMainLooper()).postDelayed({
             // Navigate to StudentParentReg Activity after the delay
-            val intent = Intent(this, AdminUpcomingEvents::class.java)
+            val intent = Intent(this, Login::class.java)
             startActivity(intent)
             // Finishing MainActivity so that the user cannot go back to it
             finish()

@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -55,6 +56,11 @@ class UpdateUser : AppCompatActivity() {
             showDatePickerDialog()
         }
 
+        // Set up email field click listener
+        binding.userEmail.setOnClickListener {
+            showEmailUpdateDialog()
+        }
+
         // Setting the onClickListener for the update button
         binding.saveBtn.setOnClickListener {
             // Save the user details
@@ -68,19 +74,20 @@ class UpdateUser : AppCompatActivity() {
     }
 
     private fun loadUserDetails() {
-        val user = dbHelper.getUser(userId)
-        user?.let {
-            binding.userName.setText(it.name)
-            binding.userSurname.setText(it.surname)
-            binding.userEmail.setText(it.email)
-            binding.userDateOfBirth.setText(it.dateOfBirth)
-            imageHolder = it.profilePicture
-            // Load profile picture if available
-            if (imageHolder != null) {
-                binding.profilePicture.setImageBitmap(BitmapFactory.decodeByteArray(imageHolder, 0, imageHolder!!.size))
-            }
+    val user = dbHelper.getUser(userId)
+    user?.let {
+        binding.userName.setText(it.name)
+        binding.userSurname.setText(it.surname)
+        binding.userEmail.setText(it.email)
+        binding.userDateOfBirth.setText(it.dateOfBirth)
+        binding.passwordTxt.setText(it.password) // Set the password field
+        imageHolder = it.profilePicture
+        // Load profile picture if available
+        if (imageHolder != null) {
+            binding.profilePicture.setImageBitmap(BitmapFactory.decodeByteArray(imageHolder, 0, imageHolder!!.size))
         }
     }
+}
 
     private fun updateUserData() {
         val name = binding.userName.text.toString()
@@ -217,27 +224,55 @@ class UpdateUser : AppCompatActivity() {
 
     // A method to validate user inputs
     private fun validateInputs(): Boolean {
-        val name = binding.userName.text.toString()
-        val surname = binding.userSurname.text.toString()
-        val email = binding.userEmail.text.toString()
-        val dateOfBirth = binding.userDateOfBirth.text.toString()
+    val name = binding.userName.text.toString()
+    val surname = binding.userSurname.text.toString()
+    val email = binding.userEmail.text.toString()
+    val dateOfBirth = binding.userDateOfBirth.text.toString()
 
-        if (name.isEmpty()) {
-            binding.userName.error = "Name is required"
-            return false
-        }
-        if (surname.isEmpty()) {
-            binding.userSurname.error = "Surname is required"
-            return false
-        }
-        if (email.isEmpty()) {
-            binding.userEmail.error = "Email is required"
-            return false
-        }
-        if (dateOfBirth.isEmpty()) {
-            binding.userDateOfBirth.error = "Date of birth is required"
-            return false
-        }
-        return true
+    if (name.isEmpty()) {
+        binding.userName.error = "Name is required"
+        return false
+    }
+    if (surname.isEmpty()) {
+        binding.userSurname.error = "Surname is required"
+        return false
+    }
+    if (email.isEmpty()) {
+        binding.userEmail.error = "Email is required"
+        return false
+    }
+    if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() || email.endsWith("@bmdhs.co.za")) {
+        binding.userEmail.error = "Invalid email format"
+        return false
+    }
+    if (dateOfBirth.isEmpty()) {
+        binding.userDateOfBirth.error = "Date of birth is required"
+        return false
+    }
+    return true
+}
+
+    // A method to show email update dialog
+    private fun showEmailUpdateDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_update_email, null)
+        val newEmailInput = dialogView.findViewById<EditText>(R.id.newEmailInput)
+        val confirmEmailInput = dialogView.findViewById<EditText>(R.id.confirmEmailInput)
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Update Email")
+            .setView(dialogView)
+            .setPositiveButton("OK") { _, _ ->
+                val newEmail = newEmailInput.text.toString()
+                val confirmEmail = confirmEmailInput.text.toString()
+                if (newEmail == confirmEmail) {
+                    binding.userEmail.setText(newEmail)
+                } else {
+                    Toast.makeText(this, "Emails do not match", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .create()
+
+        dialog.show()
     }
 }
