@@ -16,6 +16,9 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.navigation.NavigationView
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class AdminHome : AppCompatActivity() {
     private lateinit var toggle: ActionBarDrawerToggle
@@ -68,6 +71,11 @@ class AdminHome : AppCompatActivity() {
 
         // Load user details and update UI
         displayUserDetails()
+
+        // Displaying the current date
+        val dateTextView: TextView = findViewById(R.id.txtDate)
+        val currentDate = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(Date())
+        dateTextView.text = currentDate
 
         btnShop.setOnClickListener {
             if (roleId == 1 || userPrivileges?.contains("SHOP") == true) {
@@ -211,9 +219,11 @@ class AdminHome : AppCompatActivity() {
             val userNameTextView = headerView.findViewById<TextView>(R.id.user_name)
             val userEmailTextView = headerView.findViewById<TextView>(R.id.user_email)
             val userImageView = headerView.findViewById<ImageView>(R.id.profile_image)
+            val txtUsername = findViewById<TextView>(R.id.txtUsername)
 
             userNameTextView.text = user.name + " " + user.surname
             userEmailTextView.text = user.email
+            txtUsername.text = user.name + " " + user.surname
 
             val profilePicture = user.profilePicture
             if (profilePicture != null && profilePicture.isNotEmpty()) {
@@ -226,40 +236,48 @@ class AdminHome : AppCompatActivity() {
     }
 
     private fun setupNavigationView(navView: NavigationView) {
-        val headerView = navView.getHeaderView(0)
-        val headerImageView = headerView?.findViewById<ImageView>(R.id.imageView3)
-        setupImageView(headerImageView, R.drawable.banner_frame)
-
-        val logoImageView = findViewById<ImageView>(R.id.Logo)
-        setupImageView(logoImageView, R.drawable.trans_logo_figma)
-
-        val interactionsImageView = findViewById<LinearLayout>(R.id.btn_interactions).findViewById<ImageView>(R.id.imageView)
-        setupImageView(interactionsImageView, R.drawable.ic_interactions)
-
-        val createAdminImageView = findViewById<LinearLayout>(R.id.btn_CreateAdmin).findViewById<ImageView>(R.id.imageView)
-        setupImageView(createAdminImageView, R.drawable.ic_create_admin)
-
-        val reviewProfilesImageView = findViewById<LinearLayout>(R.id.btn_reviewProfiles).findViewById<ImageView>(R.id.imageView)
-        setupImageView(reviewProfilesImageView, R.drawable.ic_player_review)
-
-        val shopImageView = findViewById<LinearLayout>(R.id.btn_shop).findViewById<ImageView>(R.id.imageView)
-        setupImageView(shopImageView, R.drawable.ic_shop_icon)
-
-        val sportImageView = findViewById<LinearLayout>(R.id.btn_sport).findViewById<ImageView>(R.id.imageView)
-        setupImageView(sportImageView, R.drawable.ic_sport_management_icon)
-
-        val eventsImageView = findViewById<LinearLayout>(R.id.btn_events).findViewById<ImageView>(R.id.imageView)
-        setupImageView(eventsImageView, R.drawable.ic_event_management_icon)
-
-        val playersImageView = findViewById<LinearLayout>(R.id.btn_players).findViewById<ImageView>(R.id.imageView)
-        setupImageView(playersImageView, R.drawable.ic_players_profile_icon)
-
-        val addFixtureImageView = findViewById<LinearLayout>(R.id.btn_addFixture).findViewById<ImageView>(R.id.imageView)
-        setupImageView(addFixtureImageView, R.drawable.ic_new_event)
-
-        val addEventImageView = findViewById<LinearLayout>(R.id.btn_addEvent).findViewById<ImageView>(R.id.imageView)
-        setupImageView(addEventImageView, R.drawable.ic_new_fixture)
+    val headerView = navView.getHeaderView(0)
+    val profileSection = headerView.findViewById<LinearLayout>(R.id.admin_profile_section)
+    profileSection.setOnClickListener {
+        val intent = Intent(this, User::class.java)
+        intent.putExtra("USER_ID", userId)
+        intent.putExtra("ROLE_ID", roleId)
+        startActivity(intent)
     }
+
+    val headerImageView = headerView?.findViewById<ImageView>(R.id.imageView3)
+    setupImageView(headerImageView, R.drawable.banner_frame)
+
+    val logoImageView = findViewById<ImageView>(R.id.Logo)
+    setupImageView(logoImageView, R.drawable.trans_logo_figma)
+
+    val interactionsImageView = findViewById<LinearLayout>(R.id.btn_interactions).findViewById<ImageView>(R.id.imageView)
+    setupImageView(interactionsImageView, R.drawable.ic_interactions)
+
+    val createAdminImageView = findViewById<LinearLayout>(R.id.btn_CreateAdmin).findViewById<ImageView>(R.id.imageView)
+    setupImageView(createAdminImageView, R.drawable.ic_create_admin)
+
+    val reviewProfilesImageView = findViewById<LinearLayout>(R.id.btn_reviewProfiles).findViewById<ImageView>(R.id.imageView)
+    setupImageView(reviewProfilesImageView, R.drawable.ic_player_review)
+
+    val shopImageView = findViewById<LinearLayout>(R.id.btn_shop).findViewById<ImageView>(R.id.imageView)
+    setupImageView(shopImageView, R.drawable.ic_shop_icon)
+
+    val sportImageView = findViewById<LinearLayout>(R.id.btn_sport).findViewById<ImageView>(R.id.imageView)
+    setupImageView(sportImageView, R.drawable.ic_sport_management_icon)
+
+    val eventsImageView = findViewById<LinearLayout>(R.id.btn_events).findViewById<ImageView>(R.id.imageView)
+    setupImageView(eventsImageView, R.drawable.ic_event_management_icon)
+
+    val playersImageView = findViewById<LinearLayout>(R.id.btn_players).findViewById<ImageView>(R.id.imageView)
+    setupImageView(playersImageView, R.drawable.ic_players_profile_icon)
+
+    val addFixtureImageView = findViewById<LinearLayout>(R.id.btn_addFixture).findViewById<ImageView>(R.id.imageView)
+    setupImageView(addFixtureImageView, R.drawable.ic_new_event)
+
+    val addEventImageView = findViewById<LinearLayout>(R.id.btn_addEvent).findViewById<ImageView>(R.id.imageView)
+    setupImageView(addEventImageView, R.drawable.ic_new_fixture)
+}
 
     private fun setupImageView(imageView: ImageView?, drawableResId: Int) {
         if (imageView != null) {

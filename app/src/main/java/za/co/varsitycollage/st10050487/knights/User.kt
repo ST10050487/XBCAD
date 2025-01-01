@@ -31,6 +31,8 @@ class User : AppCompatActivity() {
             val intent = Intent(this, UpdateUser::class.java)
             intent.putExtra("USER_ID", userId)
             startActivity(intent)
+            // Finishing MainActivity so that the user cannot go back to it
+            finish()
         }
 
         if (userId != -1) {
