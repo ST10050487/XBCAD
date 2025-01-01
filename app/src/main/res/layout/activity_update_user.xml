@@ -120,19 +120,36 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Email Field -->
+<com.google.android.material.textfield.TextInputLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/userEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:inputType="textPersonName"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:clickable="true"/>
+</com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="8dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/userEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Email"
-                    android:inputType="textPersonName"/>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/passwordTxt"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="textPassword"
+                        android:hint="Password"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"/>
             </com.google.android.material.textfield.TextInputLayout>
-
 
             <!-- Date of Birth Field -->
             <com.google.android.material.textfield.TextInputLayout
@@ -167,6 +184,4 @@
 
         </LinearLayout>
     </ScrollView>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
