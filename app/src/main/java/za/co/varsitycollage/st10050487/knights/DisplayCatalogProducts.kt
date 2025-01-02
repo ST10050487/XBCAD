@@ -7,9 +7,15 @@ import android.widget.Button
 
 class DisplayCatalogProducts : AppCompatActivity() {
 
+    private var userId: Int = -1
+    private var roleId: Int = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.display_catalog_products)
+
+        // Getting the userId from the Intent
+        userId = intent.getIntExtra("USER_ID", -1)
+        roleId = intent.getIntExtra("ROLE_ID", -1)
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()

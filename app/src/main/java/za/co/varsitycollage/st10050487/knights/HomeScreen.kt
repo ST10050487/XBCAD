@@ -65,27 +65,36 @@ class HomeScreen : AppCompatActivity() {
             when (it.itemId) {
                 R.id.nav_home -> {
                     val intent = Intent(this, HomeScreen::class.java)
+                    intent.putExtra("USER_ID", userId)
+                    intent.putExtra("ROLE_ID", roleId)
                     startActivity(intent)
                 }
 
                 R.id.nav_sport_fixtures -> {
                     val intent = Intent(this, DisplaySportsFixturesActivity::class.java)
+                    intent.putExtra("USER_ID", userId)
+                    intent.putExtra("ROLE_ID", roleId)
                     startActivity(intent)
                 }
 
                 R.id.nav_events -> {
                     val intent = Intent(this, UpcomingRecentEvents::class.java)
+                    intent.putExtra("USER_ID", userId)
+                    intent.putExtra("ROLE_ID", roleId)
                     startActivity(intent)
                 }
 
                 R.id.nav_shop -> {
                     val intent = Intent(this, ViewProduct::class.java)
+                    intent.putExtra("USER_ID", userId)
+                    intent.putExtra("ROLE_ID", roleId)
                     startActivity(intent)
                 }
 
                 R.id.nav_profile -> {
                     val intent = Intent(this, User::class.java)
                     intent.putExtra("USER_ID", userId)
+                    intent.putExtra("ROLE_ID", roleId)
                     startActivity(intent)
                 }
 
