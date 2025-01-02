@@ -80,6 +80,7 @@ class AdminHome : AppCompatActivity() {
         btnShop.setOnClickListener {
             if (roleId == 1 || userPrivileges?.contains("SHOP") == true) {
                 val intent = Intent(this, DisplayCatalogProducts::class.java)
+                intent.putExtra("USER_ID", userId)
                 intent.putExtra("ROLE_ID", roleId)
                 startActivity(intent)
             } else {
@@ -90,6 +91,7 @@ class AdminHome : AppCompatActivity() {
         btnSport.setOnClickListener {
             if (roleId == 1 || userPrivileges?.contains("SPORT_MANAGEMENT") == true) {
                 val intent = Intent(this, AdminSportsFixtures::class.java)
+                intent.putExtra("USER_ID", userId)
                 intent.putExtra("ROLE_ID", roleId)
                 startActivity(intent)
             } else {
@@ -100,6 +102,7 @@ class AdminHome : AppCompatActivity() {
         btnEvents.setOnClickListener {
             if (roleId == 1 || userPrivileges?.contains("EVENT_MANAGEMENT") == true) {
                 val intent = Intent(this, EventManagement::class.java)
+                intent.putExtra("USER_ID", userId)
                 intent.putExtra("ROLE_ID", roleId)
                 startActivity(intent)
             } else {
@@ -110,6 +113,7 @@ class AdminHome : AppCompatActivity() {
         btnPlayer.setOnClickListener {
             if (roleId == 1 || userPrivileges?.contains("PLAYER_PROFILES") == true) {
                 val intent = Intent(this, ViewAllPlayerProfiles::class.java)
+                intent.putExtra("USER_ID", userId)
                 intent.putExtra("ROLE_ID", roleId)
                 startActivity(intent)
             } else {
@@ -120,6 +124,7 @@ class AdminHome : AppCompatActivity() {
         btnAddFixture.setOnClickListener {
             if (roleId == 1 || userPrivileges?.contains("SPORT_MANAGEMENT") == true) {
                 val intent = Intent(this, CreateSportFixture::class.java)
+                intent.putExtra("USER_ID", userId)
                 intent.putExtra("ROLE_ID", roleId)
                 startActivity(intent)
             } else {
@@ -130,6 +135,7 @@ class AdminHome : AppCompatActivity() {
         btnAddEvent.setOnClickListener {
             if (roleId == 1 || userPrivileges?.contains("EVENT_MANAGEMENT") == true) {
                 val intent = Intent(this, CreateEvent::class.java)
+                intent.putExtra("USER_ID", userId)
                 intent.putExtra("ROLE_ID", roleId)
                 startActivity(intent)
             } else {
@@ -141,6 +147,7 @@ class AdminHome : AppCompatActivity() {
             when (it.itemId) {
                 R.id.nav_home -> {
                     val intent = Intent(this, AdminHome::class.java)
+                    intent.putExtra("USER_ID", userId)
                     intent.putExtra("ROLE_ID", roleId)
                     startActivity(intent)
                 }
@@ -148,6 +155,7 @@ class AdminHome : AppCompatActivity() {
                     if (roleId == 1 || roleId == 2 || userPrivileges?.contains("SPORT_MANAGEMENT") == true) {
                         val intent = Intent(this, AdminSportsFixtures::class.java)
                         intent.putExtra("ROLE_ID", roleId)
+                        intent.putExtra("USER_ID", userId)
                         startActivity(intent)
                     } else {
                         showToast("Access denied to Sport Management")
@@ -158,6 +166,7 @@ class AdminHome : AppCompatActivity() {
                     if (roleId == 1 || roleId == 3 || userPrivileges?.contains("EVENT_MANAGEMENT") == true) {
                         val intent = Intent(this, EventManagement::class.java)
                         intent.putExtra("ROLE_ID", roleId)
+                        intent.putExtra("USER_ID", userId)
                         startActivity(intent)
                     } else {
                         showToast("Access denied to Event Management")
@@ -168,6 +177,7 @@ class AdminHome : AppCompatActivity() {
                     if (roleId == 1 || userPrivileges?.contains("SHOP") == true) {
                         val intent = Intent(this, DisplayCatalogProducts::class.java)
                         intent.putExtra("ROLE_ID", roleId)
+                        intent.putExtra("USER_ID", userId)
                         startActivity(intent)
                     } else {
                         showToast("Access denied to Shop")
@@ -189,6 +199,7 @@ class AdminHome : AppCompatActivity() {
                     if (roleId == 1 || roleId == 2 || userPrivileges?.contains("PLAYER_PROFILES") == true) {
                         val intent = Intent(this, ViewAllPlayerProfiles::class.java)
                         intent.putExtra("ROLE_ID", roleId)
+                        intent.putExtra("USER_ID", userId)
                         startActivity(intent)
                     } else {
                         showToast("Access denied to Player Profile")
