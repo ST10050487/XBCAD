@@ -105,7 +105,8 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".SuccessReg" />
         <activity android:name=".EventDetailActivity" />
-        <activity android:name=".ForgotPassword"></activity>
+        <activity android:name=".ForgotPassword"/>
+        <activity android:name=".ResetPasswordActivity"/>
 
         <service
             android:name=".EventMessagingService"

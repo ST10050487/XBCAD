@@ -15,7 +15,7 @@ class ForgotPassword : AppCompatActivity() {
     private lateinit var backText: TextView
     private lateinit var loginButton: Button
     private lateinit var emailEditText: EditText
-    private lateinit var sendPasswordButton: ImageButton // Change this to ImageButton
+    private lateinit var sendPasswordButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +26,7 @@ class ForgotPassword : AppCompatActivity() {
         backText = findViewById(R.id.back_function)
         loginButton = findViewById(R.id.LoginBtn)
         emailEditText = findViewById(R.id.emailTxt)
-        sendPasswordButton = findViewById(R.id.forgotEmailBtn) // Keep this as ImageButton
+        sendPasswordButton = findViewById(R.id.forgotEmailBtn)
 
         // Set click listener for the back arrow
         backArrow.setOnClickListener {
@@ -62,13 +62,15 @@ class ForgotPassword : AppCompatActivity() {
             Toast.makeText(this, "Please enter your email", Toast.LENGTH_SHORT).show()
             return
         }
-//Abc@1234
+
         val dbHelper = DBHelper(this)
         val password = dbHelper.getPasswordByEmail(email)
 
         if (password != null) {
-            // Here you can implement the logic to send the password via email or display it
-            Toast.makeText(this, "Your password is: $password", Toast.LENGTH_LONG).show()
+            // Redirect to ResetPasswordActivity
+            val intent = Intent(this, ResetPasswordActivity::class.java)
+            startActivity(intent)
+            finish()
         } else {
             Toast.makeText(this, "Email not found. Please register.", Toast.LENGTH_SHORT).show()
         }
