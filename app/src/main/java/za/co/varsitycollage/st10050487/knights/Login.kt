@@ -24,6 +24,7 @@ class Login : AppCompatActivity() {
     private var loginAttempts = 0
     private val MAX_ATTEMPTS = 5
     private var lockoutEndTime = 0L
+
     // private val LOCKOUT_DURATION_MS = 30L * 1000 // 30 seconds
     private val LOCKOUT_DURATION_MS = 300000L // 5 minutes
 
@@ -41,7 +42,6 @@ class Login : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Initialize the binding property
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -53,6 +53,7 @@ class Login : AppCompatActivity() {
         loginButton = binding.LoginBtn
         regOp = binding.RegisterBtn
         googleSignIn = binding.btnGoogle
+
         // Initializing the validation class
         valid = Validations()
 
@@ -65,11 +66,11 @@ class Login : AppCompatActivity() {
         // Create a GoogleSignInClient object with the GoogleSignInOptions object
         gsc = GoogleSignIn.getClient(this, gso)
 
-        //Set an onClickListener for the Google Sign-In button
+        // Set an onClickListener for the Google Sign-In button
         googleSignIn.setOnClickListener {
             // Handle Google Sign-In logic here
             Toast.makeText(this, "Google Sign-In Clicked", Toast.LENGTH_SHORT).show()
-            //      signIn();
+            // signIn()
         }
 
         // Set click listener for the Register button
@@ -82,7 +83,13 @@ class Login : AppCompatActivity() {
         // Set click listener for the Login button
         loginButton.setOnClickListener {
             getUserInput()
-            //loginUser()
+            // loginUser()
+        }
+
+        // Set click listener for the Forgot Password button
+        binding.forgotPasswordBtn.setOnClickListener {
+            val intent = Intent(this, ForgotPassword::class.java)
+            startActivity(intent)
         }
     }
 
