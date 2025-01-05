@@ -67,8 +67,9 @@ class ForgotPassword : AppCompatActivity() {
         val password = dbHelper.getPasswordByEmail(email)
 
         if (password != null) {
-            // Redirect to ResetPasswordActivity
+            // Redirect to ResetPasswordActivity with the email
             val intent = Intent(this, ResetPasswordActivity::class.java)
+            intent.putExtra("USER_EMAIL", email) // Pass the email to the next activity
             startActivity(intent)
             finish()
         } else {
