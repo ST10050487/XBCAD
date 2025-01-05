@@ -461,6 +461,20 @@ public class DBHelper extends SQLiteOpenHelper {
         return events;
     }
 
+    //Forogt Password Implementation
+    public String getPasswordByEmail(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String password = null;
+        String query = "SELECT PASSWORD FROM USERS WHERE EMAIL = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+
+        if (cursor.moveToFirst()) {
+            password = cursor.getString(cursor.getColumnIndexOrThrow("PASSWORD"));
+        }
+        cursor.close();
+        return password; // Returns null if email does not exist
+    }
+
     public List<String> getAllStatus() {
         List<String> status = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
