@@ -2,13 +2,13 @@ package za.co.varsitycollage.st10050487.knights
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-
 
 class ProductAdapter(private val products: List<ProductModel>) :
     RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
@@ -28,6 +28,7 @@ class ProductAdapter(private val products: List<ProductModel>) :
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = products[position]
+        Log.d("ProductAdapter", "Binding product at position $position: ${product.prodName}")
         holder.productName.text = product.prodName
         holder.productDescription.text = product.prodDescription
         holder.productPrice.text = product.prodPrice.toString()
@@ -35,7 +36,9 @@ class ProductAdapter(private val products: List<ProductModel>) :
     }
 
     override fun getItemCount(): Int {
-        return products.size
+        val count = products.size
+        Log.d("ProductAdapter", "Total number of products: $count")
+        return count
     }
 
     private fun convertByteArrayToBitmap(byteArray: ByteArray?): Bitmap? {

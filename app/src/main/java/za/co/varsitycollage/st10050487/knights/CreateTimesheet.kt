@@ -173,10 +173,14 @@ class CreateTimesheet : AppCompatActivity() {
             busReturnTime,
             message,
             matchStatusValue,
-            fixtureId // Use the fixture ID passed from the intent
+            fixtureId // Use the fixture ID passed from SharedPreferences
         )
 
         if (isSaved) {
+            Log.d(
+                "CreateTimesheet",
+                "Timesheet saved successfully: meetingTime=$meetingTime, busDepartureTime=$busDepartureTime, busReturnTime=$busReturnTime, message=$message, matchStatusValue=$matchStatusValue, fixtureId=$fixtureId"
+            )
             Toast.makeText(this, "Timesheet saved successfully", Toast.LENGTH_SHORT).show()
             // Navigate back to AdminSportsFixture activity
             val intent = Intent(this, AdminSportsFixtures::class.java)

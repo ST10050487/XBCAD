@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -20,8 +21,8 @@ import java.util.Calendar
 class UpdateUser : AppCompatActivity() {
     private lateinit var binding: ActivityUpdateUserBinding
     private lateinit var dbHelper: DBHelper
-    private var userId: Int = 0
-    private var dummyId: Int = 0
+    private var userId: Int = -1
+    private var roleId: Int = -1
     private var imageHolder: ByteArray? = null
     private lateinit var profilePicture: ImageView
     private lateinit var dateOfBirthEditText: TextInputEditText
@@ -38,7 +39,8 @@ class UpdateUser : AppCompatActivity() {
         dbHelper = DBHelper(this)
 
         // Getting the userId from the Intent
-        userId= intent.getIntExtra("USER_ID", 0)
+        userId = intent.getIntExtra("USER_ID", -1)
+        roleId = intent.getIntExtra("ROLE_ID", -1)
 
         profilePicture = findViewById(R.id.profilePicture)
         dateOfBirthEditText = findViewById(R.id.userDateOfBirth)
@@ -54,6 +56,11 @@ class UpdateUser : AppCompatActivity() {
             showDatePickerDialog()
         }
 
+        // Set up email field click listener
+        binding.userEmail.setOnClickListener {
+            showEmailUpdateDialog()
+        }
+
         // Setting the onClickListener for the update button
         binding.saveBtn.setOnClickListener {
             // Save the user details
@@ -67,23 +74,21 @@ class UpdateUser : AppCompatActivity() {
     }
 
     private fun loadUserDetails() {
-        val user = dbHelper.getUserDetails(userId);
-        user?.let {
-            binding.userName.setText(it.name)
-            binding.userSurname.setText(it.surname)
-            binding.userEmail.setText(it.email)
-            binding.userDateOfBirth.setText(it.dateOfBirth)
-            imageHolder = user?.profilePicture
-            // Load profile picture if available
-            // if product picture is not null
-            if (imageHolder != null)
-            { // set UI image to product picture
-                binding.profilePicture.setImageBitmap(imageHolder?.size?.let { BitmapFactory.decodeByteArray(imageHolder, 0, it) })
-            }
+    val user = dbHelper.getUser(userId)
+    user?.let {
+        binding.userName.setText(it.name)
+        binding.userSurname.setText(it.surname)
+        binding.userEmail.setText(it.email)
+        binding.userDateOfBirth.setText(it.dateOfBirth)
+        binding.passwordTxt.setText(it.password) // Set the password field
+        imageHolder = it.profilePicture
+        // Load profile picture if available
+        if (imageHolder != null) {
+            binding.profilePicture.setImageBitmap(BitmapFactory.decodeByteArray(imageHolder, 0, imageHolder!!.size))
         }
-        //REMOVE AND CHANAGE TO REAL ID
-        dummyId = user?.userId ?: 0
     }
+}
+
     private fun updateUserData() {
         val name = binding.userName.text.toString()
         val surname = binding.userSurname.text.toString()
@@ -91,12 +96,12 @@ class UpdateUser : AppCompatActivity() {
         val dateOfBirth = binding.userDateOfBirth.text.toString()
 
         val user = UserModel(
-            userId = dummyId,
+            userId = userId, // Use the actual userId
             name = name,
             surname = surname,
             email = email,
             profilePicture = imageHolder,
-            dateOfBirth = dateOfBirth ,
+            dateOfBirth = dateOfBirth,
             password = null
         )
 
@@ -104,12 +109,11 @@ class UpdateUser : AppCompatActivity() {
 
         if (result > 0) {
             Toast.makeText(this, "User profile updated successfully", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, Login::class.java)
+            val intent = Intent(this, User::class.java)
             intent.putExtra("USER_ID", userId)
             startActivity(intent)
             finish()
-        }
-        else {
+        } else {
             Toast.makeText(this, "Failed to update user profile", Toast.LENGTH_SHORT).show()
         }
     }
@@ -119,7 +123,7 @@ class UpdateUser : AppCompatActivity() {
         val options = arrayOf("Take a Photo", "Choose from Gallery")
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Choose Profile Picture")
-        builder.setItems(options) { dialog, which ->
+        builder.setItems(options) { _, which ->
             when (which) {
                 0 -> checkCameraPermission() // Check camera permission
                 1 -> openGallery()
@@ -185,16 +189,19 @@ class UpdateUser : AppCompatActivity() {
             }
         }
     }
+
     // Update the profile picture in the ImageView and save it to the database
     private fun updateProfilePicture(bitmap: Bitmap) {
         profilePicture.setImageBitmap(bitmap)
         imageHolder = bitmapToByteArray(bitmap)
     }
+
     private fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
-        val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-        return stream.toByteArray()
-    }
+    val resizedBitmap = Bitmap.createScaledBitmap(bitmap, 300, 300, true) // Resize the image
+    val stream = ByteArrayOutputStream()
+    resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream) // Compress the image to 50% quality
+    return stream.toByteArray()
+}
 
     // A method to show DatePickerDialog
     private fun showDatePickerDialog() {
@@ -216,30 +223,57 @@ class UpdateUser : AppCompatActivity() {
         datePickerDialog.show()
     }
 
-
     // A method to validate user inputs
     private fun validateInputs(): Boolean {
-        val name = binding.userName.text.toString()
-        val surname = binding.userSurname.text.toString()
-        val email = binding.userEmail.text.toString()
-        val dateOfBirth = binding.userDateOfBirth.text.toString()
+    val name = binding.userName.text.toString()
+    val surname = binding.userSurname.text.toString()
+    val email = binding.userEmail.text.toString()
+    val dateOfBirth = binding.userDateOfBirth.text.toString()
 
-        if (name.isEmpty()) {
-            binding.userName.error = "Name is required"
-            return false
-        }
-        if (surname.isEmpty()) {
-            binding.userSurname.error = "Surname is required"
-            return false
-        }
-        if (email.isEmpty()) {
-            binding.userEmail.error = "Email is required"
-            return false
-        }
-        if (dateOfBirth.isEmpty()) {
-            binding.userDateOfBirth.error = "Date of birth is required"
-            return false
-        }
-        return true
+    if (name.isEmpty()) {
+        binding.userName.error = "Name is required"
+        return false
+    }
+    if (surname.isEmpty()) {
+        binding.userSurname.error = "Surname is required"
+        return false
+    }
+    if (email.isEmpty()) {
+        binding.userEmail.error = "Email is required"
+        return false
+    }
+    if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() || email.endsWith("@bmdhs.co.za")) {
+        binding.userEmail.error = "Invalid email format"
+        return false
+    }
+    if (dateOfBirth.isEmpty()) {
+        binding.userDateOfBirth.error = "Date of birth is required"
+        return false
+    }
+    return true
+}
+
+    // A method to show email update dialog
+    private fun showEmailUpdateDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_update_email, null)
+        val newEmailInput = dialogView.findViewById<EditText>(R.id.newEmailInput)
+        val confirmEmailInput = dialogView.findViewById<EditText>(R.id.confirmEmailInput)
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Update Email")
+            .setView(dialogView)
+            .setPositiveButton("OK") { _, _ ->
+                val newEmail = newEmailInput.text.toString()
+                val confirmEmail = confirmEmailInput.text.toString()
+                if (newEmail == confirmEmail) {
+                    binding.userEmail.setText(newEmail)
+                } else {
+                    Toast.makeText(this, "Emails do not match", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .create()
+
+        dialog.show()
     }
 }

@@ -19,7 +19,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 27;
+    private static final int DATABASE_VERSION = 30;
 
 
     // Constructor
@@ -597,11 +597,9 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("MATCH_STATUS", matchStatus);
         values.put("FIXTURE_ID", fixtureID);
 
-        // Insert the new row, returning the primary key value of the new row
         long result = db.insert("TIMES", null, values);
-
-        // Check if the insert was successful
-        return result != -1; // If result is -1, the insert failed
+        Log.d("DBHelper", "Inserted timesheet for fixture ID: " + fixtureID + ", result: " + result);
+        return result != -1;
     }
 
     public void addDummyTimesEntry(int fixtureId) {
@@ -1184,6 +1182,28 @@ public class DBHelper extends SQLiteOpenHelper {
         db.insert("EVENTS", null, values);
     }
 
+    public List<ProductModel> getAllProducts() {
+        List<ProductModel> products = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM SCHOOL_MERCH", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                ProductModel product = new ProductModel(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("PRODUCT_ID")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("NAME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("DESCRIPTION")),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow("PRICE")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("PHOTO"))
+                );
+                products.add(product);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return products;
+    }
+
     //A method to add matches to the database
     public void addMatches(String matchLocation, String matchDate, String matchTime, double price, String matchDiscription, byte[] picture, int timeId) {
         // Add matches to the database
@@ -1711,8 +1731,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return playerList;
     }
 
-
-
     public long addEvent(String name, String date, String time, String location, double price, String description, byte[] picture, int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -1726,30 +1744,4 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("USER_ID", userId);
         return db.insert("EVENTS", null, values);
     }
-
-    public List<ProductModel> getAllProducts() {
-        List<ProductModel> products = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM SCHOOL_MERCH", null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                ProductModel product = new ProductModel(
-                        cursor.getInt(cursor.getColumnIndexOrThrow("PRODUCT_ID")),
-                        cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("NAME")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("DESCRIPTION")),
-                        cursor.getDouble(cursor.getColumnIndexOrThrow("PRICE")),
-                        cursor.getBlob(cursor.getColumnIndexOrThrow("PHOTO"))
-                );
-                products.add(product);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return products;
-    }
 }
-
-
-
-

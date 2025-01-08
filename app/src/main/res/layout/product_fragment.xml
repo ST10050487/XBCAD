@@ -7,13 +7,12 @@
 
 
     <LinearLayout
+        android:id="@+id/product_layout"
         android:layout_width="289dp"
         android:layout_height="233dp"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
 
@@ -21,21 +20,23 @@
             android:id="@+id/imageView6"
             android:layout_width="289dp"
             android:layout_height="189dp"
-            app:srcCompat="@drawable/ic_launcher_foreground" />
+            app:srcCompat="@drawable/ic_no_image_icon" />
 
         <TextView
             android:id="@+id/textView18"
             android:layout_width="286dp"
             android:layout_height="wrap_content"
             android:text="ItemName"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/backgroundtheme"/>
 
         <TextView
             android:id="@+id/textView19"
             android:layout_width="286dp"
             android:layout_height="wrap_content"
             android:text="R"
-            android:textSize="12sp" />
+            android:textSize="15sp"
+            android:textColor="@color/backgroundtheme"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

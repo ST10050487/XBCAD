@@ -164,8 +164,11 @@ class EditTimesheet : AppCompatActivity() {
         val rowsAffected = dbHelper.updateTimesheet(timesheet)
         if (rowsAffected > 0) {
             Toast.makeText(this, "Timesheet updated successfully", Toast.LENGTH_SHORT).show()
-            // Optionally, update the match status in the fixtures table
-            dbHelper.updateMatchStatus(fixtureId, matchStatusValue)
+
+            // Navigate to AdminSportsFixtures
+            val intent = Intent(this, AdminSportsFixtures::class.java)
+            startActivity(intent)
+            finish() // Optional: finish the current activity
         } else {
             Toast.makeText(this, "Failed to update timesheet", Toast.LENGTH_SHORT).show()
         }

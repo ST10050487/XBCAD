@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.2"
+agp = "8.7.3"
 circleimageview = "3.1.0"
 fragmentKtx = "1.8.3"
 kotlin = "1.9.0"
@@ -23,6 +23,8 @@ googleFirebaseCrashlytics = "3.0.2"
 firebaseAnalytics = "22.1.2"
 firebaseCrashlyticsKtx = "19.2.1"
 playServicesMeasurementApi = "22.1.2"
+firebaseDatabase = "21.0.0"
+firebaseMessaging = "24.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -45,6 +47,8 @@ firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashly
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics", version.ref = "firebaseAnalytics" }
 firebase-crashlytics-ktx = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version.ref = "firebaseCrashlyticsKtx" }
 play-services-measurement-api = { group = "com.google.android.gms", name = "play-services-measurement-api", version.ref = "playServicesMeasurementApi" }
+firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

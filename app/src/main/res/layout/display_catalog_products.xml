@@ -18,6 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <FrameLayout
+            android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="48dp">
 
@@ -121,14 +122,19 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
+                <!-- RecyclerView for displaying items -->
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView"
+                    android:id="@+id/product_recycler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="507dp" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    tools:listitem="@layout/product_fragment" />
             </LinearLayout>
-
 
         </ScrollView>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
+
