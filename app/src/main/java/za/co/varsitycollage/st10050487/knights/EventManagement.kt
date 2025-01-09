@@ -81,7 +81,7 @@ class EventManagement : AppCompatActivity() {
                     }
                 }
                 R.id.nav_shop -> {
-                    if (roleId == 1 || userPrivileges?.contains("SHOP") == true) {
+                    if (roleId == 1 || userPrivileges?.contains("SHOP_MANAGEMENT") == true) {
                         val intent = Intent(this, DisplayCatalogProducts::class.java)
                         intent.putExtra("USER_ID", userId)
                         intent.putExtra("ROLE_ID", roleId)
