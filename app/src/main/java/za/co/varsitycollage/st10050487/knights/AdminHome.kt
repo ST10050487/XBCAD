@@ -78,7 +78,7 @@ class AdminHome : AppCompatActivity() {
         dateTextView.text = currentDate
 
         btnShop.setOnClickListener {
-            if (roleId == 1 || userPrivileges?.contains("SHOP") == true) {
+            if (roleId == 1 || userPrivileges?.contains("SHOP_MANAGEMENT") == true) {
                 val intent = Intent(this, DisplayCatalogProducts::class.java)
                 intent.putExtra("USER_ID", userId)
                 intent.putExtra("ROLE_ID", roleId)
