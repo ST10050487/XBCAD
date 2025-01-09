@@ -19,9 +19,18 @@ class AdminSportsFixtures : AppCompatActivity() {
     private lateinit var selectedSportsLayout: LinearLayout // Declare the LinearLayout for sports
     private lateinit var selectedAgeGroupsLayout: LinearLayout // Declare the LinearLayout for age groups
 
+    private var roleId: Int = -1
+    private var userId: Int = -1
+    private var userPrivileges: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin_sports_fixtures)
+
+        // Retrieve the ROLE_ID, USER_ID, and user privileges from the intent
+        roleId = intent.getIntExtra("ROLE_ID", -1)
+        userId = intent.getIntExtra("USER_ID", -1)
+        userPrivileges = intent.getStringExtra("USER_PRIVILEGES")
 
         // Clear SharedPreferences to reset selected sports and age groups
         clearSelectedSportsFromPreferences()
@@ -67,6 +76,8 @@ class AdminSportsFixtures : AppCompatActivity() {
         backButton.setOnClickListener {
             // Navigate to AdminHomePageActivity
             val intent = Intent(this, AdminHome::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("ROLE_ID", roleId)
             startActivity(intent)
             finish() // Optionally call finish() if you want to remove this activity from the back stack
         }
@@ -78,6 +89,8 @@ class AdminSportsFixtures : AppCompatActivity() {
         createFixtureButton.setOnClickListener {
             // Navigate to CreateSportsActivity
             val intent = Intent(this, CreateSportFixture::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("ROLE_ID", roleId)
             startActivity(intent)
         }
     }

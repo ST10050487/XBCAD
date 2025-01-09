@@ -11,8 +11,9 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.textfield.TextInputEditText
 
 class User : AppCompatActivity() {
-    private var userId: Int = -1
     private var roleId: Int = -1
+    private var userId: Int = -1
+    private var userPrivileges: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
