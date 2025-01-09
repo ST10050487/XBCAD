@@ -36,6 +36,9 @@ class CreateEvent : AppCompatActivity() {
     private lateinit var priceInput: TextInputEditText
     private lateinit var aboutInput: TextInputEditText
     private lateinit var eventImage: ImageView
+    private var roleId: Int = -1
+    private var userId: Int = -1
+    private var userPrivileges: String? = null
 
     private val PICK_IMAGE_REQUEST = 1
     private var eventImageUri: Uri? = null
@@ -43,6 +46,11 @@ class CreateEvent : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_event)
+
+        // Retrieve the ROLE_ID, USER_ID, and user privileges from the intent
+        roleId = intent.getIntExtra("ROLE_ID", -1)
+        userId = intent.getIntExtra("USER_ID", -1)
+        userPrivileges = intent.getStringExtra("USER_PRIVILEGES")
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -139,6 +147,8 @@ class CreateEvent : AppCompatActivity() {
             Toast.makeText(this, "Event created successfully!", Toast.LENGTH_LONG).show()
             val intent = Intent(this, EventDetailActivity::class.java)
             intent.putExtra("EVENT_ID", eventId.toInt())
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("ROLE_ID", roleId)
             startActivity(intent)
             finish()
         }
