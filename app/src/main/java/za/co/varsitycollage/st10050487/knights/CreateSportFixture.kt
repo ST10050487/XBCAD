@@ -53,7 +53,9 @@ class CreateSportFixture : AppCompatActivity() {
     private var homeTeamLogoUri: Uri? = null
     private var awayTeamLogoUri: Uri? = null
     private var isHomeTeamLogo: Boolean = true
-    private var userId: Int? = null // Declare a variable to hold the user ID
+    private var roleId: Int = -1
+    private var userId: Int = -1
+    private var userPrivileges: String? = null
     private var playerList: ArrayList<PlayerProfileModel> = ArrayList()
 
     private val leagueIdMapping = mapOf(
@@ -83,8 +85,10 @@ class CreateSportFixture : AppCompatActivity() {
 
         NavigatingBackBtn()
 
-        // Retrieve the USER_ID from the Intent
-        userId = intent.getIntExtra("USER_ID", -1) // Default value is -1 if not found
+        // Retrieve the ROLE_ID, USER_ID, and user privileges from the intent
+        roleId = intent.getIntExtra("ROLE_ID", -1)
+        userId = intent.getIntExtra("USER_ID", -1)
+        userPrivileges = intent.getStringExtra("USER_PRIVILEGES")
 
         // Initialize the ImageView and the upload button
         homeTeamLogo = findViewById(R.id.display_home_team_logo)
@@ -307,6 +311,9 @@ class CreateSportFixture : AppCompatActivity() {
                 this,
                 AdminSportsFixtures::class.java
             ) // Change to your AdminSportsFixtures class
+            intent.putExtra("FIXTURE_ID", generatedFixtureId) // Pass the fixture ID
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("ROLE_ID", roleId)
             startActivity(intent)
             finish() // Optionally call finish() if you want to remove this activity from the back stack
         }
@@ -363,6 +370,8 @@ class CreateSportFixture : AppCompatActivity() {
         // Allow navigation to the CreateTimesheet activity regardless of fixture ID
         val intent = Intent(this, CreateTimesheet::class.java)
         intent.putExtra("FIXTURE_ID", generatedFixtureId) // Pass the fixture ID
+        intent.putExtra("USER_ID", userId)
+        intent.putExtra("ROLE_ID", roleId)
         startActivity(intent)
     }
 
