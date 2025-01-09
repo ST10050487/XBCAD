@@ -19,7 +19,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
     // Database name and version
     private static final String DATABASE_NAME = "knights.db";
-    private static final int DATABASE_VERSION = 30;
+    private static final int DATABASE_VERSION = 31;
 
 
     // Constructor
@@ -301,6 +301,32 @@ public class DBHelper extends SQLiteOpenHelper {
                 "TIMESTAMP INTEGER," +
                 "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID))";
         db.execSQL(CREATE_TABLE_SUSPICIOUS_ACTIVITY);
+
+       // Creating a privileges table
+        String CREATE_TABLE_PRIVILEGES = "CREATE TABLE PRIVILEGES (" +
+                "PRIVILEGE_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "PRIVILEGE TEXT NOT NULL)";
+        db.execSQL(CREATE_TABLE_PRIVILEGES);
+
+       // Inserting data into the PRIVILEGES table
+        String INSERT_PRIVILEGES = "INSERT INTO PRIVILEGES (PRIVILEGE) VALUES " +
+            "('SHOP_MANAGEMENT')," +
+            "('SPORT_MANAGEMENT')," +
+            "('EVENT_MANAGEMENT')," +
+            "('PLAYER_PROFILES')," +
+            "('GRANT_PRIVILEGES')," +
+            "('GENERATE_REPORTS')";
+        db.execSQL(INSERT_PRIVILEGES);
+
+        // Creating the USER_PRIVILEGES table
+        String CREATE_TABLE_USER_PRIVILEGES = "CREATE TABLE USER_PRIVILEGES (" +
+                "USER_PRIVILEGE_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "USER_ID INTEGER NOT NULL," +
+                "PRIVILEGE_ID INTEGER NOT NULL," +
+                "FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID)," +
+                "FOREIGN KEY (PRIVILEGE_ID) REFERENCES PRIVILEGES(PRIVILEGE_ID))";
+        db.execSQL(CREATE_TABLE_USER_PRIVILEGES);
+
     }
 
     @Override
@@ -325,57 +351,14 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS TIME_HIGHLIGHTS");
         db.execSQL("DROP TABLE IF EXISTS TIME_STATUS");
         db.execSQL("DROP TABLE IF EXISTS SUSPICIOUS_ACTIVITY");
+        db.execSQL("DROP TABLE IF EXISTS PRIVILEGES");
+        db.execSQL("DROP TABLE IF EXISTS USER_PRIVILEGES");
 
         // Recreate tables
         onCreate(db);
     }
 
-    //    @Override
-//    public void onOpen(SQLiteDatabase db) {
-//        super.onOpen(db);
-//        db.execSQL("PRAGMA foreign_keys=ON;");
-//    }
-//
-//    public synchronized SQLiteDatabase getWritableDatabase() {
-//        return super.getWritableDatabase(DATABASE_PASSWORD);
-//    }
-//
-//    public synchronized SQLiteDatabase getReadableDatabase() {
-//        SQLiteDatabase db = null;
-//        try {
-//            db = super.getReadableDatabase(DATABASE_PASSWORD);
-//        } catch (Exception e) {
-//            Log.e("DBHelper", "Error opening readable database", e);
-//        }
-//        return db;
-//    }
-//    public boolean isDatabaseValid() {
-//        File dbFile = context.getDatabasePath(DATABASE_NAME);
-//        if (!dbFile.exists()) {
-//            return false;
-//        }
-//
-//        SQLiteDatabase db = null;
-//        try {
-//            db = getReadableDatabase();
-//            Cursor cursor = db.rawQuery("PRAGMA integrity_check;", null);
-//            if (cursor != null) {
-//                if (cursor.moveToFirst()) {
-//                    String result = cursor.getString(0);
-//                    cursor.close();
-//                    return "ok".equalsIgnoreCase(result);
-//                }
-//                cursor.close();
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (db != null) {
-//                db.close();
-//            }
-//        }
-//        return false;
-//    }
+
     // HANNAH ADDED, CAUSE NO PASSWORD IN addUsers and to log user in ********************************/  /*********************************/  /*********************************/
     public boolean addUser(String name, String surname, String dateOfBirth, String email, String password, int roleId) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1762,7 +1745,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return playerList;
     }
-
+    //A method to add a new event
     public long addEvent(String name, String date, String time, String location, double price, String description, byte[] picture, int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -1775,5 +1758,21 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("PICTURE", picture);
         values.put("USER_ID", userId);
         return db.insert("EVENTS", null, values);
+    }
+    // A method to Query User Privileges
+    public List<String> getUserPrivileges(int userId) {
+        List<String> privileges = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT P.PRIVILEGE FROM PRIVILEGES P " +
+                "INNER JOIN USER_PRIVILEGES UP ON P.PRIVILEGE_ID = UP.PRIVILEGE_ID " +
+                "WHERE UP.USER_ID = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+        if (cursor.moveToFirst()) {
+            do {
+                privileges.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return privileges;
     }
 }
