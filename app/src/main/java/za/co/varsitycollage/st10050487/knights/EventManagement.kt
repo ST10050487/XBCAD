@@ -20,6 +20,7 @@ class EventManagement : AppCompatActivity() {
     private lateinit var binding: ActivityEventManagementBinding
     private lateinit var toggle: ActionBarDrawerToggle
     private var roleId: Int = -1
+    private var userId: Int = -1
     private var userPrivileges: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +31,7 @@ class EventManagement : AppCompatActivity() {
 
         // Retrieve the ROLE_ID and user privileges from the intent
         roleId = intent.getIntExtra("ROLE_ID", -1)
+        userId = intent.getIntExtra("USER_ID", -1)
         userPrivileges = intent.getStringExtra("USER_PRIVILEGES")
 
         if (roleId == -1) {
@@ -52,12 +54,14 @@ class EventManagement : AppCompatActivity() {
             when (it.itemId) {
                 R.id.nav_home -> {
                     val intent = Intent(this, AdminHome::class.java)
+                    intent.putExtra("USER_ID", userId)
                     intent.putExtra("ROLE_ID", roleId)
                     startActivity(intent)
                 }
                 R.id.nav_sport_management -> {
                     if (roleId == 1 || roleId == 2 || userPrivileges?.contains("SPORT_MANAGEMENT") == true) {
                         val intent = Intent(this, AdminSportsFixtures::class.java)
+                        intent.putExtra("USER_ID", userId)
                         intent.putExtra("ROLE_ID", roleId)
                         startActivity(intent)
                     } else {
@@ -68,6 +72,7 @@ class EventManagement : AppCompatActivity() {
                 R.id.nav_event_management -> {
                     if (roleId == 1 || roleId == 3 || userPrivileges?.contains("EVENT_MANAGEMENT") == true) {
                         val intent = Intent(this, EventManagement::class.java)
+                        intent.putExtra("USER_ID", userId)
                         intent.putExtra("ROLE_ID", roleId)
                         startActivity(intent)
                     } else {
@@ -76,8 +81,9 @@ class EventManagement : AppCompatActivity() {
                     }
                 }
                 R.id.nav_shop -> {
-                    if (roleId == 1 || userPrivileges?.contains("SHOP") == true) {
+                    if (roleId == 1 || userPrivileges?.contains("SHOP_MANAGEMENT") == true) {
                         val intent = Intent(this, DisplayCatalogProducts::class.java)
+                        intent.putExtra("USER_ID", userId)
                         intent.putExtra("ROLE_ID", roleId)
                         startActivity(intent)
                     } else {
@@ -88,6 +94,7 @@ class EventManagement : AppCompatActivity() {
                 R.id.nav_profile -> {
                     if (roleId == 1 || roleId == 2 || userPrivileges?.contains("GENERATE_REPORTS") == true) {
                         val intent = Intent(this, PlayerProfileView::class.java)
+                        intent.putExtra("USER_ID", userId)
                         intent.putExtra("ROLE_ID", roleId)
                         startActivity(intent)
                     } else {
@@ -98,6 +105,7 @@ class EventManagement : AppCompatActivity() {
                 R.id.nav_player_profiles -> {
                     if (roleId == 1 || roleId == 2 || userPrivileges?.contains("PLAYER_PROFILES") == true) {
                         val intent = Intent(this, PlayerProfile::class.java)
+                        intent.putExtra("USER_ID", userId)
                         intent.putExtra("ROLE_ID", roleId)
                         startActivity(intent)
                     } else {

@@ -7,8 +7,9 @@ import android.widget.Button
 
 class DisplayCatalogProducts : AppCompatActivity() {
 
-    private var userId: Int = -1
     private var roleId: Int = -1
+    private var userId: Int = -1
+    private var userPrivileges: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.display_catalog_products)
@@ -26,12 +27,16 @@ class DisplayCatalogProducts : AppCompatActivity() {
         val buttonCreateItem: Button = findViewById(R.id.buttonCreateItem)
         buttonCreateItem.setOnClickListener {
             val intent = Intent(this, CreateProduct::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("ROLE_ID", roleId)
             startActivity(intent)
         }
 
         val backButton: Button = findViewById(R.id.backButton)
         backButton.setOnClickListener {
             val intent = Intent(this, HomeScreen::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("ROLE_ID", roleId)
             startActivity(intent)
         }
     }
