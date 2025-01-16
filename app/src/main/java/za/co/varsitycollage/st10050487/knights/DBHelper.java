@@ -444,6 +444,35 @@ public class DBHelper extends SQLiteOpenHelper {
         return events;
     }
 
+    //Forogt Password Implementation
+    public String getPasswordByEmail(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String password = null;
+        String query = "SELECT PASSWORD FROM USERS WHERE EMAIL = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+
+        if (cursor.moveToFirst()) {
+            password = cursor.getString(cursor.getColumnIndexOrThrow("PASSWORD"));
+        }
+        cursor.close();
+        return password; // Returns null if email does not exist
+    }
+
+    //update Password Based on email
+    // Method to update the password
+    public boolean updatePassword(String email, String newPassword) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        // Hash the new password before updating
+        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+        values.put("PASSWORD", hashedPassword); // Store the new hashed password
+
+        // Update the password for the user with the given email
+        int rowsAffected = db.update("USERS", values, "EMAIL = ?", new String[]{email});
+        return rowsAffected > 0; // Return true if the update was successful
+    }
+
+
     public List<String> getAllStatus() {
         List<String> status = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -1088,7 +1117,11 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("SURNAME", surname);
         values.put("DATEOFBIRTH", dateOfBirth);
         values.put("EMAIL", email);
-        values.put("PASSWORD", password);
+
+        // Hash the password before storing it
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        values.put("PASSWORD", hashedPassword); // Store the hashed password
+
         values.put("ROLE_ID", roleId);
         db.insert("USERS", null, values);
     }
@@ -1231,7 +1264,6 @@ public class DBHelper extends SQLiteOpenHelper {
         try {
             // Query to check if user exists
             cursor = db.rawQuery("SELECT USER_ID, PASSWORD FROM USERS WHERE EMAIL=?", new String[]{email});
-            // Checking if cursor is not null and move to first
             if (cursor != null && cursor.moveToFirst()) {
                 int userIdColumnIndex = cursor.getColumnIndex("USER_ID");
                 int passwordColumnIndex = cursor.getColumnIndex("PASSWORD");
@@ -1243,7 +1275,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     if (BCrypt.checkpw(password, storedHashedPassword)) {
                         return userId;
                     } else {
-                        return null;
+                        return null; // Password does not match
                     }
                 }
             }
