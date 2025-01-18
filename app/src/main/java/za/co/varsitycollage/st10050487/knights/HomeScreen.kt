@@ -23,7 +23,7 @@ import java.util.Locale
 
 class HomeScreen : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var eventAdapter: UpcomingEvent
+    private lateinit var eventAdapter: EventsAdapter
     private lateinit var dbHelper: DBHelper
     private lateinit var toggle: ActionBarDrawerToggle
     private var userId: Int = -1
@@ -115,7 +115,7 @@ class HomeScreen : AppCompatActivity() {
 
         val eventList = dbHelper.getAllEvents()
         if (eventList.isNotEmpty()) {
-            eventAdapter = UpcomingEvent(eventList)
+            eventAdapter = EventsAdapter(this, eventList)
             recyclerView.adapter = eventAdapter
             Log.d("HomeScreen", "RecyclerView adapter set with ${eventList.size} items.")
 
