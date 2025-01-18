@@ -308,14 +308,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 "PRIVILEGE TEXT NOT NULL)";
         db.execSQL(CREATE_TABLE_PRIVILEGES);
 
-       // Inserting data into the PRIVILEGES table
+        // Inserting data into the PRIVILEGES table
         String INSERT_PRIVILEGES = "INSERT INTO PRIVILEGES (PRIVILEGE) VALUES " +
             "('SHOP_MANAGEMENT')," +
             "('SPORT_MANAGEMENT')," +
             "('EVENT_MANAGEMENT')," +
             "('PLAYER_PROFILES')," +
             "('GRANT_PRIVILEGES')," +
-            "('GENERATE_REPORTS')";
+            "('GENERATE_REPORTS');";
         db.execSQL(INSERT_PRIVILEGES);
 
         // Creating the USER_PRIVILEGES table
@@ -443,35 +443,6 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         return events;
     }
-
-    //Forogt Password Implementation
-    public String getPasswordByEmail(String email) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String password = null;
-        String query = "SELECT PASSWORD FROM USERS WHERE EMAIL = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{email});
-
-        if (cursor.moveToFirst()) {
-            password = cursor.getString(cursor.getColumnIndexOrThrow("PASSWORD"));
-        }
-        cursor.close();
-        return password; // Returns null if email does not exist
-    }
-
-    //update Password Based on email
-    // Method to update the password
-    public boolean updatePassword(String email, String newPassword) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        // Hash the new password before updating
-        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
-        values.put("PASSWORD", hashedPassword); // Store the new hashed password
-
-        // Update the password for the user with the given email
-        int rowsAffected = db.update("USERS", values, "EMAIL = ?", new String[]{email});
-        return rowsAffected > 0; // Return true if the update was successful
-    }
-
 
     public List<String> getAllStatus() {
         List<String> status = new ArrayList<>();
@@ -1117,11 +1088,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("SURNAME", surname);
         values.put("DATEOFBIRTH", dateOfBirth);
         values.put("EMAIL", email);
-
-        // Hash the password before storing it
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        values.put("PASSWORD", hashedPassword); // Store the hashed password
-
+        values.put("PASSWORD", password);
         values.put("ROLE_ID", roleId);
         db.insert("USERS", null, values);
     }
@@ -1264,6 +1231,7 @@ public class DBHelper extends SQLiteOpenHelper {
         try {
             // Query to check if user exists
             cursor = db.rawQuery("SELECT USER_ID, PASSWORD FROM USERS WHERE EMAIL=?", new String[]{email});
+            // Checking if cursor is not null and move to first
             if (cursor != null && cursor.moveToFirst()) {
                 int userIdColumnIndex = cursor.getColumnIndex("USER_ID");
                 int passwordColumnIndex = cursor.getColumnIndex("PASSWORD");
@@ -1275,7 +1243,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     if (BCrypt.checkpw(password, storedHashedPassword)) {
                         return userId;
                     } else {
-                        return null; // Password does not match
+                        return null;
                     }
                 }
             }
@@ -1759,14 +1727,65 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("USER_ID", userId);
         return db.insert("EVENTS", null, values);
     }
+
     // A method to Query User Privileges
+    public List<String> getAllPrivileges() {
+    List<String> privileges = new ArrayList<>();
+    SQLiteDatabase db = this.getReadableDatabase();
+    Cursor cursor = db.rawQuery("SELECT PRIVILEGE FROM PRIVILEGES", null);
+    if (cursor.moveToFirst()) {
+        do {
+            privileges.add(cursor.getString(0));
+        } while (cursor.moveToNext());
+    }
+    cursor.close();
+    return privileges;
+}
+    // A method to get a list of all the Users
+public List<UserModel> getAllUsers() {
+    List<UserModel> users = new ArrayList<>();
+    SQLiteDatabase db = this.getReadableDatabase();
+    Cursor cursor = db.rawQuery("SELECT USER_ID, NAME, SURNAME, PHOTO, EMAIL, PASSWORD, DATEOFBIRTH FROM USERS", null);
+    if (cursor.moveToFirst()) {
+        do {
+            int userId = cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID"));
+            String name = cursor.getString(cursor.getColumnIndexOrThrow("NAME"));
+            String surname = cursor.getString(cursor.getColumnIndexOrThrow("SURNAME"));
+            byte[] photo = cursor.getBlob(cursor.getColumnIndexOrThrow("PHOTO"));
+            String email = cursor.getString(cursor.getColumnIndexOrThrow("EMAIL"));
+            String password = cursor.getString(cursor.getColumnIndexOrThrow("PASSWORD"));
+            String dateOfBirth = cursor.getString(cursor.getColumnIndexOrThrow("DATEOFBIRTH"));
+            users.add(new UserModel(userId, name, surname, photo, email, password, dateOfBirth));
+        } while (cursor.moveToNext());
+    }
+    cursor.close();
+    return users;
+}
+    // A method to assign a privilege to a user
+    public void assignPrivilegesToUser(int userId, List<Integer> privilegeIds) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            // Delete existing privileges for the user
+            db.delete("USER_PRIVILEGES", "USER_ID = ?", new String[]{String.valueOf(userId)});
+
+            // Insert new privileges
+            for (int privilegeId : privilegeIds) {
+                ContentValues values = new ContentValues();
+                values.put("USER_ID", userId);
+                values.put("PRIVILEGE_ID", privilegeId);
+                db.insert("USER_PRIVILEGES", null, values);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+    // A method to get the user privileges
     public List<String> getUserPrivileges(int userId) {
         List<String> privileges = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT P.PRIVILEGE FROM PRIVILEGES P " +
-                "INNER JOIN USER_PRIVILEGES UP ON P.PRIVILEGE_ID = UP.PRIVILEGE_ID " +
-                "WHERE UP.USER_ID = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+        Cursor cursor = db.rawQuery("SELECT p.PRIVILEGE FROM USER_PRIVILEGES up JOIN PRIVILEGES p ON up.PRIVILEGE_ID = p.PRIVILEGE_ID WHERE up.USER_ID = ?", new String[]{String.valueOf(userId)});
         if (cursor.moveToFirst()) {
             do {
                 privileges.add(cursor.getString(0));
@@ -1775,4 +1794,56 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         return privileges;
     }
+    //Forogt Password Implementation
+    public String getPasswordByEmail(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String password = null;
+        String query = "SELECT PASSWORD FROM USERS WHERE EMAIL = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+
+        if (cursor.moveToFirst()) {
+            password = cursor.getString(cursor.getColumnIndexOrThrow("PASSWORD"));
+        }
+        cursor.close();
+        return password; // Returns null if email does not exist
+    }
+
+    //update Password Based on email
+    // Method to update the password
+    public boolean updatePassword(String email, String newPassword) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        // Hash the new password before updating
+        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+        values.put("PASSWORD", hashedPassword); // Store the new hashed password
+
+        // Update the password for the user with the given email
+        int rowsAffected = db.update("USERS", values, "EMAIL = ?", new String[]{email});
+        return rowsAffected > 0; // Return true if the update was successful
+    }
+    public List<UserModel> searchUsers(String query) {
+    List<UserModel> users = new ArrayList<>();
+    SQLiteDatabase db = this.getReadableDatabase();
+    Cursor cursor = db.rawQuery(
+        "SELECT * FROM USERS WHERE NAME LIKE ? OR SURNAME LIKE ? OR EMAIL LIKE ?",
+        new String[]{"%" + query + "%", "%" + query + "%", "%" + query + "%"}
+    );
+
+    if (cursor.moveToFirst()) {
+        do {
+            UserModel user = new UserModel(
+                cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
+                cursor.getString(cursor.getColumnIndexOrThrow("NAME")),
+                cursor.getString(cursor.getColumnIndexOrThrow("SURNAME")),
+                cursor.getBlob(cursor.getColumnIndexOrThrow("PHOTO")),
+                cursor.getString(cursor.getColumnIndexOrThrow("EMAIL")),
+                cursor.getString(cursor.getColumnIndexOrThrow("PASSWORD")),
+                cursor.getString(cursor.getColumnIndexOrThrow("DATEOFBIRTH"))
+            );
+            users.add(user);
+        } while (cursor.moveToNext());
+    }
+    cursor.close();
+    return users;
+}
 }

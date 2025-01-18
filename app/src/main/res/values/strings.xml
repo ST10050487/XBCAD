@@ -31,7 +31,8 @@
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="msg_token_fmt">FCM Registration Token: %1$s</string>
-
+    <string name="select_user">Select User</string>
+    <string name="select_privileges">Select Privileges</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="default_web_client_id">814054848260-sb61707fg2pkvn9hp0qsjnmbvordae58.apps.googleusercontent.com</string>

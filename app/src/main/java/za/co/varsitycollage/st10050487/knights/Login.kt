@@ -117,65 +117,68 @@ class Login : AppCompatActivity() {
 
     // A method to get user input
     private fun getUserInput() {
-        val email = emailEditText.text.toString()
-        val password = passwordEditText.text.toString()
+    val email = emailEditText.text.toString()
+    val password = passwordEditText.text.toString()
 
-        if (Validation()) {
+    if (Validation()) {
+        if (isLockedOut()) {
+            loginAttempts = 0
+            Toast.makeText(
+                this,
+                "Account is locked. Try again in 5 minutes.",
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
 
-            if (isLockedOut()) {
-                loginAttempts = 0
-                Toast.makeText(
-                    this,
-                    "Account is locked. Try again in 5 minutes.",
-                    Toast.LENGTH_LONG
-                ).show()
-                return
+        // Check if user exists in the database
+        val dbHelper = DBHelper(this)
+        val userId = dbHelper.validateUser(email, password)
+        if (userId != null) {
+            // Get the ROLE_ID of the user
+            val roleId = dbHelper.getRoleId(userId)
+            // Get the user's privileges
+            val userPrivileges = dbHelper.getUserPrivileges(userId).joinToString(",")
+
+            loginAttempts = 0 // Reset attempts on successful login
+            val intent = when (roleId) {
+                1, 2, 3 -> Intent(this, AdminHome::class.java)
+                4, 5 -> Intent(this, HomeScreen::class.java)
+                else -> null
             }
 
-            // Check if user exists in the database
-            val dbHelper = DBHelper(this)
-            val userId = dbHelper.validateUser(email, password)
-            if (userId != null) {
-                // Get the ROLE_ID of the user
-                val roleId = dbHelper.getRoleId(userId)
-                loginAttempts = 0 // Reset attempts on successful login
-                val intent = when (roleId) {
-                    1, 2, 3 -> Intent(this, AdminHome::class.java)
-                    4, 5 -> Intent(this, HomeScreen::class.java)
-                    else -> null
-                }
-
-                if (intent != null) {
-                    // Passing the ROLE_ID and USER_ID to the respective Activity
-                    intent.putExtra("ROLE_ID", roleId)
-                    intent.putExtra("USER_ID", userId)
-                    startActivity(intent)
-                    // Finishing the login activity once the user is logged in
-                    finish()
-                } else {
-                    Toast.makeText(this, "Invalid role", Toast.LENGTH_SHORT).show()
-                }
+            if (intent != null) {
+                // Passing the ROLE_ID, USER_ID, and USER_PRIVILEGES to the respective Activity
+                intent.putExtra("ROLE_ID", roleId)
+                intent.putExtra("USER_ID", userId)
+                intent.putExtra("USER_PRIVILEGES", userPrivileges)
+                startActivity(intent)
+                // Finishing the login activity once the user is logged in
+                finish()
             } else {
-                if (loginAttempts >= MAX_ATTEMPTS) {
-                    lockoutEndTime = System.currentTimeMillis() + LOCKOUT_DURATION_MS
-                    Toast.makeText(
-                        this,
-                        "Too many attempts. Account locked for 5 minutes.",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    saveSuspiciousActivity(email, "Too many failed login attempts")
-                } else {
-                    loginAttempts++
-                    // User does not exist or incorrect password
-                    Toast.makeText(
-                        this,
-                        ("Invalid credentials. Attempt $loginAttempts").toString() + " of " + MAX_ATTEMPTS,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                Toast.makeText(this, "Invalid role", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            if (loginAttempts >= MAX_ATTEMPTS) {
+                lockoutEndTime = System.currentTimeMillis() + LOCKOUT_DURATION_MS
+                Toast.makeText(
+                    this,
+                    "Too many attempts. Account locked for 5 minutes.",
+                    Toast.LENGTH_LONG
+                ).show()
+                saveSuspiciousActivity(email, "Too many failed login attempts")
+            } else {
+                loginAttempts++
+                // User does not exist or incorrect password
+                Toast.makeText(
+                    this,
+                    ("Invalid credentials. Attempt $loginAttempts").toString() + " of " + MAX_ATTEMPTS,
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
+}
 
     private fun saveSuspiciousActivity(email: String, activityDescription: String) {
         val dbHelper = DBHelper(this)

@@ -19,6 +19,9 @@ import com.google.android.material.navigation.NavigationView
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import android.content.res.Resources
+import android.graphics.Bitmap
+
 
 class AdminHome : AppCompatActivity() {
     private lateinit var toggle: ActionBarDrawerToggle
@@ -48,6 +51,7 @@ class AdminHome : AppCompatActivity() {
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
         val navView = findViewById<NavigationView>(R.id.nav_view)
         val btnShop = findViewById<LinearLayout>(R.id.btn_shop)
+        val btn_CreateAdmin = findViewById<LinearLayout>(R.id.btn_CreateAdmin)
         val btnSport = findViewById<LinearLayout>(R.id.btn_sport)
         val btnEvents = findViewById<LinearLayout>(R.id.btn_events)
         val btnPlayer = findViewById<LinearLayout>(R.id.btn_players)
@@ -77,6 +81,17 @@ class AdminHome : AppCompatActivity() {
         val currentDate = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(Date())
         dateTextView.text = currentDate
 
+        btn_CreateAdmin.setOnClickListener {
+            if (roleId == 1 || userPrivileges?.contains("GRANT_PRIVILEGES") == true) {
+                val intent = Intent(this, AssignPrivileges::class.java)
+                intent.putExtra("USER_ID", userId)
+                intent.putExtra("ROLE_ID", roleId)
+                startActivity(intent)
+            } else {
+                showToast("Access denied to Create Admin")
+                Log.e("AdminHome", "Access denied to Create Admin")
+            }
+        }
         btnShop.setOnClickListener {
             if (roleId == 1 || userPrivileges?.contains("SHOP_MANAGEMENT") == true) {
                 val intent = Intent(this, DisplayCatalogProducts::class.java)
@@ -206,6 +221,17 @@ class AdminHome : AppCompatActivity() {
                         Log.e("AdminHome", "Access denied to Player Profiles")
                     }
                 }
+                R.id.nav_create_admin -> {
+                    if (roleId == 1 || userPrivileges?.contains("GRANT_PRIVILEGES") == true) {
+                        val intent = Intent(this, AssignPrivileges::class.java)
+                        intent.putExtra("USER_ID", userId)
+                        intent.putExtra("ROLE_ID", roleId)
+                        startActivity(intent)
+                    } else {
+                        showToast("Access denied to Create Admin")
+                        Log.e("AdminHome", "Access denied to Create Admin")
+                    }
+                }
                 R.id.nav_logout -> {
                     val intent = Intent(this, Login::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -317,5 +343,38 @@ class AdminHome : AppCompatActivity() {
             view = layout
             show()
         }
+    }
+    fun decodeSampledBitmapFromResource(res: Resources, resId: Int, reqWidth: Int, reqHeight: Int): Bitmap {
+        // First decode with inJustDecodeBounds=true to check dimensions
+        val options = BitmapFactory.Options().apply {
+            inJustDecodeBounds = true
+        }
+        BitmapFactory.decodeResource(res, resId, options)
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight)
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false
+        return BitmapFactory.decodeResource(res, resId, options)
+    }
+
+    fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+        // Raw height and width of image
+        val (height: Int, width: Int) = options.run { outHeight to outWidth }
+        var inSampleSize = 1
+
+        if (height > reqHeight || width > reqWidth) {
+            val halfHeight: Int = height / 2
+            val halfWidth: Int = width / 2
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+                inSampleSize *= 2
+            }
+        }
+
+        return inSampleSize
     }
 }
