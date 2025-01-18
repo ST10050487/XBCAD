@@ -29,9 +29,12 @@ class ProductAdapter(private val products: List<ProductModel>) :
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = products[position]
         Log.d("ProductAdapter", "Binding product at position $position: ${product.prodName}")
+
         holder.productName.text = product.prodName
         holder.productDescription.text = product.prodDescription
         holder.productPrice.text = product.prodPrice.toString()
+
+
         holder.productImage.setImageBitmap(convertByteArrayToBitmap(product.prodPicture))
     }
 

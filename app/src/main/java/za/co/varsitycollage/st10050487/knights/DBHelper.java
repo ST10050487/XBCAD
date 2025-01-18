@@ -1182,28 +1182,6 @@ public class DBHelper extends SQLiteOpenHelper {
         db.insert("EVENTS", null, values);
     }
 
-    public List<ProductModel> getAllProducts() {
-        List<ProductModel> products = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM SCHOOL_MERCH", null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                ProductModel product = new ProductModel(
-                        cursor.getInt(cursor.getColumnIndexOrThrow("PRODUCT_ID")),
-                        cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("NAME")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("DESCRIPTION")),
-                        cursor.getDouble(cursor.getColumnIndexOrThrow("PRICE")),
-                        cursor.getBlob(cursor.getColumnIndexOrThrow("PHOTO"))
-                );
-                products.add(product);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return products;
-    }
-
     //A method to add matches to the database
     public void addMatches(String matchLocation, String matchDate, String matchTime, double price, String matchDiscription, byte[] picture, int timeId) {
         // Add matches to the database
@@ -1730,6 +1708,33 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return playerList;
     }
+
+    public List<ProductModel> getAllProducts() {
+        List<ProductModel> productList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM SCHOOL_MERCH";
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int prodId = cursor.getInt(cursor.getColumnIndexOrThrow("ID"));
+                int userId = cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID"));
+                String prodName = cursor.getString(cursor.getColumnIndexOrThrow("NAME"));
+                String prodDescription = cursor.getString(cursor.getColumnIndexOrThrow("DESCRIPTION"));
+                double prodPrice = cursor.getDouble(cursor.getColumnIndexOrThrow("PRICE"));
+                byte[] prodPicture = cursor.getBlob(cursor.getColumnIndexOrThrow("PHOTO"));
+
+                ProductModel product = new ProductModel(prodId, userId, prodName, prodDescription, prodPrice, prodPicture);
+                productList.add(product);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return productList;
+    }
+
 
     public long addEvent(String name, String date, String time, String location, double price, String description, byte[] picture, int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
