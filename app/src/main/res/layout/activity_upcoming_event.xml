@@ -4,30 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".UpcomingEvent">
 
     <ImageView
         android:id="@+id/event_image"
-        android:layout_width="245dp"
-        android:layout_height="150dp"
-        android:src="@drawable/ic_no_image_icon"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="4dp"
         android:scaleType="centerCrop"
+        android:src="@drawable/ic_no_image_icon"
+        app:layout_constraintWidth_percent="0.7"
+        app:layout_constraintHeight_percent="0.7"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/event_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:text="Event Name"
         android:textColor="#5723B4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.251"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_image" />
-
+        app:layout_constraintTop_toBottomOf="@id/event_image" />
 </androidx.constraintlayout.widget.ConstraintLayout>
