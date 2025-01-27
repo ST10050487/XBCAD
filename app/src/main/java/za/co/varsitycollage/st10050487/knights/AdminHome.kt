@@ -86,6 +86,7 @@ class AdminHome : AppCompatActivity() {
                 val intent = Intent(this, AssignPrivileges::class.java)
                 intent.putExtra("USER_ID", userId)
                 intent.putExtra("ROLE_ID", roleId)
+                intent.putExtra("USER_PRIVILEGES", userPrivileges)
                 startActivity(intent)
             } else {
                 showToast("Access denied to Create Admin")
@@ -97,6 +98,7 @@ class AdminHome : AppCompatActivity() {
                 val intent = Intent(this, DisplayCatalogProducts::class.java)
                 intent.putExtra("USER_ID", userId)
                 intent.putExtra("ROLE_ID", roleId)
+                intent.putExtra("USER_PRIVILEGES", userPrivileges)
                 startActivity(intent)
             } else {
                 showToast("Access denied to Shop")
@@ -108,6 +110,7 @@ class AdminHome : AppCompatActivity() {
                 val intent = Intent(this, AdminSportsFixtures::class.java)
                 intent.putExtra("USER_ID", userId)
                 intent.putExtra("ROLE_ID", roleId)
+                intent.putExtra("USER_PRIVILEGES", userPrivileges)
                 startActivity(intent)
             } else {
                 showToast("Access denied to Sport Management")
@@ -119,6 +122,7 @@ class AdminHome : AppCompatActivity() {
                 val intent = Intent(this, EventManagement::class.java)
                 intent.putExtra("USER_ID", userId)
                 intent.putExtra("ROLE_ID", roleId)
+                intent.putExtra("USER_PRIVILEGES", userPrivileges)
                 startActivity(intent)
             } else {
                 showToast("Access denied to Event Management")
@@ -130,6 +134,7 @@ class AdminHome : AppCompatActivity() {
                 val intent = Intent(this, ViewAllPlayerProfiles::class.java)
                 intent.putExtra("USER_ID", userId)
                 intent.putExtra("ROLE_ID", roleId)
+                intent.putExtra("USER_PRIVILEGES", userPrivileges)
                 startActivity(intent)
             } else {
                 showToast("Access denied to Player Profiles")
@@ -141,6 +146,7 @@ class AdminHome : AppCompatActivity() {
                 val intent = Intent(this, CreateSportFixture::class.java)
                 intent.putExtra("USER_ID", userId)
                 intent.putExtra("ROLE_ID", roleId)
+                intent.putExtra("USER_PRIVILEGES", userPrivileges)
                 startActivity(intent)
             } else {
                 showToast("Access denied to Add Fixture")
@@ -152,6 +158,7 @@ class AdminHome : AppCompatActivity() {
                 val intent = Intent(this, CreateEvent::class.java)
                 intent.putExtra("USER_ID", userId)
                 intent.putExtra("ROLE_ID", roleId)
+                intent.putExtra("USER_PRIVILEGES", userPrivileges)
                 startActivity(intent)
             } else {
                 showToast("Access denied to Add Event")
@@ -164,6 +171,7 @@ class AdminHome : AppCompatActivity() {
                     val intent = Intent(this, AdminHome::class.java)
                     intent.putExtra("USER_ID", userId)
                     intent.putExtra("ROLE_ID", roleId)
+                    intent.putExtra("USER_PRIVILEGES", userPrivileges)
                     startActivity(intent)
                 }
                 R.id.nav_sport_management -> {
@@ -171,6 +179,7 @@ class AdminHome : AppCompatActivity() {
                         val intent = Intent(this, AdminSportsFixtures::class.java)
                         intent.putExtra("ROLE_ID", roleId)
                         intent.putExtra("USER_ID", userId)
+                        intent.putExtra("USER_PRIVILEGES", userPrivileges)
                         startActivity(intent)
                     } else {
                         showToast("Access denied to Sport Management")
@@ -182,6 +191,7 @@ class AdminHome : AppCompatActivity() {
                         val intent = Intent(this, EventManagement::class.java)
                         intent.putExtra("ROLE_ID", roleId)
                         intent.putExtra("USER_ID", userId)
+                        intent.putExtra("USER_PRIVILEGES", userPrivileges)
                         startActivity(intent)
                     } else {
                         showToast("Access denied to Event Management")
@@ -193,6 +203,7 @@ class AdminHome : AppCompatActivity() {
                         val intent = Intent(this, DisplayCatalogProducts::class.java)
                         intent.putExtra("ROLE_ID", roleId)
                         intent.putExtra("USER_ID", userId)
+                        intent.putExtra("USER_PRIVILEGES", userPrivileges)
                         startActivity(intent)
                     } else {
                         showToast("Access denied to Shop")
@@ -204,6 +215,7 @@ class AdminHome : AppCompatActivity() {
                         val intent = Intent(this, User::class.java)
                         intent.putExtra("USER_ID", userId)
                         intent.putExtra("ROLE_ID", roleId)
+                        intent.putExtra("USER_PRIVILEGES", userPrivileges)
                         startActivity(intent)
                     } else {
                         showToast("Access denied to Player Profile")
@@ -215,6 +227,7 @@ class AdminHome : AppCompatActivity() {
                         val intent = Intent(this, ViewAllPlayerProfiles::class.java)
                         intent.putExtra("ROLE_ID", roleId)
                         intent.putExtra("USER_ID", userId)
+                        intent.putExtra("USER_PRIVILEGES", userPrivileges)
                         startActivity(intent)
                     } else {
                         showToast("Access denied to Player Profile")
@@ -226,6 +239,7 @@ class AdminHome : AppCompatActivity() {
                         val intent = Intent(this, AssignPrivileges::class.java)
                         intent.putExtra("USER_ID", userId)
                         intent.putExtra("ROLE_ID", roleId)
+                        intent.putExtra("USER_PRIVILEGES", userPrivileges)
                         startActivity(intent)
                     } else {
                         showToast("Access denied to Create Admin")
@@ -279,6 +293,7 @@ class AdminHome : AppCompatActivity() {
         val intent = Intent(this, User::class.java)
         intent.putExtra("USER_ID", userId)
         intent.putExtra("ROLE_ID", roleId)
+        intent.putExtra("USER_PRIVILEGES", userPrivileges)
         startActivity(intent)
     }
 
