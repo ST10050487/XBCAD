@@ -80,17 +80,7 @@
                     android:padding="@dimen/_5sdp"/>
             </LinearLayout>
 
-            <!-- Address -->
-            <TextView
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:id="@+id/event_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:text="Entrance 12, Tyger valley Shopping Centre, Bellville, Cape Town, 7536"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+
 
             <!-- View on Maps Button -->
             <TextView

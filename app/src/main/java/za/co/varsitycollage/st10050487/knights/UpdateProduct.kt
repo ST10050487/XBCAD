@@ -29,13 +29,8 @@ class UpdateProduct : AppCompatActivity() {
         setContentView(binding.root)
 
         dbHelper = DBHelper(this)
-      //   Insert dummy data
-       val newProductId = dbHelper.dummyProduct(userId)
-        Toast.makeText(this, "New Product ID: $newProductId", Toast.LENGTH_SHORT).show()
-
-        // productId and userId are passed via Intent
-        // productId = intent.getIntExtra("PRODUCT_ID", 0)
-        // userId = intent.getIntExtra("USER_ID", 0)
+        productId = intent.getIntExtra("PRODUCT_ID", 0)
+        userId = intent.getIntExtra("USER_ID", 0)
 
         loadProductDetails()
 
@@ -54,30 +49,30 @@ class UpdateProduct : AppCompatActivity() {
     }
 
     private fun loadProductDetails() {
-        // Fetch product details from the database
         val product = dbHelper.getProduct(productId)
-        // Set the product details to the UI
         product?.let {
             binding.txtTitle.setText(it.prodName)
             binding.txtPrice.setText(String.format("%.2f", it.prodPrice))
             binding.txtDescription.setText(it.prodDescription)
-            // Set the product picture to image holder variable
-            imageHolder = product?.prodPicture
+            imageHolder = it.prodPicture
 
-            // if product picture is not null
-           if (imageHolder != null)
-           { // set UI image to product picture
-                binding.prodImage.setImageBitmap(imageHolder?.size?.let { BitmapFactory.decodeByteArray(imageHolder, 0, it) })
+            if (imageHolder != null) {
+                binding.prodImage.setImageBitmap(
+                    imageHolder?.size?.let { size -> BitmapFactory.decodeByteArray(imageHolder, 0, size) }
+                )
             }
-
         }
+    }
 
+    private fun compressBitmap(bitmap: Bitmap): ByteArray {
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream)
+        return stream.toByteArray()
     }
 
     private fun updateProdPicture(bitmap: Bitmap) {
         binding.prodImage.setImageBitmap(bitmap)
-        // assign the bitmap to the prodBlob variable using the bitmapToByteArray function to convert it to a byte array
-        imageHolder = bitmapToByteArray(bitmap)
+        imageHolder = compressBitmap(bitmap)
     }
 
     private fun updateProductData() {
@@ -102,36 +97,28 @@ class UpdateProduct : AppCompatActivity() {
             Toast.makeText(this, "Failed to update product", Toast.LENGTH_SHORT).show()
         }
     }
-    private fun deleteProduct() {
 
+    private fun deleteProduct() {
         if (productId != -1) {
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Delete Product")
             builder.setMessage("Are you sure you want to delete this Product?")
 
-            builder.setPositiveButton("Yes") { dialog: DialogInterface, which: Int ->
-
-                val dbHelper = DBHelper(this)
-                val successTime = dbHelper.deleteProduct(productId )
-                if (successTime ) {
-                    Toast.makeText(this, "Product deleted successfully", Toast.LENGTH_SHORT)
-                        .show()
-                    //   finish() // Close the activity
+            builder.setPositiveButton("Yes") { _, _ ->
+                val success = dbHelper.deleteProduct(productId)
+                if (success) {
+                    Toast.makeText(this, "Product deleted successfully", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "Failed to delete Product", Toast.LENGTH_SHORT).show()
                 }
             }
-            builder.setNegativeButton("No") { dialog: DialogInterface, which: Int ->
-                // Dismiss the dialog
-                dialog.dismiss()
-            }
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
-        }
-        else {
+            builder.setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
+            builder.create().show()
+        } else {
             Toast.makeText(this, "Invalid Product ID", Toast.LENGTH_SHORT).show()
         }
     }
+
     private fun validateInputs(): Boolean {
         val name = binding.txtTitle.text.toString()
         val price = binding.txtPrice.text.toString()
@@ -151,6 +138,7 @@ class UpdateProduct : AppCompatActivity() {
         }
         return true
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -167,11 +155,6 @@ class UpdateProduct : AppCompatActivity() {
             }
         }
     }
-    private fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
-        val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-        return stream.toByteArray()
-    }
 
     private fun showImagePickerOptions() {
         val options = arrayOf("Take a Photo", "Choose from Gallery")
@@ -185,6 +168,7 @@ class UpdateProduct : AppCompatActivity() {
         }
         builder.show()
     }
+
     private fun checkCameraPermission() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             if (checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -196,6 +180,7 @@ class UpdateProduct : AppCompatActivity() {
             openCamera()
         }
     }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CAMERA_REQUEST && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -204,11 +189,13 @@ class UpdateProduct : AppCompatActivity() {
             Toast.makeText(this, "Camera permission is required to take a picture.", Toast.LENGTH_SHORT).show()
         }
     }
+
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         startActivityForResult(intent, PICK_IMAGE_REQUEST)
     }
+
     private fun openCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(intent, CAMERA_REQUEST)
