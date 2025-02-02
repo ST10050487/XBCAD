@@ -97,15 +97,16 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="314dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     app:boxBackgroundColor="#FFFFFF">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/searchEventInput"
                         android:layout_width="match_parent"
                         android:layout_height="35dp"
                         android:background="@drawable/rounded_border"
                         android:drawableEnd="@drawable/ic_search_icon"
-                        android:hint="Search item, price ..." />
+                        android:hint="Search date, price ..." />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

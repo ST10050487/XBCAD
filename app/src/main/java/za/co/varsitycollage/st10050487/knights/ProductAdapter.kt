@@ -1,49 +1,72 @@
 package za.co.varsitycollage.st10050487.knights
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
+                            import android.content.Intent
+                            import android.graphics.Bitmap
+                            import android.graphics.BitmapFactory
+                            import android.util.Log
+                            import android.view.LayoutInflater
+                            import android.view.View
+                            import android.view.ViewGroup
+                            import android.widget.Button
+                            import android.widget.ImageView
+                            import android.widget.TextView
+                            import androidx.recyclerview.widget.RecyclerView
 
-class ProductAdapter(private val products: List<ProductModel>) :
-    RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+                            class ProductAdapter(
+                                private var products: List<ProductModel>,
+                                private val userId: Int,
+                                private val dbHelper: DBHelper // Add dbHelper as a parameter
+                            ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
-    class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val productName: TextView = view.findViewById(R.id.textView18)
-        val productDescription: TextView = view.findViewById(R.id.textView19)
-        val productPrice: TextView = view.findViewById(R.id.textView19)
-        val productImage: ImageView = view.findViewById(R.id.imageView6)
-    }
+                                class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+                                    val productName: TextView = view.findViewById(R.id.productName)
+                                    val productDescription: TextView = view.findViewById(R.id.productDiscription)
+                                    val productPrice: TextView = view.findViewById(R.id.productPrice)
+                                    val productImage: ImageView = view.findViewById(R.id.productImage)
+                                    val editButton: Button = view.findViewById(R.id.editButton)
+                                }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.product_fragment, parent, false)
-        return ProductViewHolder(view)
-    }
+                                override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
+                                    val view = LayoutInflater.from(parent.context)
+                                        .inflate(R.layout.product_fragment, parent, false)
+                                    return ProductViewHolder(view)
+                                }
 
-    override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        val product = products[position]
-        Log.d("ProductAdapter", "Binding product at position $position: ${product.prodName}")
-        holder.productName.text = product.prodName
-        holder.productDescription.text = product.prodDescription
-        holder.productPrice.text = product.prodPrice.toString()
-        holder.productImage.setImageBitmap(convertByteArrayToBitmap(product.prodPicture))
-    }
+                                override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
+                                    val product = products[position]
+                                    holder.productName.text = product.prodName
+                                    holder.productDescription.text = product.prodDescription
+                                    holder.productPrice.text = " R " + product.prodPrice.toString()
 
-    override fun getItemCount(): Int {
-        val count = products.size
-        Log.d("ProductAdapter", "Total number of products: $count")
-        return count
-    }
+                                    // Load the photo asynchronously
+                                    Thread {
+                                        val photo = dbHelper.getProductPhoto(product.prodId)
+                                        holder.itemView.post {
+                                            holder.productImage.setImageBitmap(convertByteArrayToBitmap(photo))
+                                        }
+                                    }.start()
 
-    private fun convertByteArrayToBitmap(byteArray: ByteArray?): Bitmap? {
-        return byteArray?.let {
-            BitmapFactory.decodeByteArray(it, 0, it.size)
-        }
-    }
-}
+                                    holder.editButton.setOnClickListener {
+                                        val context = holder.itemView.context
+                                        val intent = Intent(context, UpdateProduct::class.java)
+                                        intent.putExtra("PRODUCT_ID", product.prodId)
+                                        intent.putExtra("USER_ID", userId)
+                                        context.startActivity(intent)
+                                    }
+                                }
+
+                                override fun getItemCount(): Int {
+                                    return products.size
+                                }
+
+                                fun updateProducts(newProducts: List<ProductModel>) {
+                                    products = newProducts
+                                    notifyDataSetChanged()
+                                }
+
+                                private fun convertByteArrayToBitmap(byteArray: ByteArray?): Bitmap? {
+                                    return byteArray?.let {
+                                        BitmapFactory.decodeByteArray(it, 0, it.size)
+                                    }
+                                }
+                            }

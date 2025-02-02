@@ -585,21 +585,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    public void addDummyTimesEntry(int fixtureId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("FIXTURE_ID", fixtureId);
-        values.put("LEAGUE_ID", 1);
-        values.put("TIMES_STATUS_ID", 1);
-        values.put("FIXTURE_ID", fixtureId);
-        values.put("MEETING_TIME", "2023-10-01 14:00");
-        values.put("BUS_DEPATURE_TIME", "2023-10-01 13:00");
-        values.put("BUS_RETURN_TIME", "2023-10-01 18:00");
-        values.put("MESSAGE", "This is a dummy message for the times entry.");
-        values.put("HOME_SCORE", 2); // Assuming a dummy home score
-        values.put("AWAY_SCORE", 1); // Assuming a dummy away score
-        db.insert("TIMES", null, values);
-    }
 
     public TimesheetModel getTimesDetails(int fixtureId) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -766,28 +751,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.update("SPORT_FIXTURES", values, "FIXTURE_ID = ?", new String[]{String.valueOf(fixture.getFixtureId())});
     }
 
-    public long addDummyFixtureWithUserId(int userId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("SPORT", "Soccer");
-        values.put("HOME_TEAM", "Team A");
-        values.put("AWAY_TEAM", "Team B");
-        values.put("AGE_GROUP", "Boys Under 18");
-        values.put("LEAGUE", "Premier League");
-        values.put("HOME_LOGO", (byte[]) null); // Assuming no logo for dummy data
-        values.put("AWAY_LOGO", (byte[]) null); // Assuming no logo for dummy data
-        values.put("MATCH_LOCATION", "Stadium A");
-        values.put("MATCH_DATE", "2023-10-01");
-        values.put("MATCH_TIME", "15:00");
-        values.put("MATCH_DESCRIPTION", "Friendly match");
-        values.put("PICTURE", (byte[]) null); // Assuming no picture for dummy data
-        values.put("USER_ID", userId); // Link to the current user
-        values.put("LEAGUE_ID", 1); // Assuming a valid LEAGUE_ID
-        values.put("IS_HOME_GAME", 0); // Add this line
-
-        long fixid = db.insert("SPORT_FIXTURES", null, values);
-        return fixid;
-    }
 
     // A method to get the match staus
     public String getMatchStatus(int matchStatusId) {
@@ -1052,7 +1015,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete("SCHOOL_MERCH", "PRODUCT_ID = ?", new String[]{String.valueOf(productId)}) > 0;
     }
-
+    // A method to get a Product
     public ProductModel getProduct(int productId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query("SCHOOL_MERCH", null, "PRODUCT_ID = ?", new String[]{String.valueOf(productId)}, null, null, null);
@@ -1064,7 +1027,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     cursor.getString(cursor.getColumnIndexOrThrow("NAME")),
                     cursor.getString(cursor.getColumnIndexOrThrow("DESCRIPTION")),
                     cursor.getDouble(cursor.getColumnIndexOrThrow("PRICE")),
-                    cursor.getBlob(cursor.getColumnIndexOrThrow("PHOTO"))
+                    cursor.getBlob(cursor.getColumnIndexOrThrow("PHOTO")) // Ensure PHOTO is retrieved
             );
             cursor.close();
             return product;
@@ -1075,7 +1038,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return null;
     }
-
 
 /*********************************/  /*********************************/  /*********************************/
     /*********************************/
@@ -1164,11 +1126,11 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("USER_ID", userId);
         db.insert("EVENTS", null, values);
     }
-
+    // A method to get all the products
     public List<ProductModel> getAllProducts() {
         List<ProductModel> products = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM SCHOOL_MERCH", null);
+        Cursor cursor = db.rawQuery("SELECT PRODUCT_ID, USER_ID, NAME, DESCRIPTION, PRICE FROM SCHOOL_MERCH", null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -1178,7 +1140,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndexOrThrow("NAME")),
                         cursor.getString(cursor.getColumnIndexOrThrow("DESCRIPTION")),
                         cursor.getDouble(cursor.getColumnIndexOrThrow("PRICE")),
-                        cursor.getBlob(cursor.getColumnIndexOrThrow("PHOTO"))
+                        null // Exclude PHOTO
                 );
                 products.add(product);
             } while (cursor.moveToNext());
@@ -1186,7 +1148,17 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         return products;
     }
-
+    // A method to load product photos
+    public byte[] getProductPhoto(int productId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT PHOTO FROM SCHOOL_MERCH WHERE PRODUCT_ID = ?", new String[]{String.valueOf(productId)});
+        byte[] photo = null;
+        if (cursor.moveToFirst()) {
+            photo = cursor.getBlob(cursor.getColumnIndexOrThrow("PHOTO"));
+        }
+        cursor.close();
+        return photo;
+    }
     //A method to add matches to the database
     public void addMatches(String matchLocation, String matchDate, String matchTime, double price, String matchDiscription, byte[] picture, int timeId) {
         // Add matches to the database
@@ -1821,6 +1793,7 @@ public List<UserModel> getAllUsers() {
         int rowsAffected = db.update("USERS", values, "EMAIL = ?", new String[]{email});
         return rowsAffected > 0; // Return true if the update was successful
     }
+    // A method search for a user
     public List<UserModel> searchUsers(String query) {
     List<UserModel> users = new ArrayList<>();
     SQLiteDatabase db = this.getReadableDatabase();
@@ -1846,4 +1819,26 @@ public List<UserModel> getAllUsers() {
     cursor.close();
     return users;
 }
+// A method to search for products
+public List<ProductModel> searchProducts(String query) {
+        List<ProductModel> products = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM SCHOOL_MERCH WHERE NAME LIKE ? OR DESCRIPTION LIKE ?", new String[]{"%" + query + "%", "%" + query + "%"});
+
+        if (cursor.moveToFirst()) {
+            do {
+                ProductModel product = new ProductModel(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("PRODUCT_ID")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("USER_ID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("NAME")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("DESCRIPTION")),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow("PRICE")),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow("PHOTO"))
+                );
+                products.add(product);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return products;
+    }
 }

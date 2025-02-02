@@ -145,10 +145,9 @@ class CreateEvent : AppCompatActivity() {
             Toast.makeText(this, "Failed to create event", Toast.LENGTH_LONG).show()
         } else {
             Toast.makeText(this, "Event created successfully!", Toast.LENGTH_LONG).show()
-            val intent = Intent(this, EventDetailActivity::class.java)
-            intent.putExtra("EVENT_ID", eventId.toInt())
+            val intent = Intent(this, DisplayCatalogProducts::class.java)
             intent.putExtra("USER_ID", userId)
-            intent.putExtra("ROLE_ID", roleId)
+            intent.putExtra("USER_PRIVILEGES", userPrivileges)
             startActivity(intent)
             finish()
         }
